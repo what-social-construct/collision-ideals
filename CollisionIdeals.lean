@@ -8,6 +8,7 @@ import CollisionIdeals.FiniteOrderFixedPoint
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.FixedPointIdeal
 import CollisionIdeals.OffDiagonal
+import CollisionIdeals.OffDiagonalScheme
 import CollisionIdeals.Planar
 import CollisionIdeals.PlanarRigidity
 import CollisionIdeals.PolynomialFiberProduct

@@ -379,9 +379,7 @@ noncomputable def collisionRingEquivDiagonalProdOffDiagonal
 
 /-- The obstruction vanishes exactly when the off-diagonal ideal is the unit ideal. -/
 theorem obstructionIdeal_eq_bot_iff_collisionOffDiagonalIdeal_eq_top
-    (F : κ → SourceRing R ι)
-    (q : CollisionRing F)
-    (hq : IsCollisionOffDiagonalProjector F q) :
+    (F : κ → SourceRing R ι) :
     obstructionIdeal F = ⊥ ↔
       collisionOffDiagonalIdeal F = ⊤ := by
   rw [obstructionIdeal_eq_bot_iff]
@@ -393,22 +391,23 @@ theorem obstructionIdeal_eq_bot_iff_collisionOffDiagonalIdeal_eq_top
     intro x hx
     simpa using hx
   · intro h
-    have hinter :=
-      relationIdeal_eq_diagonal_inf_offDiagonal F q hq
-    simpa [h] using hinter
+    apply le_antisymm (relationIdeal_le_diagonalIdeal F)
+    intro x hx
+    rw [collisionOffDiagonalIdeal, offDiagonalColonIdeal,
+      Ideal.eq_top_iff_one] at h
+    have hx' := Submodule.mem_colon.mp h x hx
+    simpa using hx'
 
 /-- Equivalently, the off-diagonal quotient ring is the zero ring. -/
 theorem obstructionIdeal_eq_bot_iff_offDiagonalFactor_subsingleton
-    (F : κ → SourceRing R ι)
-    (q : CollisionRing F)
-    (hq : IsCollisionOffDiagonalProjector F q) :
+    (F : κ → SourceRing R ι) :
     obstructionIdeal F = ⊥ ↔
       Subsingleton
         (PairRing R ι ⧸ collisionOffDiagonalIdeal F) := by
   rw [Ideal.Quotient.subsingleton_iff]
   exact
     obstructionIdeal_eq_bot_iff_collisionOffDiagonalIdeal_eq_top
-      F q hq
+      F
 
 end Collision
 

@@ -130,7 +130,16 @@ The current development is dimension-generic and proves:
   decomposition;
 - saturation stabilizes at \(I_R:I_\Delta\) when the diagonal is clopen;
 - the complementary-ideal identities and Chinese-remainder sheet
-  decomposition.
+  decomposition;
+- the affine off-diagonal collision scheme
+  \(R_F^\circ=\operatorname{Spec}(S/(I_R:I_\Delta))\);
+- the canonical identification of \(\operatorname{Spec}(S/I_R)\) with
+  the categorical affine self-fiber product \(X\times_YX\);
+- from the clopen-projector datum, the scheme coproduct decomposition
+  \(\operatorname{Spec}(S/I_R)\cong
+    \operatorname{Spec}(S/I_\Delta)\sqcup R_F^\circ\);
+- emptiness of \(R_F^\circ\), vanishing of the obstruction ideal, and
+  equality \(I_R=I_\Delta\) are equivalent.
 
 The definitions are generic in the coefficient ring, source variables, and
 output coordinates.  The planar specialization uses
@@ -173,12 +182,20 @@ The geometric form of the project goal is:
 > **Planar étale-correspondence rigidity.**
 > Let \(F:X=\mathbb A^2\to Y=\mathbb A^2\) be a Keller map and set
 > \[
-> S_F=(X\times_YX)\setminus\Delta_X.
+> R_F^\circ
+> =
+> \operatorname{Spec}\bigl(S/(I_R:I_\Delta)\bigr).
 > \]
-> Then \(S_F\) is empty.
+> Then \(R_F^\circ\) is empty.
 
-Every irreducible component \(S\subseteq S_F\) has two étale quasi-finite
-projections
+The colon presentation is the scheme-theoretic meaning of the complement
+here.  Étaleness makes the diagonal open and closed in \(X\times_YX\), so
+its complement is again an affine clopen subscheme rather than merely a
+set-theoretic difference.  The Chinese-remainder decomposition below
+identifies it canonically.
+
+Every irreducible component \(S\subseteq R_F^\circ\) has two étale
+quasi-finite projections
 
 \[
 p_1,p_2:S\longrightarrow X
@@ -454,14 +471,54 @@ S/I_\Delta\times S/I_{\mathrm{off}}.
 }
 \]
 
-The second ring is precisely the off-diagonal sheet factor.  Its being the
-zero ring is equivalent to
+Passing contravariantly to affine schemes gives
 
 \[
+\boxed{
+\operatorname{Spec}(S/I_R)
+\cong
+\operatorname{Spec}(S/I_\Delta)
+\sqcup
+R_F^\circ,
+\qquad
+R_F^\circ:=\operatorname{Spec}(S/I_{\mathrm{off}}).
+}
+\]
+
+Since \(\operatorname{Spec}(S/I_\Delta)\cong X\), this says exactly that
+the self-collision space is the disjoint union of its diagonal copy of the
+source and the affine off-diagonal collision scheme.  In particular,
+
+\[
+\boxed{
+R_F^\circ=\varnothing
+\Longleftrightarrow
+S/I_{\mathrm{off}}\text{ is the zero ring}
+\Longleftrightarrow
 I_{\mathrm{off}}=S
 \Longleftrightarrow
 \operatorname{Obs}(F)=0.
+}
 \]
+
+Under these equivalent conditions,
+
+\[
+X\times_YX
+\cong
+\operatorname{Spec}(S/I_R)
+\cong
+\operatorname{Spec}(S/I_\Delta)
+\cong
+\Delta_X
+\cong X.
+\]
+
+Thus the Lean proposition `PlanarOffDiagonalVanishing` is equivalent to
+`PlanarVanishing`; this is proved in `OffDiagonalScheme`.  The construction
+removes an ambiguity in the geometric language, but the assertion that this
+scheme is empty for every planar Keller map remains the substantive
+Jacobian-conjecture step.
 
 The corresponding principal neighborhood statement needs a slightly
 stronger formulation than merely choosing \(h\notin I_\Delta\).  Lean
