@@ -1,6 +1,9 @@
 import CollisionIdeals.Basic
 import CollisionIdeals.ConductorDescent
+import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.FiniteCompletion
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.Planar
+import CollisionIdeals.PolynomialFiberProduct
 import CollisionIdeals.Secant
+import CollisionIdeals.UniversalProperty

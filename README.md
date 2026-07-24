@@ -82,12 +82,47 @@ subscheme cut out by \(\operatorname{Obs}(F)\), regarded as an ideal of
 \(A_F\), is the diagonal.  Thus \(\operatorname{Obs}(F)=0\) says that the
 self-fiber product is scheme-theoretically only the diagonal.
 
+## Universal property
+
+The construction is dimension-generic.  Put
+
+\[
+A=R[x_i]_{i\in\iota},\qquad B=R[t_j]_{j\in\kappa},
+\qquad t_j\longmapsto F_j.
+\]
+
+For every commutative \(R\)-algebra \(T\), the collision quotient satisfies
+
+\[
+\operatorname{Hom}_{R\text{-alg}}(S/I_R(F),T)
+\cong
+\left\{
+(f,g):A\rightrightarrows T:
+f(F_j)=g(F_j)\text{ for every }j
+\right\}.
+\]
+
+Consequently there is a canonical equivalence
+
+\[
+S/I_R(F)\cong A\otimes_BA.
+\]
+
+This universal construction does not assert vanishing.  Dimension two and
+dimension three are specializations of the same object: the planar target
+says its off-diagonal factor is zero, whereas in the cubic
+\(S_3\)-example the normalized off-diagonal factor is the Galois closure.
+
 ## Lean status
 
 The current development is dimension-generic and proves:
 
 - every polynomial difference lies in the diagonal ideal;
 - the canonical containment \(I_R(F)\subseteq I_\Delta\);
+- the universal property of the collision quotient;
+- the canonical equivalence \(S/I_R(F)\simeq A\otimes_BA\);
+- the obstruction ideal is the kernel of the diagonal map
+  \(S/I_R(F)\to A\);
 - \(\operatorname{Obs}(F)=0\) if and only if \(I_R(F)=I_\Delta\);
 - equality of the two ideals implies injectivity on points;
 - a polynomial left inverse forces \(I_R(F)=I_\Delta\);
@@ -163,6 +198,9 @@ deck automorphisms; the substantive case is the nonfinite boundary case.
 This gives the intended contradiction architecture.
 
 First, the standard finite-correspondence rigidity statement says:
+
+> For a planar Keller map, there is no nonempty connected off-diagonal
+> collision component finite over either projection.
 
 \[
 S\neq\varnothing
