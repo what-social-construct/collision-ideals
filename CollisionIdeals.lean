@@ -1,4 +1,5 @@
 import CollisionIdeals.Basic
+import CollisionIdeals.ConductorDescent
 import CollisionIdeals.FiniteCompletion
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.Planar

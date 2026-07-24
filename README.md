@@ -265,6 +265,33 @@ off-diagonal components, separated over \(X\), cannot meet again solely
 along the boundary of the finite completion.  This is a reformulation of
 the hard planar assertion, not a consequence of normalization alone.
 
+This extension problem can be concentrated further on the conductor.  If
+\(\widetilde C\) is the normalization of the completed fiber-product
+algebra \(\overline C\), let
+
+\[
+\mathfrak c=
+\{d\in\widetilde C:d\widetilde C\subseteq\overline C\}
+\]
+
+be the conductor.  The normalized off-diagonal idempotent
+\(\widetilde q\in\widetilde C\) descends to \(\overline C\) exactly when
+
+\[
+\widetilde q\bmod\mathfrak c
+\]
+
+lies in the image of
+
+\[
+\overline C/\mathfrak c\longrightarrow
+\widetilde C/\mathfrak c.
+\]
+
+Thus the target planar lemma says that the \(0/1\) labels on the normalized
+diagonal and off-diagonal branches are compatible along the conductor
+where those branches are glued.
+
 ## Dimension three: the contrasting narrative
 
 The dimensional contrast is:
