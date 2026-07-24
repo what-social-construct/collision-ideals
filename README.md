@@ -213,6 +213,31 @@ Indeed, a connected finite étale cover of
 graph of a finite-order deck automorphism.  Such a graph cannot remain
 disjoint from the diagonal.
 
+The graph-extraction part is now explicit in Lean.
+`collisionGraphEndomorphism` trivializes the first projection of a
+`CollisionCocone` and turns the second projection into a source-ring
+endomorphism.  Lean proves that this endomorphism fixes every coordinate
+of \(F\), that its graph reconstructs the original second projection, and
+that a bijective second projection upgrades it to
+`collisionGraphAutomorphism`.
+
+At the component level, `FiniteComponentAutomorphismBridge` records the
+remaining geometric passage from a finite off-diagonal component to a
+finite-order, fixed-point-free deck automorphism.
+`FiniteOrderPlaneAutomorphismFixedPoint` records the classical
+affine-plane fixed-point input.  Lean proves
+
+```text
+FiniteComponentAutomorphismBridge
+FiniteOrderPlaneAutomorphismFixedPoint
+--------------------------------------
+FiniteCorrespondenceRigidity
+```
+
+in `finiteCorrespondenceRigidity_of_automorphismBridge`.  Neither the
+geometric construction of the bridge nor the classical fixed-point
+theorem is silently assumed as an axiom: both occur as explicit hypotheses.
+
 The specifically planar theorem target is the opposite implication:
 
 \[
@@ -242,6 +267,10 @@ is proved by `planarVanishing_of_finite_and_nonfinite`.  This theorem is the
 complete logical proof scaffold; instantiating the model with actual scheme
 components and proving `PlanarBoundaryFiniteness` remain the substantive
 planar geometry.
+
+The refined adapter
+`planarVanishing_of_automorphismBridge_and_boundaryFiniteness` plugs the
+graph-automorphism argument directly into this scaffold.
 
 There is one caveat to a componentwise inertia proof: a degree-one
 off-diagonal component can have an unramified boundary.  Such components
