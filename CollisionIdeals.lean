@@ -7,6 +7,7 @@ import CollisionIdeals.FiniteFieldSymmetry
 import CollisionIdeals.FiniteOrderFixedPoint
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.FixedPointIdeal
+import CollisionIdeals.OffDiagonal
 import CollisionIdeals.Planar
 import CollisionIdeals.PlanarRigidity
 import CollisionIdeals.PolynomialFiberProduct
