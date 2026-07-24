@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.Ideal.Maps
+import Mathlib.RingTheory.Ideal.Quotient.Operations
 import Mathlib.RingTheory.Ideal.Span
 
 set_option autoImplicit false
@@ -115,6 +116,49 @@ theorem annihilator_eq_span_one_sub_offDiagonalIdempotent
 /-- The determinant of a two-by-two secant matrix. -/
 def secantDet (a b c d : A) : A :=
   a * d - b * c
+
+/--
+The adjugate identity before passing to the collision quotient:
+`det(M) I_Δ ⊆ I_R`.
+-/
+theorem secantDet_mul_diagonalIdeal_mem_relationIdeal
+    (a b c d dx dy z : A)
+    (hz : z ∈ Ideal.span ({dx, dy} : Set A)) :
+    secantDet a b c d * z ∈
+      Ideal.span ({a * dx + b * dy, c * dx + d * dy} : Set A) := by
+  let I :=
+    Ideal.span ({a * dx + b * dy, c * dx + d * dy} : Set A)
+  have hdx : secantDet a b c d * dx ∈ I := by
+    rw [Ideal.mem_span_pair]
+    refine ⟨d, -b, ?_⟩
+    simp only [secantDet]
+    ring
+  have hdy : secantDet a b c d * dy ∈ I := by
+    rw [Ideal.mem_span_pair]
+    refine ⟨-c, a, ?_⟩
+    simp only [secantDet]
+    ring
+  obtain ⟨r, s, rfl⟩ := Ideal.mem_span_pair.mp hz
+  change secantDet a b c d * (r * dx + s * dy) ∈ I
+  rw [show secantDet a b c d * (r * dx + s * dy) =
+      r * (secantDet a b c d * dx) +
+        s * (secantDet a b c d * dy) by ring]
+  exact I.add_mem (I.mul_mem_left r hdx) (I.mul_mem_left s hdy)
+
+/-- Ideal containment descends to annihilation in the quotient ring. -/
+theorem quotient_mk_mem_annihilator_obstruction
+    (IR IΔ : Ideal A) (δ : A)
+    (hδ : ∀ z ∈ IΔ, δ * z ∈ IR) :
+    Ideal.Quotient.mk IR δ ∈
+      (IΔ.map (Ideal.Quotient.mk IR)).annihilator := by
+  apply Submodule.mem_annihilator.mpr
+  intro q hq
+  obtain ⟨z, hz, rfl⟩ :=
+    (Ideal.mem_map_iff_of_surjective
+      (Ideal.Quotient.mk IR) Ideal.Quotient.mk_surjective).mp hq
+  change Ideal.Quotient.mk IR δ * Ideal.Quotient.mk IR z = 0
+  rw [← map_mul]
+  exact Ideal.Quotient.eq_zero_iff_mem.mpr (hδ z hz)
 
 /-- The adjugate identity for the first diagonal generator. -/
 theorem secantDet_mul_fst
