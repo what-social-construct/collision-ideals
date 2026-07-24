@@ -221,9 +221,36 @@ of \(F\), that its graph reconstructs the original second projection, and
 that a bijective second projection upgrades it to
 `collisionGraphAutomorphism`.
 
+The finite-order route no longer needs a separately assumed bijectivity
+of the second projection.  `algEquivOfFiniteOrder` proves that a
+finite-order algebra endomorphism is automatically an automorphism, and
+`collisionGraphAutomorphismOfFiniteOrder` applies this directly to a
+collision graph.  On points, `planeAutomorphismPointMap` is the geometric
+map represented by that coordinate-ring automorphism.  Lean proves that
+if the automorphism fixes \(F\), then
+
+\[
+F(\gamma(a))=F(a)
+\]
+
+and hence every point of its graph annihilates \(I_R(F)\).  A fixed point
+of \(\gamma\) is therefore exactly an intersection of its graph with the
+diagonal.  `FixedPointIdeal` makes the same statement algebraically:
+
+\[
+J_\gamma=(\gamma(x_1)-x_1,\gamma(x_2)-x_2)
+\]
+
+is proper exactly when \(\gamma\) has a fixed point, and \(J_\gamma=(1)\)
+exactly when the graph avoids the diagonal.  The converse direction uses
+the Nullstellensatz over \(\mathbb C\).
+
 At the component level, `FiniteComponentAutomorphismBridge` records the
 remaining geometric passage from a finite off-diagonal component to a
 finite-order, fixed-point-free deck automorphism.
+The more primitive `FiniteComponentEndomorphismBridge` records only the
+endomorphism naturally produced by trivializing the first projection;
+Lean derives the automorphism bridge from its finite-order field.
 `FiniteOrderPlaneAutomorphismFixedPoint` records the classical
 affine-plane fixed-point input.  Lean proves
 
@@ -237,6 +264,33 @@ FiniteCorrespondenceRigidity
 in `finiteCorrespondenceRigidity_of_automorphismBridge`.  Neither the
 geometric construction of the bridge nor the classical fixed-point
 theorem is silently assumed as an axiom: both occur as explicit hypotheses.
+
+Two unconditional finite-symmetry steps are separated into their own
+modules.  `FiniteFieldSymmetry` proves that a self-embedding of a finite
+field extension is bijective and that every automorphism of such an
+extension has finite order.  `FiniteOrderFixedPoint` proves by averaging a
+finite orbit that every finite-order **affine** automorphism in
+characteristic zero has a fixed point.  What is not yet in mathlib is the
+additional plane-polynomial linearization theorem needed to pass from a
+finite-order polynomial automorphism to that affine case.
+
+Likewise, mathlib does not currently supply the theorem that every
+connected finite étale cover of \(\mathbb A^2_{\mathbb C}\) is trivial.
+Thus the finite case is reduced to two explicit classical geometric
+interfaces:
+
+\[
+\begin{aligned}
+&S\to\mathbb A^2_{\mathbb C}\text{ connected, finite, étale}
+  \Longrightarrow S\cong\mathbb A^2_{\mathbb C},\\
+&\gamma\in\operatorname{Aut}(\mathbb A^2_{\mathbb C}),\
+  \gamma\text{ finite order}
+  \Longrightarrow \gamma\text{ has a fixed point}.
+\end{aligned}
+\]
+
+The algebra between these interfaces is formalized; neither interface is
+being presented as a completed Lean theorem.
 
 The specifically planar theorem target is the opposite implication:
 
@@ -359,6 +413,32 @@ Zariski Main places the original affine plane model in the finite model:
 \[
 X=\operatorname{Spec}(A)\hookrightarrow\overline X\longrightarrow Y.
 \]
+
+Here normalization and Galois closure play complementary, not identical,
+roles.  Normalization is the geometric operation that separates integral
+collision branches.  The Galois closure is the finite symmetry object that
+simultaneously contains every conjugate sheet.  If \(g\in G\), the generic
+field of the collision component indexed by \(HgH\) is
+
+\[
+L\,g(L)=N^{\,H\cap gHg^{-1}}.
+\]
+
+Consequently the normal \(N\)-model maps **to** the normalization of that
+collision component:
+
+\[
+\operatorname{Norm}_{N}(Y)
+\longrightarrow
+\operatorname{Norm}_{L\,g(L)}(Y).
+\]
+
+A single normalized self-fiber product need not be the Galois closure.
+Rather, normalized components of iterated fiber products intersect the
+conjugate stabilizers; when their intersection is the normal core of
+\(H\), their compositum is \(N\).  This is the precise bridge from the
+equal-functions language of \(I_R\) to the equal-embeddings language of
+Galois theory.
 
 Although \(F:X\to Y\) is étale, the finite map
 \(\overline X\to Y\) may ramify at points of the deleted boundary

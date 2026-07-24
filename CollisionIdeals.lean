@@ -3,7 +3,10 @@ import CollisionIdeals.ConductorDescent
 import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.FiniteCorrespondence
 import CollisionIdeals.FiniteCompletion
+import CollisionIdeals.FiniteFieldSymmetry
+import CollisionIdeals.FiniteOrderFixedPoint
 import CollisionIdeals.FiberProduct
+import CollisionIdeals.FixedPointIdeal
 import CollisionIdeals.Planar
 import CollisionIdeals.PlanarRigidity
 import CollisionIdeals.PolynomialFiberProduct
