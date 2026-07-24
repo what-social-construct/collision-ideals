@@ -226,6 +226,23 @@ boundary curve.  Conductor compatibility of the normalized collision
 idempotent is the proposed mechanism for proving this finiteness.  The two
 statements together force \(S=\varnothing\), hence planar vanishing.
 
+This contradiction is formalized in Lean.  A
+`PlanarCollisionComponentModel` records the component predicate, finiteness
+of \(p_1\), and the fact that a nonzero obstruction produces an
+off-diagonal component.  Then
+
+```text
+FiniteCorrespondenceRigidity
+PlanarBoundaryFiniteness
+--------------------------------
+PlanarVanishing
+```
+
+is proved by `planarVanishing_of_finite_and_nonfinite`.  This theorem is the
+complete logical proof scaffold; instantiating the model with actual scheme
+components and proving `PlanarBoundaryFiniteness` remain the substantive
+planar geometry.
+
 The next formal step is the local theorem: for a Keller map, the diagonal is
 an open-and-closed subscheme of the self-fiber product, so
 \(\operatorname{Obs}(F)\) is supported on the off-diagonal complement.  The
