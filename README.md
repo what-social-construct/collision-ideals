@@ -184,6 +184,87 @@ The secant argument constructs this decomposition; it does not by itself
 prove that \(q_F=0\).  Forcing that vanishing is the specifically planar
 step.
 
+## Finite completion and hidden inertia
+
+Write
+
+\[
+B=\mathbb C[P,Q]\subset A=\mathbb C[x,y],\qquad
+K=\operatorname{Frac}(B)\subset L=\operatorname{Frac}(A),
+\]
+
+and let \(N/K\) be the normal closure, with
+
+\[
+G=\operatorname{Gal}(N/K),\qquad H=\operatorname{Gal}(N/L).
+\]
+
+For \(Y=\operatorname{Spec}(B)\), set
+
+\[
+Z=\operatorname{Norm}_{Y}(N),\qquad
+\overline X=\operatorname{Norm}_{Y}(L)\cong Z/H.
+\]
+
+Zariski Main places the original affine plane model in the finite model:
+
+\[
+X=\operatorname{Spec}(A)\hookrightarrow\overline X\longrightarrow Y.
+\]
+
+Although \(F:X\to Y\) is étale, the finite map
+\(\overline X\to Y\) may ramify at points of the deleted boundary
+\(\overline X\setminus X\).  In the Galois completion \(Z\to Y\), this is
+recorded by nontrivial divisorial inertia.  Normalization does not create
+ramification from nothing: it reveals valuations of \(N/K\) whose centers
+were absent from the original affine sheet.
+
+The fiber product makes this mechanism precise.  Let
+
+\[
+\overline R=\overline X\times_Y\overline X,
+\qquad
+R=X\times_YX.
+\]
+
+On \(R\), étaleness makes the diagonal open and closed:
+
+\[
+R=\Delta_X\sqcup R^\circ.
+\]
+
+At a ramified boundary divisor of the finite completion, the closure of
+the diagonal and the closure of an off-diagonal component can meet inside
+\(\overline R\).  Equivalently, the diagonal idempotent on \(R\) need not
+extend across the divisorial boundary to \(\overline R\).
+
+Algebraically, for a ring map \(B\to A\), put
+
+\[
+C=A\otimes_BA,\qquad \mu:C\to A.
+\]
+
+Formal unramifiedness is equivalent to the existence of a tensor \(t\in C\)
+such that
+
+\[
+\mu(t)=1,\qquad
+(1\otimes a-a\otimes1)t=0\quad(a\in A).
+\]
+
+Then \(t\) is the diagonal projector, \(q=1-t\) is the off-diagonal
+projector, and
+
+\[
+\ker(\mu)=Cq.
+\]
+
+Thus a fiber-product form of the missing planar step is an idempotent
+extension, or closure-separation, statement: the diagonal and
+off-diagonal components, separated over \(X\), cannot meet again solely
+along the boundary of the finite completion.  This is a reformulation of
+the hard planar assertion, not a consequence of normalization alone.
+
 ## Dimension three: the contrasting narrative
 
 The dimensional contrast is:
