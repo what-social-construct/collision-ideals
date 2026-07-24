@@ -160,6 +160,34 @@ off-diagonal correspondence can hide its ramification entirely in boundary
 curves.  Finite connected correspondence components reduce to graphs of
 deck automorphisms; the substantive case is the nonfinite boundary case.
 
+This gives the intended contradiction architecture.
+
+First, the standard finite-correspondence rigidity statement says:
+
+\[
+S\neq\varnothing
+\quad\Longrightarrow\quad
+p_1:S\to X\text{ is not finite}.
+\]
+
+Indeed, a connected finite étale cover of
+\(\mathbb A^2_{\mathbb C}\) is trivial, so a finite component would be the
+graph of a finite-order deck automorphism.  Such a graph cannot remain
+disjoint from the diagonal.
+
+The specifically planar theorem target is the opposite implication:
+
+\[
+S\neq\varnothing
+\quad\Longrightarrow\quad
+p_1:S\to X\text{ is finite}.
+\]
+
+Equivalently, the finite normalization of \(S\) over \(X\) has no deleted
+boundary curve.  Conductor compatibility of the normalized collision
+idempotent is the proposed mechanism for proving this finiteness.  The two
+statements together force \(S=\varnothing\), hence planar vanishing.
+
 The next formal step is the local theorem: for a Keller map, the diagonal is
 an open-and-closed subscheme of the self-fiber product, so
 \(\operatorname{Obs}(F)\) is supported on the off-diagonal complement.  The
