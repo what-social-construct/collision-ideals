@@ -130,6 +130,36 @@ axiom.  Proving it is the unresolved two-dimensional Jacobian-conjecture
 case; by the automorphism criterion above, the planar Jacobian conjecture is
 an immediate corollary.
 
+The geometric form of the project goal is:
+
+> **Planar étale-correspondence rigidity.**
+> Let \(F:X=\mathbb A^2\to Y=\mathbb A^2\) be a Keller map and set
+> \[
+> S_F=(X\times_YX)\setminus\Delta_X.
+> \]
+> Then \(S_F\) is empty.
+
+Every irreducible component \(S\subseteq S_F\) has two étale quasi-finite
+projections
+
+\[
+p_1,p_2:S\longrightarrow X
+\]
+
+satisfying
+
+\[
+F\circ p_1=F\circ p_2.
+\]
+
+Galois theory identifies the generic function field of \(S\) as a
+double-coset field in the normal closure of
+\(\mathbb C(x,y)/\mathbb C(P,Q)\).  The intended planar argument is then to
+use the geometry of affine surfaces to show that no such nonfinite
+off-diagonal correspondence can hide its ramification entirely in boundary
+curves.  Finite connected correspondence components reduce to graphs of
+deck automorphisms; the substantive case is the nonfinite boundary case.
+
 The next formal step is the local theorem: for a Keller map, the diagonal is
 an open-and-closed subscheme of the self-fiber product, so
 \(\operatorname{Obs}(F)\) is supported on the off-diagonal complement.  The
