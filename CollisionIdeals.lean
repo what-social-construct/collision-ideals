@@ -1,3 +1,4 @@
 import CollisionIdeals.Basic
+import CollisionIdeals.FiniteCompletion
 import CollisionIdeals.Planar
 import CollisionIdeals.Secant
