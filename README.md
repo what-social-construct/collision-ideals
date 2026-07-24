@@ -3,8 +3,8 @@
 Let
 
 \[
-F=(F_1,\ldots,F_m):\mathbb A^n_{\mathbb C}\longrightarrow
-\mathbb A^m_{\mathbb C}
+F=(F_1,\ldots,F_n):\mathbb A^n_{\mathbb C}\longrightarrow
+\mathbb A^n_{\mathbb C}
 \]
 
 be a polynomial map.  In the coordinate ring of two copies of the source,
@@ -16,50 +16,70 @@ S=\mathbb C[x_1,\ldots,x_n,y_1,\ldots,y_n],
 there are two canonical ideals:
 
 \[
-I_R(F)=\bigl(F_j(x)-F_j(y)\bigr)_{j=1}^m,
+I_R(F)=\bigl(F_i(x)-F_i(y)\bigr)_{i=1}^n,
 \qquad
 I_\Delta=\bigl(x_i-y_i\bigr)_{i=1}^n.
 \]
 
-The project is organized around one question:
+Every polynomial difference vanishes on the diagonal, so there is a
+canonical inclusion
 
 \[
-\boxed{\text{When is }I_R(F)=I_\Delta?}
+I_R(F)\subseteq I_\Delta
 \]
 
-## The obstruction
-
-Every polynomial difference \(H(x)-H(y)\) belongs to \(I_\Delta\).  Hence
+and therefore a canonical \(S/I_R(F)\)-module
 
 \[
-I_R(F)\subseteq I_\Delta.
+\operatorname{Obs}(F):=I_\Delta/I_R(F).
 \]
 
-Let \(A_F=S/I_R(F)\), the coordinate ring of the collision space.  The image
+Thus \(\operatorname{Obs}(F)\) is not an additional independent object: it
+is the canonical defect module in the exact sequence
 
 \[
-J_F:=I_\Delta A_F
+0\longrightarrow I_R(F)\longrightarrow I_\Delta
+\longrightarrow\operatorname{Obs}(F)\longrightarrow0.
 \]
 
-is the obstruction ideal.  Equivalently, as an \(A_F\)-module it is
-\(I_\Delta/I_R(F)\).  The central equality is exactly
+The purpose of this project is to study the vanishing of
+\(\operatorname{Obs}(F)\).
+Since \(I_R(F)\subseteq I_\Delta\), the elementary module criterion gives
 
 \[
-I_R(F)=I_\Delta
+\operatorname{Obs}(F)=0
 \quad\Longleftrightarrow\quad
-J_F=0.
+I_R(F)=I_\Delta.
 \]
 
-Geometrically,
+## Automorphism criterion
+
+Over \(\mathbb C\), the quotient has a direct interpretation:
+
+\[
+\boxed{
+F\text{ is a polynomial automorphism}
+\quad\Longleftrightarrow\quad
+\operatorname{Obs}(F)=0.
+}
+\]
+
+If \(F\) has a polynomial inverse, applying the inverse to the two output
+tuples gives \(I_\Delta\subseteq I_R(F)\).  Conversely, vanishing gives
+\(I_R(F)=I_\Delta\), hence injectivity on complex points; Ax–Grothendieck
+then gives a polynomial automorphism.
+
+Geometrically, if \(A_F=S/I_R(F)\), then
 
 \[
 \operatorname{Spec}(A_F)
 =
-\mathbb A^n\times_{\mathbb A^m}\mathbb A^n
+\mathbb A^n\times_{\mathbb A^n}\mathbb A^n
 \]
 
 parametrizes ordered pairs with the same image under \(F\).  The closed
-subscheme cut out by \(J_F\) is the diagonal.  Thus \(J_F=0\) says that the
+subscheme cut out by \(\operatorname{Obs}(F)\), regarded as an ideal of
+\(A_F\), is the diagonal.  Thus \(\operatorname{Obs}(F)=0\) says that the
 self-fiber product is scheme-theoretically only the diagonal.
 
 ## Lean status
@@ -68,9 +88,11 @@ The current development is dimension-generic and proves:
 
 - every polynomial difference lies in the diagonal ideal;
 - the canonical containment \(I_R(F)\subseteq I_\Delta\);
-- \(J_F=0\) if and only if \(I_R(F)=I_\Delta\);
-- equality of the two ideals implies injectivity on points.
-- a polynomial left inverse forces \(I_R(F)=I_\Delta\).
+- \(\operatorname{Obs}(F)=0\) if and only if \(I_R(F)=I_\Delta\);
+- equality of the two ideals implies injectivity on points;
+- a polynomial left inverse forces \(I_R(F)=I_\Delta\);
+- the abstract secant-determinant identities and resulting idempotent
+  decomposition.
 
 The definitions are generic in the coefficient ring, source variables, and
 output coordinates.  The planar specialization uses
@@ -99,29 +121,98 @@ The main theorem target is:
 \boxed{
 \operatorname{Keller}(F)
 \Longrightarrow
-J_F=0
-\quad
-\text{(equivalently, }I_R(F)=I_\Delta\text{).}
+\operatorname{Obs}(F)=0.
 }
 \]
 
 In Lean, `PlanarVanishing` records this proposition without assuming it as an
 axiom.  Proving it is the unresolved two-dimensional Jacobian-conjecture
-case; the repository keeps that boundary explicit.
+case; by the automorphism criterion above, the planar Jacobian conjecture is
+an immediate corollary.
 
 The next formal step is the local theorem: for a Keller map, the diagonal is
-an open-and-closed subscheme of the self-fiber product, so \(J_F\) is
-supported on the off-diagonal complement.  The substantive planar step is
-then to prove that this complement is empty.
+an open-and-closed subscheme of the self-fiber product, so
+\(\operatorname{Obs}(F)\) is supported on the off-diagonal complement.  The
+substantive planar step is then to prove that this complement is empty.
+
+## Secant determinant and annihilator
+
+Write the collision equations in secant form
+
+\[
+\binom{F_1(x)-F_1(y)}{F_2(x)-F_2(y)}
+=
+M_F(x,y)\binom{x_1-y_1}{x_2-y_2}
+\]
+
+and set \(\delta_F=\det M_F\).  If \(\det JF=c\in\mathbb C^\times\), then
+
+\[
+\delta_F I_\Delta\subseteq I_R(F),
+\qquad
+\delta_F\equiv c\pmod {I_\Delta}.
+\]
+
+In \(A_F=S/I_R(F)\), this says that \(\bar\delta_F\) annihilates
+\(\operatorname{Obs}(F)\) and is congruent to the unit \(c\) modulo
+\(\operatorname{Obs}(F)\).  Consequently
+
+\[
+q_F=1-\frac{\bar\delta_F}{c}
+\]
+
+is idempotent and
+
+\[
+\operatorname{Obs}(F)=A_Fq_F,
+\qquad
+\operatorname{Ann}_{A_F}(\operatorname{Obs}(F))
+=A_F(1-q_F).
+\]
+
+Thus the following are equivalent:
+
+\[
+\operatorname{Obs}(F)=0
+\quad\Longleftrightarrow\quad
+q_F=0
+\quad\Longleftrightarrow\quad
+\text{the off-diagonal clopen summand is empty}.
+\]
+
+The secant argument constructs this decomposition; it does not by itself
+prove that \(q_F=0\).  Forcing that vanishing is the specifically planar
+step.
 
 ## Dimension three: the contrasting narrative
 
+The dimensional contrast is:
+
+\[
+\begin{array}{c|c}
+n=2 &
+\operatorname{Keller}(F)\Longrightarrow\operatorname{Obs}(F)=0
+\quad\text{(Planar Vanishing target)},\\[2mm]
+n=3 &
+\operatorname{Obs}(F)\neq0
+\quad\text{in the known example; its off-diagonal field is the }
+S_3\text{-Galois closure}.
+\end{array}
+\]
+
 In the known cubic-fiber counterexample in dimension three, the
-off-diagonal collision obstruction does not vanish.  Generically, the map
-has three sheets and a cubic fiber equation with \(S_3\)-Galois group.  The
-off-diagonal component records ordered pairs of distinct sheets; its
-Galois-closure description is the \(S_3\) phenomenon governing the failure
-of
+obstruction module \(\operatorname{Obs}(F)\) does not vanish.  Generically,
+let \(L/K\) be the resulting cubic function-field extension.  Then
+
+\[
+L\otimes_KL\cong L\times M,
+\]
+
+where the \(L\)-factor is the diagonal and \(M/K\) is the degree-\(6\)
+Galois closure with \(\operatorname{Gal}(M/K)\cong S_3\).  Thus the generic
+function field of the off-diagonal component is precisely the
+\(S_3\)-Galois closure.  It records ordered pairs of distinct sheets and
+governs the failure of
 
 \[
 F(u)=F(v)\Longrightarrow u=v.

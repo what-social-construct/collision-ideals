@@ -1,2 +1,3 @@
 import CollisionIdeals.Basic
 import CollisionIdeals.Planar
+import CollisionIdeals.Secant
