@@ -4,6 +4,7 @@ import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.FiniteCompletion
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.Planar
+import CollisionIdeals.PlanarRigidity
 import CollisionIdeals.PolynomialFiberProduct
 import CollisionIdeals.Secant
 import CollisionIdeals.UniversalProperty

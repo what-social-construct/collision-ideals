@@ -243,6 +243,12 @@ complete logical proof scaffold; instantiating the model with actual scheme
 components and proving `PlanarBoundaryFiniteness` remain the substantive
 planar geometry.
 
+There is one caveat to a componentwise inertia proof: a degree-one
+off-diagonal component can have an unramified boundary.  Such components
+are governed generically by \(N_G(H)/H\).  The global normal-closure
+argument below avoids identifying nonfiniteness of an individual component
+with ramification.
+
 The next formal step is the local theorem: for a Keller map, the diagonal is
 an open-and-closed subscheme of the self-fiber product, so
 \(\operatorname{Obs}(F)\) is supported on the off-diagonal complement.  The
@@ -331,6 +337,64 @@ Although \(F:X\to Y\) is étale, the finite map
 recorded by nontrivial divisorial inertia.  Normalization does not create
 ramification from nothing: it reveals valuations of \(N/K\) whose centers
 were absent from the original affine sheet.
+
+### Global planar rigidity bridge
+
+In the intermediate quotient, generic sheets are represented by \(G/H\).
+For a branch divisor \(B\subseteq Y\), choose \(E\subseteq Z\) above it and
+write \(I_E\leq G\) for its inertia group.  The stabilizer of the sheet
+\(gH\) is \(gHg^{-1}\), so invisibility of inertia at that sheet is
+
+\[
+I_E\leq gHg^{-1}.
+\]
+
+Equivalently, every element of \(I_E\) fixes \(gH\).  The kernel of the
+action on all sheets is
+
+\[
+\ker\bigl(G\curvearrowright G/H\bigr)
+=\operatorname{core}_G(H).
+\]
+
+Because \(N\) is the actual normal closure, \(H\) is core-free.  Thus any
+nontrivial inertia group fixes some sheets only by moving others.  The
+affine étale model can exist only if every moved sheet is deleted at the
+boundary.
+
+The formal target is `PlanarHiddenInertiaRigidity`: for each actual branch
+divisor, inertia that is invisible on every sheet remaining in the affine
+plane must be trivial.  `PlanarGaloisInertiaModel` records the following
+bridge:
+
+\[
+\operatorname{Obs}(F)\ne0
+\Longrightarrow G\ne1
+\Longrightarrow \exists E,\ I_E\ne1,
+\]
+
+together with étale invisibility on the visible sheets.  Lean then proves
+
+\[
+\texttt{PlanarHiddenInertiaRigidity}
+\Longrightarrow \operatorname{Obs}(F)=0
+\]
+
+and, uniformly for Keller maps,
+
+\[
+\boxed{
+\texttt{HasPlanarHiddenInertiaBridge}
+\Longrightarrow \texttt{PlanarVanishing}.
+}
+\]
+
+The final implication is
+`planarVanishing_of_hiddenInertiaRigidity`.  The coset stabilizer,
+normal-core, and contradiction steps are proved.  Constructing the
+geometric model from \(Z=\operatorname{Norm}_N(Y)\) and proving
+`PlanarHiddenInertiaRigidity` are the remaining substantive planar
+geometry; they are not assumed as axioms.
 
 The fiber product makes this mechanism precise.  Let
 
