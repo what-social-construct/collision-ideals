@@ -1,6 +1,6 @@
 import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.OffDiagonal
-import CollisionIdeals.Planar
+import CollisionIdeals.Planar.Vanishing
 import CollisionIdeals.PolynomialFiberProduct
 import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.AlgebraicGeometry.Pullbacks

@@ -180,6 +180,21 @@ The current development is dimension-generic and proves:
   \(R_F^\circ=\operatorname{Spec}(S/(I_R:I_\Delta))\);
 - the canonical identification of \(\operatorname{Spec}(S/I_R)\) with
   the categorical affine self-fiber product \(X\times_YX\);
+- the concrete planar function fields
+  \(K=\mathbb C(P,Q)\subset L=\mathbb C(x,y)\), a finite normal-closure
+  interface \(L\hookrightarrow N\), and the fixing subgroup
+  \(H=\operatorname{Gal}(N/L)\);
+- the normalized affine models
+  \[
+  Z=\operatorname{Norm}_N(Y)\longrightarrow
+  \overline X=\operatorname{Norm}_L(Y)\longrightarrow Y
+  \]
+  and the commuting normalization triangle;
+- for abstract candidate-inertia data, the group-theoretic relative index
+  \([I_E:I_E\cap H]\), including that it is greater than one in the
+  finite case relevant here when \(I_E\nsubseteq H\);
+- the formal reduction from normalization rigidity and the
+  generic-degree-one collision lemma to `PlanarVanishing`;
 - from the clopen-projector datum, the scheme coproduct decomposition
   \(\operatorname{Spec}(S/I_R)\cong
     \operatorname{Spec}(S/I_\Delta)\sqcup R_F^\circ\);
@@ -203,9 +218,9 @@ lake build
 The generic implementation modules under `CollisionIdeals/` contain the
 dimension-independent construction: collision and diagonal ideals, the
 canonical diagonal map, the obstruction kernel, secant identities, fiber
-products, normalization interfaces, coset sheets, and finite-field
-symmetry.  A few older top-level filenames remain as compatibility facades
-for the new planar leaves.
+products, normalization interfaces, coset sheets, the abstract inertia
+quotient \([I:I\cap H]\), and finite-field symmetry.  A few older top-level
+filenames remain as compatibility facades for the new planar leaves.
 
 The `CollisionIdeals/Planar/` directory contains only the complex
 two-dimensional specialization:
@@ -213,8 +228,21 @@ two-dimensional specialization:
 - `Basic` defines `PlanePolynomial`, the planar Jacobian determinant, and
   the Keller condition;
 - `Vanishing` states the planar obstruction/kernel target;
+- `Normalization` constructs \(K\subset L\subset N\), the normalized
+  models \(Z\to\overline X\to Y\), and states the finite-model rigidity
+  target;
+- `Inertia` gives an abstract interface for divisorial centers and inertia
+  subgroups, and proves the associated relative subgroup-index
+  calculation;
+- `ValuationInertia` constructs valuation-ring decomposition and inertia
+  subgroups and isolates the additional geometric DVR bridge
+  \(e=|I|\);
+- `EtaleBoundary` isolates both the Keller-to-scheme-étale theorem and the
+  valuation/inertia-to-boundary theorem still needed;
+- `GenericFiber` isolates the passage from generic degree one to emptiness
+  of the off-diagonal collision scheme;
 - `Components`, `Secant`, `Rigidity`, and `FixedPointIdeal` package the
-  proposed planar proof interfaces.
+  other proposed planar proof interfaces.
 
 The former top-level planar import paths remain as compatibility wrappers.
 The `CollisionIdeals/ComplexThree/` directory is presently a minimal
@@ -667,27 +695,72 @@ For \(Y=\operatorname{Spec}(B)\), set
 
 \[
 Z=\operatorname{Norm}_{Y}(N),\qquad
-\overline X=\operatorname{Norm}_{Y}(L)\cong Z/H.
+\overline X=\operatorname{Norm}_{Y}(L).
 \]
 
-Zariski Main places the original affine plane model in the finite model:
+The canonical finite diagram is
 
 \[
-X=\operatorname{Spec}(A)\hookrightarrow\overline X\longrightarrow Y.
+\begin{array}{ccc}
+Z&\longrightarrow&\overline X\\
+&\searrow&\downarrow\nu\\
+&&Y,
+\end{array}
 \]
+
+At the function-field level \(N^G=K\) and \(N^H=L\).  Under the usual
+normality and invariant-ring hypotheses, the corresponding geometric
+quotients are \(Z/G\simeq Y\) and \(Z/H\simeq\overline X\).  The current
+Lean development proves the fixed-field statement and constructs the
+displayed maps; it does not yet construct these two scheme quotients.
+
+Zariski Main places the original affine plane model in the intermediate
+finite model over the image base:
+
+\[
+X=\operatorname{Spec}(A)\xrightarrow{j}\overline X
+\xrightarrow{\nu}Y,
+\]
+
+After identifying \(Y=\operatorname{Spec}\mathbb C[P,Q]\) with the
+abstract polynomial-ring target, the composite is the original map \(F\).
+
+The Lean module `Planar.Normalization` now constructs the two integral
+closures, all three displayed morphisms, and the commuting triangle.
+It also proves that the fixed field of the displayed subgroup \(H\) is
+the distinguished copy of \(L\) in \(N\), and that
+\[
+\operatorname{core}_G(H)=1
+\]
+because the conjugate images of \(L\) generate the supplied normal closure.
+Module-finiteness of the integral closures and the assertion that \(j\) is
+an open immersion remain explicit properties: they are not manufactured
+by the definitions.
+
+There is one further target-identification bridge.  The normalization base
+is literally \(\operatorname{Spec}\mathbb C[P,Q]\), while the original map
+was presented with an abstract polynomial-ring target.  Injectivity of the
+coordinate homomorphism identifies these rings and yields
+\[
+\operatorname{Spec}\mathbb C[P,Q]\simeq\mathbb A^2_{\mathbb C}.
+\]
+`PlanarKellerTargetImageBridge` isolates the still-unformalized implication
+from the concrete Keller determinant to this injectivity; under it, Lean
+constructs the displayed scheme isomorphism.
 
 Here normalization and Galois closure play complementary, not identical,
 roles.  Normalization is the geometric operation that separates integral
 collision branches.  The Galois closure is the finite symmetry object that
-simultaneously contains every conjugate sheet.  If \(g\in G\), the generic
-field of the collision component indexed by \(HgH\) is
+simultaneously contains every conjugate sheet.  The expected generic
+fiber-product/Galois bridge identifies the collision component indexed by
+\(HgH\) with the compositum field
 
 \[
 L\,g(L)=N^{\,H\cap gHg^{-1}}.
 \]
 
-Consequently the normal \(N\)-model maps **to** the normalization of that
-collision component:
+It would then induce a map from the normal \(N\)-model to the normalization
+of that collision component:
 
 \[
 \operatorname{Norm}_{N}(Y)
@@ -696,18 +769,121 @@ collision component:
 \]
 
 A single normalized self-fiber product need not be the Galois closure.
-Rather, normalized components of iterated fiber products intersect the
-conjugate stabilizers; when their intersection is the normal core of
-\(H\), their compositum is \(N\).  This is the precise bridge from the
-equal-functions language of \(I_R\) to the equal-embeddings language of
-Galois theory.
+Rather, normalized components of iterated fiber products should intersect
+the conjugate stabilizers; when their intersection is the normal core of
+\(H\), their compositum is \(N\).  Constructing this functorial
+component-to-normalization map is still missing in Lean.  It is the exact
+geometric adapter needed between the equal-functions language of \(I_R\)
+and the equal-embeddings language of Galois theory.
 
 Although \(F:X\to Y\) is étale, the finite map
 \(\overline X\to Y\) may ramify at points of the deleted boundary
-\(\overline X\setminus X\).  In the Galois completion \(Z\to Y\), this is
+\[
+D=\overline X\setminus j(X).
+\]
+In the Galois completion \(Z\to Y\), this is
 recorded by nontrivial divisorial inertia.  Normalization does not create
 ramification from nothing: it reveals valuations of \(N/K\) whose centers
 were absent from the original affine sheet.
+
+For a codimension-one point \(E\subset Z\), let \(I_E\leq G\) be its
+inertia group.  The ramification index induced in the marked intermediate
+extension is
+
+\[
+\boxed{
+e_E(L/K)
+=[I_E:I_E\cap H]
+=\frac{|I_E|}{|I_E\cap H|}.
+}
+\]
+
+Thus
+
+\[
+I_E\nsubseteq H
+\Longrightarrow e_E(L/K)>1.
+\]
+
+For an actual divisorial valuation whose center is compatible with these
+models, étaleness of the visible sheet should force the center on
+\(\overline X\) of every such divisor into \(D\).  This center-compatibility
+and boundary implication is an explicit target, not a consequence yet
+proved in Lean.  Inertia contained in \(H\) is invisible in \(L/K\), so it
+is important not to assert that every ramification divisor of \(Z/Y\) must
+lie over the deleted boundary of the marked sheet.
+`Planar.Inertia` formalizes the group-theoretic index as
+`H.relIndex I_E`.  Its divisor type, centers, and subgroups are an abstract
+interface: the module does not yet construct codimension-one valuations or
+prove that a supplied subgroup is their geometric inertia group.
+`Planar.EtaleBoundary` therefore exposes separate theorem targets:
+Keller implies scheme-theoretic étaleness, and a realized valuation center
+with \(I_E\nsubseteq H\) lies in the deleted boundary.  The latter is named
+`PlanarValuationCenterBoundaryBridge` precisely because the present
+abstract divisor data does not itself certify that its stored point is the
+center of its stored valuation.
+
+At the valuation level, mathlib already defines the decomposition subgroup
+of a valuation ring as its stabilizer and the inertia subgroup as the
+kernel of its action on the residue field.  `Planar.ValuationInertia`
+specializes these constructions to \(N/K\), restricts the valuation ring
+to \(K\), and defines the DVR ramification index.  For the intended
+geometric divisorial towers, the required identification is
+\[
+e(w_E/v_B)=|I_E|
+\]
+and is exposed as `InertiaCardinalityBridge`; it is not yet proved from the
+currently recorded DVR hypotheses.  In particular, the current structure
+does not yet encode geometric centeredness, residue separability, or all
+defectlessness hypotheses.  Conditional on the bridge, Lean proves that
+ramification index different from one is equivalent to nontrivial inertia.
+`PlanarValuationInertiaFamily.toInertiaDivisorData` then feeds these
+concrete inertia kernels into the pre-existing relative-index interface;
+there is only one definition of the intermediate quotient
+\([I_E:I_E\cap H]\), namely the dimension-independent
+`inertiaQuotientIndex` in `CollisionIdeals/InertiaQuotient.lean`.
+The same generic module proves that, for core-free \(H\), every nontrivial
+\(I\) has
+\[
+[I:I\cap gHg^{-1}]>1
+\]
+on at least one conjugate sheet \(gH\).  `Planar.Inertia` now specializes
+this theorem to the actual subgroup \(H=\operatorname{Gal}(N/L)\).
+What is still missing is the geometric adapter from \(gHg^{-1}\) to the
+conjugate model \(g(L)\), its valuation center, and its affine-plane
+boundary.
+
+The normalization-form planar target is:
+
+> **Planar normalization rigidity.**
+> In the setup above, if \(X\simeq\mathbb A^2_{\mathbb C}\) and
+> \(\nu|_X:X\to Y\) is everywhere étale, then \(L=K\).
+
+Equivalently, no nontrivial finite extension \(K\subsetneq L\) admits an
+affine-plane open model whose intermediate ramification is displaced
+entirely into the deleted boundary.  In Lean,
+`PlanarFunctionFieldExtensionTrivial F` means that the canonical embedding
+\(K\hookrightarrow L\) is surjective, and `PlanarNormalizationRigidity`
+states the displayed theorem.  It is deliberately a proposition to be
+proved, not an axiom or a completed theorem; this is the decisive planar
+Jacobian-conjecture step.
+
+Once normalization rigidity supplies \(L=K\), Lean proves that the
+function-field finrank is one.  The remaining generic-fiber bridge is
+isolated as `PlanarGenericDegreeOneExcludesOffDiagonal`: a nonempty
+component of the étale self-fiber product has open image under its first
+projection and hence would contribute another generic sheet.  Therefore
+
+\[
+L=K
+\Longrightarrow R_F^\circ=\varnothing
+\Longrightarrow\ker(\bar\mu_F)=0
+\Longrightarrow I_R=I_\Delta.
+\]
+
+The last two implications are already unconditional Lean theorems.
+`planarVanishing_of_normalizationRigidity` packages the full reduction and
+shows exactly which normalization and generic-fiber inputs remain.
 
 ### Global planar rigidity bridge
 
@@ -729,14 +905,15 @@ action on all sheets is
 \]
 
 Because \(N\) is the actual normal closure, \(H\) is core-free.  Thus any
-nontrivial inertia group fixes some sheets only by moving others.  The
-affine étale model can exist only if every moved sheet is deleted at the
-boundary.
+nontrivial inertia group moves at least one sheet.  Turning that moved
+generic sheet into a ramified divisor on a conjugate affine model, and
+then proving that its center must be deleted at the boundary, is the
+missing conjugate-sheet geometric adapter.
 
-The formal target is `PlanarHiddenInertiaRigidity`: for each actual branch
-divisor, inertia that is invisible on every sheet remaining in the affine
-plane must be trivial.  `PlanarGaloisInertiaModel` records the following
-bridge:
+The earlier abstract route packages this goal as
+`PlanarHiddenInertiaRigidity`: for each supplied branch divisor, inertia
+that is invisible on every supplied visible sheet must be trivial.
+`PlanarGaloisInertiaModel` separately records the schematic implication
 
 \[
 \operatorname{Obs}(F)\ne0
@@ -760,12 +937,16 @@ and, uniformly for Keller maps,
 }
 \]
 
-The final implication is
+The final conditional implication is
 `planarVanishing_of_hiddenInertiaRigidity`.  The coset stabilizer,
-normal-core, and contradiction steps are proved.  Constructing the
-geometric model from \(Z=\operatorname{Norm}_N(Y)\) and proving
-`PlanarHiddenInertiaRigidity` are the remaining substantive planar
-geometry; they are not assumed as axioms.
+normal-core, and contradiction steps are proved.  The normalized models
+and their canonical domination map are now constructed in Lean.  The older
+`PlanarGaloisInertiaModel` route and the newer normalized-valuation route
+are not yet joined by an adapter.  What remains is to construct an
+exhaustive family of actual ramification divisors, connect their centers
+and conjugate visible sheets to the abstract Galois-inertia interface, and
+prove the corresponding rigidity statement.  These are substantive
+planar geometry, not assumed axioms.
 
 The fiber product makes this mechanism precise.  Let
 
@@ -786,14 +967,14 @@ the diagonal and the closure of an off-diagonal component can meet inside
 \(\overline R\).  Equivalently, the diagonal idempotent on \(R\) need not
 extend across the divisorial boundary to \(\overline R\).
 
-Algebraically, for a ring map \(B\to A\), put
+Algebraically, in the finitely presented setting relevant here, put
 
 \[
 C=A\otimes_BA,\qquad \mu:C\to A.
 \]
 
-Formal unramifiedness is equivalent to the existence of a tensor \(t\in C\)
-such that
+Formal unramifiedness makes the finitely generated diagonal ideal
+idempotent, equivalently giving a tensor \(t\in C\) such that
 
 \[
 \mu(t)=1,\qquad

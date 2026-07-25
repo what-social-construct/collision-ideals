@@ -9,7 +9,9 @@ import CollisionIdeals.FiniteOrderFixedPoint
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.FixedPointIdeal
 import CollisionIdeals.GaloisSheets
+import CollisionIdeals.InertiaQuotient
 import CollisionIdeals.JacobianConjecture
+import CollisionIdeals.NormalizationModel
 import CollisionIdeals.OffDiagonal
 import CollisionIdeals.OffDiagonalScheme
 import CollisionIdeals.Planar
