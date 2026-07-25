@@ -1149,6 +1149,103 @@ N=K
 Thus the quotient of the two canonical ideals is both the starting
 obstruction and the final vanishing statement.
 
+### Exported planar-rigidity conclusion
+
+`Planar.Conclusion` now exposes the intended theorem spine with the Keller
+condition explicit from the outset.
+
+For every planar map \(F\), `planarCollisionIdempotent F` is a canonical
+choice of the secant projector on the Keller locus (and is defined to be
+zero off that locus).  If \(F\) is Keller, Lean proves
+
+\[
+q_F^2=q_F,
+\qquad
+\ker(\bar\mu_F)=(q_F),
+\]
+
+and hence
+
+\[
+q_F=0
+\Longleftrightarrow
+\ker(\bar\mu_F)=0
+\Longleftrightarrow
+I_R(F)=I_\Delta.
+\]
+
+`PlanarRigidity.HiddenInertiaConfiguration` packages one normalized
+valuation route through the remaining geometry.  It contains:
+
+- `hKeller : IsPlanarKeller F`;
+- a finite normal-closure model;
+- an actual family of nontrivial valuation inertia;
+- conjugate-open visibility;
+- the exhaustive-divisor and visible-sheet detection inputs.
+
+From such a package, Lean proves first \(L=K\) and then
+
+\[
+N=K.
+\]
+
+Because these fields have different Lean types, the latter proposition is
+represented by surjectivity of the canonical embedding \(K\to N\).
+`normalClosureEquivBase` exposes the resulting algebra isomorphism
+
+\[
+K\simeq_K N.
+\]
+
+Finally, after supplying
+`PlanarGenericDegreeOneExcludesOffDiagonal` and the explicit classical
+`PlanarAxGrothendieck` interface,
+`HiddenInertiaConfiguration.conclusion` returns the bundled result
+
+\[
+\boxed{
+q_F=0,\qquad
+I_R(F)=I_\Delta,\qquad
+F\text{ is a polynomial automorphism}.
+}
+\]
+
+Likewise, `planarVanishing_implies_jc2` proves
+`JacobianConjectureTwo` from uniform vanishing of the canonical
+idempotent, with Ax--Grothendieck kept as a visible hypothesis rather than
+introduced as a Lean axiom.
+
+For the Galois-sheet stage, a twofold generic collision component indexed
+by \(HgH\) has field
+
+\[
+N^{H\cap gHg^{-1}},
+\]
+
+which need not be all of \(N\).  The unconditional normal-closure
+construction therefore uses a sufficiently iterated collision algebra:
+choose a finite tuple \(g_1,\ldots,g_r\) with
+
+\[
+\bigcap_i g_iHg_i^{-1}
+=\operatorname{core}_G(H)
+=1.
+\]
+
+The corresponding primitive component has fraction field \(N\).  This
+iteration is automatic because \(G\) is finite and the normal-closure
+action is faithful.  In the cubic \(S_3\) case a pair of distinct-root
+sheets already has trivial stabilizer intersection, so the twofold
+collision algebra suffices.
+
+The new conclusion module does not manufacture the hidden-inertia
+configuration.  The remaining substantive work is still the functorial
+generic tensor decomposition, extension of its primitive idempotents to
+the normalized collision algebra, the open immersion into
+\(\operatorname{Norm}_N(Y)\), the boundary-module support theorem, and the
+global planar rigidity theorem excluding a nontrivial cover whose
+different is supported entirely in the deleted boundary.
+
 ## Cubic \(S_3\) contrast
 
 The intended comparison is:

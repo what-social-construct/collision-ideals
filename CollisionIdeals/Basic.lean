@@ -54,6 +54,16 @@ def relationGenerator (F : κ → SourceRing R ι) (j : κ) : PairRing R ι :=
 def relationIdeal (F : κ → SourceRing R ι) : Ideal (PairRing R ι) :=
   Ideal.span (Set.range (relationGenerator F))
 
+/--
+The collision-ideal name used in the geometric formulation.
+
+`relationIdeal` remains the implementation name; this abbreviation exposes
+the paper notation without introducing a second ideal.
+-/
+abbrev collisionIdeal
+    (F : κ → SourceRing R ι) : Ideal (PairRing R ι) :=
+  relationIdeal F
+
 /-- The coordinate ring of the self-fiber product cut out by `I_R(F)`. -/
 abbrev CollisionRing (F : κ → SourceRing R ι) :=
   PairRing R ι ⧸ relationIdeal F
@@ -161,6 +171,13 @@ def collisionDiagonalMap
       intro f hf
       rw [Ideal.Quotient.eq_zero_iff_mem]
       exact relationIdeal_le_diagonalIdeal F hf)
+
+/-- Paper notation `bar μ_F` for the collision-to-diagonal map. -/
+abbrev barMu
+    (F : κ → SourceRing R ι) :
+    CollisionRing F →+*
+      PairRing R ι ⧸ diagonalIdeal (R := R) (ι := ι) :=
+  collisionDiagonalMap F
 
 /-- The collision-to-diagonal map is the evident map on representatives. -/
 @[simp]

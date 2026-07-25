@@ -16,6 +16,7 @@ import CollisionIdeals.NormalizationModel
 import CollisionIdeals.OffDiagonal
 import CollisionIdeals.OffDiagonalScheme
 import CollisionIdeals.Planar
+import CollisionIdeals.Planar.Conclusion
 import CollisionIdeals.PlanarRigidity
 import CollisionIdeals.PlanarSecant
 import CollisionIdeals.PolynomialFiberProduct
