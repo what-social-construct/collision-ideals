@@ -1,5 +1,7 @@
 import CollisionIdeals.Planar.Basic
 import CollisionIdeals.Planar.Components
+import CollisionIdeals.Planar.ConjugateBoundary
+import CollisionIdeals.Planar.DecompositionSheets
 import CollisionIdeals.Planar.EtaleBoundary
 import CollisionIdeals.Planar.GenericFiber
 import CollisionIdeals.Planar.Inertia

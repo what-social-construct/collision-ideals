@@ -193,6 +193,11 @@ The current development is dimension-generic and proves:
 - for abstract candidate-inertia data, the group-theoretic relative index
   \([I_E:I_E\cap H]\), including that it is greater than one in the
   finite case relevant here when \(I_E\nsubseteq H\);
+- the well-defined double-coset index on
+  \(D_E\backslash G/H\), using normality of inertia in the decomposition
+  group, and its planar valuation specialization;
+- the exact visible-sheet detection condition required from the global
+  system of conjugate affine opens;
 - the formal reduction from normalization rigidity and the
   generic-degree-one collision lemma to `PlanarVanishing`;
 - from the clopen-projector datum, the scheme coproduct decomposition
@@ -218,9 +223,10 @@ lake build
 The generic implementation modules under `CollisionIdeals/` contain the
 dimension-independent construction: collision and diagonal ideals, the
 canonical diagonal map, the obstruction kernel, secant identities, fiber
-products, normalization interfaces, coset sheets, the abstract inertia
-quotient \([I:I\cap H]\), and finite-field symmetry.  A few older top-level
-filenames remain as compatibility facades for the new planar leaves.
+products, normalization interfaces, coset and double-coset sheets, the
+abstract inertia quotient \([I:I\cap H]\), conductor descent, and
+finite-field symmetry.  A few older top-level filenames remain as
+compatibility facades for the new planar leaves.
 
 The `CollisionIdeals/Planar/` directory contains only the complex
 two-dimensional specialization:
@@ -237,6 +243,10 @@ two-dimensional specialization:
 - `ValuationInertia` constructs valuation-ring decomposition and inertia
   subgroups and isolates the additional geometric DVR bridge
   \(e=|I|\);
+- `DecompositionSheets` specializes the generic
+  \(D_E\backslash G/H\) calculation to planar valuation inertia;
+- `ConjugateBoundary` records the visible conjugate sheets and isolates
+  the global detection/coverage condition on their affine opens;
 - `EtaleBoundary` isolates both the Keller-to-scheme-étale theorem and the
   valuation/inertia-to-boundary theorem still needed;
 - `GenericFiber` isolates the passage from generic degree one to emptiness
@@ -849,9 +859,41 @@ The same generic module proves that, for core-free \(H\), every nontrivial
 \]
 on at least one conjugate sheet \(gH\).  `Planar.Inertia` now specializes
 this theorem to the actual subgroup \(H=\operatorname{Gal}(N/L)\).
-What is still missing is the geometric adapter from \(gHg^{-1}\) to the
-conjugate model \(g(L)\), its valuation center, and its affine-plane
-boundary.
+
+The decomposition group sharpens this statement.  Fix \(E\subset Z\)
+above a base divisor \(B\), with decomposition and inertia groups
+\[
+I_E\trianglelefteq D_E\leq G.
+\]
+Using the convention
+\[
+q_g=(g^{-1}E)\cap N^H,
+\]
+the primes of the intermediate normalization above \(B\) are indexed by
+the double cosets
+\[
+D_E\backslash G/H.
+\]
+For the class represented by \(g\),
+\[
+e(q_g/B)
+=[I_E:I_E\cap gHg^{-1}].
+\]
+Normality of \(I_E\) in \(D_E\) makes this expression invariant under the
+left \(D_E\)-action; right \(H\)-invariance is automatic.
+`DecompositionSheets` formalizes this well-defined group-theoretic index,
+and `Planar.DecompositionSheets` instantiates it with mathlib's actual
+valuation decomposition and inertia subgroups.  Lean now proves
+\[
+I_E\neq1
+\Longrightarrow
+\exists q\in D_E\backslash G/H,\quad
+\iota_E(q):=[I_E:I_E\cap gHg^{-1}]>1.
+\]
+The remaining valuation-theoretic adapter is the standard equivalence
+between these double-coset classes and the actual prime divisors \(q_g\)
+of the intermediate normalization, including equality with their DVR
+ramification indices.
 
 The normalization-form planar target is:
 
@@ -910,6 +952,52 @@ generic sheet into a ramified divisor on a conjugate affine model, and
 then proving that its center must be deleted at the boundary, is the
 missing conjugate-sheet geometric adapter.
 
+That local conclusion is not yet a contradiction: the ramified center may
+indeed lie outside its conjugate affine-plane open.  The additional input
+is global.  For a fixed \(E\), let
+\[
+V_E\subseteq G/H
+\]
+be the sheets whose corresponding centers remain in their conjugate affine
+opens.  Étaleness gives
+\[
+I_E\leq\bigcap_{gH\in V_E}gHg^{-1}.
+\]
+The required overlap/coverage assertion is precisely that these visible
+stabilizers detect inertia:
+\[
+I_E\leq\bigcap_{gH\in V_E}gHg^{-1}
+\Longrightarrow I_E=1.
+\]
+An ordinary union cover is not by itself sufficient.  The stronger
+condition \(V_E=G/H\) works because the intersection is then
+\(\operatorname{core}_G(H)=1\); smaller visible families also suffice when
+their stabilizer intersection is trivial.
+
+`Planar.ConjugateBoundary` records this as
+`PlanarConjugateOpenVisibility.DetectsInertia`.  Lean proves that it is
+incompatible with any nonempty supplied family of nontrivial valuation
+inertia, and derives it from `AllSheetsVisible` using the already-proved
+core-freeness theorem.  Constructing the visible sets from the actual
+conjugate open immersions and proving this detection property is the
+remaining global planar boundary theorem.
+
+For an exhaustive valuation family,
+`NontrivialExtensionHasDivisor` records the other global input:
+\(L\neq K\) produces at least one nontrivial divisorial-inertia witness.
+Lean now composes these inputs:
+\[
+\texttt{NontrivialExtensionHasDivisor}
++\texttt{DetectsInertia}
+\Longrightarrow L=K.
+\]
+After the explicit generic-fiber bridge, the theorem
+`obstructionIdeal_eq_bot_of_detectsInertia` returns this conclusion to the
+original collision obstruction
+\[
+I_\Delta/I_R=0.
+\]
+
 The earlier abstract route packages this goal as
 `PlanarHiddenInertiaRigidity`: for each supplied branch divisor, inertia
 that is invisible on every supplied visible sheet must be trivial.
@@ -942,11 +1030,12 @@ The final conditional implication is
 normal-core, and contradiction steps are proved.  The normalized models
 and their canonical domination map are now constructed in Lean.  The older
 `PlanarGaloisInertiaModel` route and the newer normalized-valuation route
-are not yet joined by an adapter.  What remains is to construct an
-exhaustive family of actual ramification divisors, connect their centers
-and conjugate visible sheets to the abstract Galois-inertia interface, and
-prove the corresponding rigidity statement.  These are substantive
-planar geometry, not assumed axioms.
+now use the same visible-sheet detection language, but there is not yet a
+theorem constructing one model from the other.  What remains is to
+construct an exhaustive family of actual ramification divisors, identify
+their double-coset prime classes and centers, construct the conjugate
+visible opens, and prove the displayed global detection property.  These
+are substantive planar geometry, not assumed axioms.
 
 The fiber product makes this mechanism precise.  Let
 
@@ -988,6 +1077,20 @@ projector, and
 \ker(\mu)=Cq.
 \]
 
+This is where the ideal quotient meets the Galois sheets.  Passing to the
+generic fiber gives
+\[
+A\otimes_BA
+\longrightarrow
+L\otimes_KL,
+\]
+and normalizing the generic collision algebra separates its conjugate
+components, indexed by the appropriate \(H\backslash G/H\) classes.  The
+image of \(t\) is the \(0/1\) label of the identity component and the image
+of \(q\) labels the off-diagonal components.  Constructing this
+componentwise normalization map functorially is still one of the explicit
+fiber-product/Galois adapters.
+
 Thus a fiber-product form of the missing planar step is an idempotent
 extension, or closure-separation, statement: the diagonal and
 off-diagonal components, separated over \(X\), cannot meet again solely
@@ -1017,9 +1120,34 @@ lies in the image of
 \widetilde C/\mathfrak c.
 \]
 
+`ConductorDescent` proves this criterion for an arbitrary injective ring
+map: an idempotent has an idempotent preimage exactly when its residue
+modulo the conductor lies in the image of the corresponding quotient map.
+
 Thus the target planar lemma says that the \(0/1\) labels on the normalized
 diagonal and off-diagonal branches are compatible along the conductor
 where those branches are glued.
+
+The complete intended loop is therefore
+\[
+I_\Delta/I_R\neq0
+\Longrightarrow R_F^\circ\neq\varnothing
+\Longrightarrow N/K\text{ nontrivial}
+\Longrightarrow \text{nontrivial boundary inertia}
+\]
+\[
+\Longrightarrow
+\text{failure of conjugate-open/conductor compatibility}.
+\]
+Proving that planar geometry forbids the final failure reverses the loop:
+\[
+N=K
+\Longrightarrow R_F^\circ=\varnothing
+\Longrightarrow \ker(\bar\mu_F)=0
+\Longrightarrow I_\Delta/I_R=0.
+\]
+Thus the quotient of the two canonical ideals is both the starting
+obstruction and the final vanishing statement.
 
 ## Cubic \(S_3\) contrast
 

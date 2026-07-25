@@ -79,6 +79,29 @@ theorem exists_idempotent_preimage
   rw [map_mul, he]
   exact hq
 
+/--
+For an injective normalization map, an idempotent descends exactly when
+its residue modulo the conductor descends.
+
+This packages the conductor test for extending the diagonal/off-diagonal
+component labels from a normalization back to the completed collision
+algebra.
+-/
+theorem exists_idempotent_preimage_iff_quotient_conductor
+    (f : C →+* D) (hf : Function.Injective f)
+    (q : D) (hq : IsIdempotentElem q) :
+    (∃ e : C, IsIdempotentElem e ∧ f e = q) ↔
+      Ideal.Quotient.mk (extensionConductor f) q ∈
+        Set.range
+          ((Ideal.Quotient.mk (extensionConductor f)).comp f) := by
+  constructor
+  · rintro ⟨e, _, rfl⟩
+    exact ⟨e, rfl⟩
+  · intro hmod
+    exact
+      exists_idempotent_preimage f hf q hq
+        ((mem_range_iff_quotient_conductor_mem_range f q).2 hmod)
+
 end
 
 end CollisionIdeals

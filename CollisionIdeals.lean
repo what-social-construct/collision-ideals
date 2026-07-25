@@ -1,6 +1,7 @@
 import CollisionIdeals.Basic
 import CollisionIdeals.ComplexThree
 import CollisionIdeals.ConductorDescent
+import CollisionIdeals.DecompositionSheets
 import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.FiniteCorrespondence
 import CollisionIdeals.FiniteCompletion
