@@ -40,8 +40,9 @@ theorem obstructionIdeal_eq_bot_of_isPolynomialAutomorphism
       F hF.hasPolynomialLeftInverse
 
 /--
-The standard automorphism formulation of the two-dimensional Jacobian
-conjecture.
+The explicit complex-plane automorphism statement: every polynomial
+self-map of `𝔸²_ℂ` with constant nonzero Jacobian determinant is a
+polynomial automorphism of `𝔸²_ℂ`.
 -/
 def PlanarJacobianConjecture : Prop :=
   ∀ F : Fin 2 → PlanePolynomial,
@@ -78,6 +79,21 @@ theorem planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
         ((obstructionIdeal_eq_bot_iff F).1 hObstruction)
 
 /--
+Modulo Ax--Grothendieck, a polynomial self-map of the complex affine plane
+is a polynomial automorphism exactly when its collision-to-diagonal map is
+injective.
+-/
+theorem planarPolynomialAutomorphism_iff_collisionDiagonalMap_injective
+    (hAx : PlanarAxGrothendieck)
+    (F : Fin 2 → PlanePolynomial) :
+    IsPolynomialAutomorphism F ↔
+      Function.Injective (collisionDiagonalMap F) := by
+  rw [RingHom.injective_iff_ker_eq_bot, collisionDiagonalMap_ker]
+  exact
+    planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
+      hAx F
+
+/--
 Modulo the classical Ax--Grothendieck theorem, the usual planar Jacobian
 conjecture is exactly vanishing of `I_Δ / I_R` for every planar Keller map.
 -/
@@ -95,6 +111,17 @@ theorem planarJacobianConjecture_iff_planarVanishing
       (planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
         hAx F).2
         (hVanishing F hKeller)
+
+/--
+Modulo Ax--Grothendieck, the explicit statement that every planar Keller
+map is a polynomial automorphism is equivalent to kernel vanishing for the
+canonical collision-to-diagonal map.
+-/
+theorem planarJacobianConjecture_iff_planarKernelVanishing
+    (hAx : PlanarAxGrothendieck) :
+    PlanarJacobianConjecture ↔ PlanarKernelVanishing :=
+  (planarJacobianConjecture_iff_planarVanishing hAx).trans
+    planarKernelVanishing_iff_planarVanishing.symm
 
 end
 

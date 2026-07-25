@@ -34,6 +34,31 @@ def PlanarVanishing : Prop :=
       obstructionIdeal F = ⊥
 
 /--
+The kernel formulation of the planar theorem target: for every planar
+Keller map, the canonical collision-to-diagonal quotient map is injective.
+
+This definition records the statement without adding it as an axiom.
+-/
+def PlanarKernelVanishing : Prop :=
+  ∀ F : Fin 2 → PlanePolynomial,
+    IsPlanarKeller F →
+      RingHom.ker (collisionDiagonalMap F) = ⊥
+
+/--
+The kernel formulation and obstruction-ideal formulation of planar
+vanishing are identical.
+-/
+theorem planarKernelVanishing_iff_planarVanishing :
+    PlanarKernelVanishing ↔ PlanarVanishing := by
+  constructor
+  · intro h F hKeller
+    rw [← collisionDiagonalMap_ker F]
+    exact h F hKeller
+  · intro h F hKeller
+    rw [collisionDiagonalMap_ker F]
+    exact h F hKeller
+
+/--
 Planar vanishing is equivalent to equality of the collision and diagonal
 ideals for every planar Keller map.
 -/

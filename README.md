@@ -101,10 +101,11 @@ hypothesis, not as a new axiom.  Lean proves
 
 ```text
 PlanarAxGrothendieck →
-  (PlanarJacobianConjecture ↔ PlanarVanishing)
+  (PlanarJacobianConjecture ↔ PlanarKernelVanishing)
 ```
 
-in `planarJacobianConjecture_iff_planarVanishing`.
+in `planarJacobianConjecture_iff_planarKernelVanishing`; Lean also proves
+`PlanarKernelVanishing ↔ PlanarVanishing`.
 
 Geometrically, if \(A_F=S/I_R(F)\), then
 
@@ -208,13 +209,23 @@ C}\), write
 \det JF\in\mathbb C^\times.
 \]
 
-The main theorem target is:
+The explicit complex-plane automorphism target is:
 
 \[
 \boxed{
 \operatorname{Keller}(F)
 \Longrightarrow
-\operatorname{Obs}(F)=0.
+F\in\operatorname{Aut}_{\mathrm{poly}}(\mathbb A^2_{\mathbb C}).
+}
+\]
+
+Its equivalent kernel/ideal target is:
+
+\[
+\boxed{
+\operatorname{Keller}(F)
+\Longrightarrow
+\ker(\bar\mu_F)=\operatorname{Obs}(F)=0.
 }
 \]
 
