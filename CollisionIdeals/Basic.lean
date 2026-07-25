@@ -145,6 +145,65 @@ theorem relationIdeal_le_diagonalIdeal (F : κ → SourceRing R ι) :
   exact left_sub_right_mem_diagonal (F j)
 
 /--
+The diagonal quotient map induced by the canonical inclusion
+`I_R(F) ≤ I_Δ`.
+
+On representatives it sends `f + I_R(F)` to `f + I_Δ`.
+-/
+def collisionDiagonalMap
+    (F : κ → SourceRing R ι) :
+    CollisionRing F →+*
+      PairRing R ι ⧸ diagonalIdeal (R := R) (ι := ι) :=
+  Ideal.Quotient.lift
+    (relationIdeal F)
+    (Ideal.Quotient.mk (diagonalIdeal (R := R) (ι := ι)))
+    (by
+      intro f hf
+      rw [Ideal.Quotient.eq_zero_iff_mem]
+      exact relationIdeal_le_diagonalIdeal F hf)
+
+/-- The collision-to-diagonal map is the evident map on representatives. -/
+@[simp]
+theorem collisionDiagonalMap_mk
+    (F : κ → SourceRing R ι)
+    (f : PairRing R ι) :
+    collisionDiagonalMap F
+        (Ideal.Quotient.mk (relationIdeal F) f) =
+      Ideal.Quotient.mk
+        (diagonalIdeal (R := R) (ι := ι)) f := by
+  rfl
+
+/-- The diagonal quotient factors through the collision quotient. -/
+theorem collisionDiagonalMap_comp_quotientMk
+    (F : κ → SourceRing R ι) :
+    (collisionDiagonalMap F).comp
+        (Ideal.Quotient.mk (relationIdeal F)) =
+      Ideal.Quotient.mk
+        (diagonalIdeal (R := R) (ι := ι)) := by
+  rfl
+
+/-- The collision-to-diagonal map is surjective. -/
+theorem collisionDiagonalMap_surjective
+    (F : κ → SourceRing R ι) :
+    Function.Surjective (collisionDiagonalMap F) := by
+  intro f
+  obtain ⟨g, rfl⟩ := Ideal.Quotient.mk_surjective f
+  exact
+    ⟨Ideal.Quotient.mk (relationIdeal F) g,
+      collisionDiagonalMap_mk F g⟩
+
+/--
+The obstruction ideal is literally the kernel of the induced diagonal map:
+`ker(S / I_R(F) → S / I_Δ) = I_Δ / I_R(F)`.
+-/
+theorem collisionDiagonalMap_ker
+    (F : κ → SourceRing R ι) :
+    RingHom.ker (collisionDiagonalMap F) =
+      obstructionIdeal F := by
+  rw [collisionDiagonalMap, Ideal.ker_quotient_lift, Ideal.mk_ker]
+  rfl
+
+/--
 Substituting the two copies of `F` into any polynomial produces a difference
 lying in `I_R(F)`.
 -/
@@ -201,6 +260,29 @@ theorem obstructionIdeal_eq_bot_iff (F : κ → SourceRing R ι) :
     exact le_antisymm (relationIdeal_le_diagonalIdeal F) h
   · intro h
     rw [h]
+
+/--
+The induced diagonal map has zero kernel exactly when the collision and
+diagonal ideals agree.
+-/
+theorem collisionDiagonalMap_ker_eq_bot_iff
+    (F : κ → SourceRing R ι) :
+    RingHom.ker (collisionDiagonalMap F) = ⊥ ↔
+      relationIdeal F =
+        diagonalIdeal (R := R) (ι := ι) := by
+  rw [collisionDiagonalMap_ker, obstructionIdeal_eq_bot_iff]
+
+/--
+Equivalently, the collision-to-diagonal quotient map is injective exactly
+when `I_R(F) = I_Δ`.
+-/
+theorem collisionDiagonalMap_injective_iff
+    (F : κ → SourceRing R ι) :
+    Function.Injective (collisionDiagonalMap F) ↔
+      relationIdeal F =
+        diagonalIdeal (R := R) (ι := ι) := by
+  rw [RingHom.injective_iff_ker_eq_bot,
+    collisionDiagonalMap_ker_eq_bot_iff]
 
 /-- Evaluate the coordinate polynomials of `F` at a point. -/
 def pointMap (F : κ → SourceRing R ι) (a : ι → R) : κ → R :=

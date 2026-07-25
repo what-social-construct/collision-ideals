@@ -42,6 +42,31 @@ is the canonical defect module in the exact sequence
 \longrightarrow\operatorname{Obs}(F)\longrightarrow0.
 \]
 
+Equivalently, let
+
+\[
+\bar\mu_F:S/I_R(F)\longrightarrow S/I_\Delta,
+\qquad
+[f]_{I_R}\longmapsto[f]_{I_\Delta},
+\]
+
+be the quotient map induced by \(I_R(F)\subseteq I_\Delta\).  Then
+
+\[
+\boxed{
+\ker(\bar\mu_F)=\operatorname{Obs}(F)=I_\Delta/I_R(F),
+}
+\]
+
+so there is a second canonical exact sequence
+
+\[
+0\longrightarrow\operatorname{Obs}(F)
+\longrightarrow S/I_R(F)
+\xrightarrow{\bar\mu_F}S/I_\Delta
+\longrightarrow0.
+\]
+
 The purpose of this project is to study the vanishing of
 \(\operatorname{Obs}(F)\).
 Since \(I_R(F)\subseteq I_\Delta\), the elementary module criterion gives
