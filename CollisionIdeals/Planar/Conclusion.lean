@@ -107,16 +107,18 @@ variable [Algebra (PlanarBaseFunctionField F) N]
 The exact hidden-inertia package consumed by planar rigidity.
 
 The Keller hypothesis is part of the package from the outset.  The last
-two fields isolate the genuine global inputs: nontriviality must produce a
-divisorial inertia witness, and the conjugate affine opens must detect it.
+three fields expose the final geometric chain without collapsing it into
+one contrapositive hypothesis: visible sheets kill divisorial inertia,
+purity promotes this to étaleness, and finite-étale rigidity trivializes
+the normal closure.
 -/
 structure HiddenInertiaConfiguration where
   hKeller : IsPlanarKeller F
   cover : PlanarNormalizedCover (F := F) (N := N)
   inertia : PlanarValuationInertiaFamily cover
   visibility : PlanarConjugateOpenVisibility inertia
-  nontrivialExtensionHasDivisor :
-    inertia.NontrivialExtensionHasDivisor
+  purity : inertia.DivisorialPurity
+  finiteEtaleRigidity : cover.FiniteEtaleRigidity
   detectsInertia :
     visibility.DetectsInertia
 
@@ -125,26 +127,33 @@ namespace HiddenInertiaConfiguration
 variable (C : HiddenInertiaConfiguration (F := F) (N := N))
 
 include C in
-/-- Hidden-inertia detection first forces `L = K`. -/
-theorem functionFieldExtension_trivial :
-    PlanarFunctionFieldExtensionTrivial F :=
-  PlanarConjugateOpenVisibility.functionFieldExtension_trivial_of_detectsInertia
-    C.visibility
-    C.nontrivialExtensionHasDivisor
+/-- Hidden-inertia detection leaves no nontrivial divisorial inertia. -/
+theorem noNontrivialDivisorialInertia :
+    C.inertia.NoNontrivialDivisorialInertia :=
+  C.visibility.divisor_isEmpty_of_detectsInertia
     C.detectsInertia
 
 /--
 `PlanarRigidity`: a hidden-inertia configuration forces `N = K`.
 
-The conclusion is surjectivity of the canonical field embedding.  Since
-that embedding is automatically injective, this is the type-correct
-proposition expressing equality of the two fields.
+Visible-sheet detection first kills divisorial inertia.  Purity makes the
+finite normalization étale, and affine-plane finite-étale rigidity makes
+the cover trivial.  The conclusion is surjectivity of the canonical field
+embedding, the type-correct proposition expressing `N = K`.
 -/
 theorem normalClosureExtension_trivial :
     C.cover.normalClosure.ExtensionTrivial :=
-  PlanarNormalClosureData.extensionTrivial_of_functionFieldExtensionTrivial
-    C.cover.normalClosure
-    C.functionFieldExtension_trivial
+  C.inertia.normalClosureExtension_trivial_of_noNontrivialDivisorialInertia
+    C.noNontrivialDivisorialInertia
+    C.purity
+    C.finiteEtaleRigidity
+
+include C in
+/-- Triviality of the normal closure immediately forces `L = K`. -/
+theorem functionFieldExtension_trivial :
+    PlanarFunctionFieldExtensionTrivial F :=
+  C.cover.normalClosure.functionFieldExtensionTrivial_of_extensionTrivial
+    C.normalClosureExtension_trivial
 
 /-- The algebra isomorphism form of the conclusion `N = K`. -/
 noncomputable def normalClosureEquivBase :

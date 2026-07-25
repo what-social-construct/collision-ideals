@@ -247,6 +247,9 @@ two-dimensional specialization:
   \(D_E\backslash G/H\) calculation to planar valuation inertia;
 - `ConjugateBoundary` records the visible conjugate sheets and isolates
   the global detection/coverage condition on their affine opens;
+- `PurityRigidity` states divisorial purity and affine-plane finite-étale
+  rigidity as two explicit geometric inputs and proves their formal
+  composition;
 - `EtaleBoundary` isolates both the Keller-to-scheme-étale theorem and the
   valuation/inertia-to-boundary theorem still needed;
 - `GenericFiber` isolates the passage from generic degree one to emptiness
@@ -992,15 +995,34 @@ core-freeness theorem.  Constructing the visible sets from the actual
 conjugate open immersions and proving this detection property is the
 remaining global planar boundary theorem.
 
-For an exhaustive valuation family,
-`NontrivialExtensionHasDivisor` records the other global input:
-\(L\neq K\) produces at least one nontrivial divisorial-inertia witness.
-Lean now composes these inputs:
+`Planar.PurityRigidity` now separates the two geometric inputs used after
+hidden-inertia detection:
+
 \[
-\texttt{NontrivialExtensionHasDivisor}
-+\texttt{DetectsInertia}
+\begin{aligned}
+\texttt{DivisorialPurity}:&\quad
+  \text{no nontrivial divisorial inertia}
+  \Longrightarrow Z\to Y\text{ is étale},\\
+\texttt{FiniteEtaleRigidity}:&\quad
+  Z\to Y\text{ is étale}
+  \Longrightarrow N=K.
+\end{aligned}
+\]
+
+Both are explicit propositions supplied to the downstream theorems; no
+project axiom asserts either one.  Lean proves the formal composition
+
+\[
+\texttt{DetectsInertia}
++\texttt{DivisorialPurity}
++\texttt{FiniteEtaleRigidity}
+\Longrightarrow N=K
 \Longrightarrow L=K.
 \]
+
+For compatibility with the earlier contrapositive route, Lean also derives
+`NontrivialExtensionHasDivisor` from these two geometric inputs:
+\(L\neq K\) then supplies a nontrivial divisorial-inertia witness.
 After the explicit generic-fiber bridge, the theorem
 `obstructionIdeal_eq_bot_of_detectsInertia` returns this conclusion to the
 original collision obstruction
@@ -1191,15 +1213,18 @@ valuation route through the remaining geometry.  It contains:
 - a finite normal-closure model;
 - an actual family of nontrivial valuation inertia;
 - conjugate-open visibility;
-- the exhaustive-divisor and visible-sheet detection inputs.
+- visible-sheet detection;
+- the explicit divisorial-purity input;
+- the explicit affine-plane finite-étale-rigidity input.
 
-From such a package, Lean proves first \(L=K\) and then
+From such a package, Lean proves first
 
 \[
-N=K.
+N=K
 \]
 
-Because these fields have different Lean types, the latter proposition is
+and then immediately \(L=K\).  Because these fields have different Lean
+types, the first proposition is
 represented by surjectivity of the canonical embedding \(K\to N\).
 `normalClosureEquivBase` exposes the resulting algebra isomorphism
 

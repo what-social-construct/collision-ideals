@@ -6,5 +6,6 @@ import CollisionIdeals.Planar.EtaleBoundary
 import CollisionIdeals.Planar.GenericFiber
 import CollisionIdeals.Planar.Inertia
 import CollisionIdeals.Planar.Normalization
+import CollisionIdeals.Planar.PurityRigidity
 import CollisionIdeals.Planar.ValuationInertia
 import CollisionIdeals.Planar.Vanishing

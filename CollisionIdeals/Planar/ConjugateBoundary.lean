@@ -1,5 +1,6 @@
 import CollisionIdeals.Planar.DecompositionSheets
 import CollisionIdeals.Planar.GenericFiber
+import CollisionIdeals.Planar.PurityRigidity
 import CollisionIdeals.Planar.Rigidity
 
 set_option autoImplicit false
@@ -26,6 +27,25 @@ def PlanarValuationInertiaFamily.NontrivialExtensionHasDivisor
     (V : PlanarValuationInertiaFamily M) : Prop :=
   ¬ PlanarFunctionFieldExtensionTrivial F →
     Nonempty V.Divisor
+
+/--
+Purity and finite-étale rigidity imply the older contrapositive interface:
+if `L / K` is nontrivial, an exhaustive valuation family contains a
+nontrivial divisorial-inertia witness.
+-/
+theorem PlanarValuationInertiaFamily.nontrivialExtensionHasDivisor_of_purity
+    (V : PlanarValuationInertiaFamily M)
+    (hPurity : V.DivisorialPurity)
+    (hFiniteEtaleRigidity : M.FiniteEtaleRigidity) :
+    V.NontrivialExtensionHasDivisor := by
+  intro hNontrivial
+  by_contra hNonempty
+  have hNoInertia : V.NoNontrivialDivisorialInertia :=
+    not_nonempty_iff.mp hNonempty
+  exact
+    hNontrivial
+      (V.functionFieldExtension_trivial_of_noNontrivialDivisorialInertia
+        hNoInertia hPurity hFiniteEtaleRigidity)
 
 /--
 The group-theoretic shadow of the conjugate affine-plane opens on the
@@ -129,6 +149,23 @@ theorem functionFieldExtension_trivial_of_detectsInertia
   letI : Nonempty V.Divisor :=
     hExists hNontrivial
   exact W.false_of_detectsInertia hDetect
+
+/--
+The hidden-inertia route in normal-closure order:
+
+visible-sheet detection kills every divisorial inertia witness; purity
+makes the finite normalization étale; finite-étale rigidity then gives
+`N = K`.
+-/
+theorem normalClosureExtension_trivial_of_detectsInertia
+    (hPurity : V.DivisorialPurity)
+    (hFiniteEtaleRigidity : M.FiniteEtaleRigidity)
+    (hDetect : W.DetectsInertia) :
+    M.normalClosure.ExtensionTrivial :=
+  V.normalClosureExtension_trivial_of_noNontrivialDivisorialInertia
+    (W.divisor_isEmpty_of_detectsInertia hDetect)
+    hPurity
+    hFiniteEtaleRigidity
 
 /--
 After the generic-fiber bridge, the global boundary calculation returns
