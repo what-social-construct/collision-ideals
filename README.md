@@ -198,6 +198,30 @@ Build the project with:
 lake build
 ```
 
+## Module layout
+
+The generic implementation modules under `CollisionIdeals/` contain the
+dimension-independent construction: collision and diagonal ideals, the
+canonical diagonal map, the obstruction kernel, secant identities, fiber
+products, normalization interfaces, coset sheets, and finite-field
+symmetry.  A few older top-level filenames remain as compatibility facades
+for the new planar leaves.
+
+The `CollisionIdeals/Planar/` directory contains only the complex
+two-dimensional specialization:
+
+- `Basic` defines `PlanePolynomial`, the planar Jacobian determinant, and
+  the Keller condition;
+- `Vanishing` states the planar obstruction/kernel target;
+- `Components`, `Secant`, `Rigidity`, and `FixedPointIdeal` package the
+  proposed planar proof interfaces.
+
+The former top-level planar import paths remain as compatibility wrappers.
+The `CollisionIdeals/ComplexThree/` directory is presently a minimal
+specialization layer.  It imports the generic collision and Galois
+machinery; the concrete cubic ordered-root theorem will be added there
+with all separability, degree, and non-Galois hypotheses explicit.
+
 ## Planar Vanishing
 
 For a polynomial self-map \(F:\mathbb A^2_{\mathbb C}\to\mathbb A^2_{\mathbb
@@ -816,44 +840,59 @@ Thus the target planar lemma says that the \(0/1\) labels on the normalized
 diagonal and off-diagonal branches are compatible along the conductor
 where those branches are glued.
 
-## Dimension three: the contrasting narrative
+## Cubic \(S_3\) contrast
 
-The dimensional contrast is:
+The intended comparison is:
 
 \[
 \begin{array}{c|c}
-n=2 &
+\text{planar Keller target} &
 \operatorname{Keller}(F)\Longrightarrow\operatorname{Obs}(F)=0
-\quad\text{(Planar Vanishing target)},\\[2mm]
-n=3 &
+\\[2mm]
+\text{separable non-Galois cubic class} &
 \operatorname{Obs}(F)\neq0
-\quad\text{in the known example; its off-diagonal field is the }
-S_3\text{-Galois closure}.
+\quad\text{when an off-diagonal collision occurs.}
 \end{array}
 \]
 
-In the known cubic-fiber counterexample in dimension three, the
-obstruction module \(\operatorname{Obs}(F)\) does not vanish.  Generically,
-let \(L/K\) be the resulting cubic function-field extension.  Then
+The cubic class is the intended dimension-three case study, but the
+\(S_3\) mechanism comes from the degree-three field extension, not from
+ambient dimension alone.
+
+For such a map, strict containment
 
 \[
-L\otimes_KL\cong L\times M,
+I_R\subsetneq I_\Delta
 \]
 
-where the \(L\)-factor is the diagonal and \(M/K\) is the degree-\(6\)
-Galois closure with \(\operatorname{Gal}(M/K)\cong S_3\).  Thus the generic
-function field of the off-diagonal component is precisely the
-\(S_3\)-Galois closure.  It records ordered pairs of distinct sheets and
-governs the failure of
+is equivalent to
+
+\[
+\ker(\bar\mu_F)\neq0,
+\qquad
+C_F^{\mathrm{off}}\neq0.
+\]
+
+Generically, suppose the associated function-field extension \(L/K\) is
+separable, cubic, and non-Galois, with normal closure \(N/K\).  Then, as
+\(L\)-algebras,
+
+\[
+L\otimes_KL\cong L\times N,
+\]
+
+where the first factor is the diagonal and
+\(\operatorname{Gal}(N/K)\cong S_3\).  The original cubic sheet marks one
+root; the off-diagonal fiber product marks a second distinct root; those
+two roots determine the third.  Consequently, the function field of the
+dominant normalized off-diagonal component is \(N\), the ordered-root
+\(S_3\)-Galois closure.  It records the failure of
 
 \[
 F(u)=F(v)\Longrightarrow u=v.
 \]
 
-This final example is a contrast, not a universal assertion that every
-three-dimensional collision relation has \(S_3\)-monodromy.
-
-For the explicit counterexample and independent formal verification, see the
-[Archive of Formal Proofs entry](https://isa-afp.org/entries/Jacobian_Counterexample.html).
-For the cubic-fiber and \(S_3\) structure, see the
-[ordered-root/Galois-closure account](https://mathoverflow.net/questions/513387/).
+This is a conditional cubic-extension statement.  It is neither a
+universal assertion that every three-dimensional collision relation has
+\(S_3\)-monodromy nor, without a separately verified Keller hypothesis, a
+counterexample to the three-dimensional Jacobian conjecture.

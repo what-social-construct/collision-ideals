@@ -1,4 +1,5 @@
 import CollisionIdeals.Basic
+import CollisionIdeals.ComplexThree
 import CollisionIdeals.ConductorDescent
 import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.FiniteCorrespondence
@@ -7,6 +8,7 @@ import CollisionIdeals.FiniteFieldSymmetry
 import CollisionIdeals.FiniteOrderFixedPoint
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.FixedPointIdeal
+import CollisionIdeals.GaloisSheets
 import CollisionIdeals.JacobianConjecture
 import CollisionIdeals.OffDiagonal
 import CollisionIdeals.OffDiagonalScheme
@@ -15,4 +17,5 @@ import CollisionIdeals.PlanarRigidity
 import CollisionIdeals.PlanarSecant
 import CollisionIdeals.PolynomialFiberProduct
 import CollisionIdeals.Secant
+import CollisionIdeals.SecantIdeal
 import CollisionIdeals.UniversalProperty
