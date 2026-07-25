@@ -1,8 +1,10 @@
 import CollisionIdeals.Planar.Basic
 import CollisionIdeals.Planar.Components
 import CollisionIdeals.Planar.ConjugateBoundary
+import CollisionIdeals.Planar.ConditionalVanishing
 import CollisionIdeals.Planar.DecompositionSheets
 import CollisionIdeals.Planar.EtaleBoundary
+import CollisionIdeals.Planar.ExternalAssumptions
 import CollisionIdeals.Planar.GenericFiber
 import CollisionIdeals.Planar.Inertia
 import CollisionIdeals.Planar.Normalization

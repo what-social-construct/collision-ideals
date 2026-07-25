@@ -252,6 +252,11 @@ two-dimensional specialization:
   composition;
 - `EtaleBoundary` isolates both the Keller-to-scheme-étale theorem and the
   valuation/inertia-to-boundary theorem still needed;
+- `ExternalAssumptions` contains exactly the two explicitly declared
+  algebraic-geometry axioms used by the conditional spine: specialized
+  branch purity and finite-étale rigidity of \(\mathbb A^2_{\mathbb C}\);
+- `ConditionalVanishing` packages the remaining internal hidden-inertia
+  data and proves the user-facing conditional planar-vanishing theorem;
 - `GenericFiber` isolates the passage from generic degree one to emptiness
   of the off-diagonal collision scheme;
 - `Components`, `Secant`, `Rigidity`, and `FixedPointIdeal` package the
@@ -1010,7 +1015,42 @@ hidden-inertia detection:
 \]
 
 Both are explicit propositions supplied to the downstream theorems; no
-project axiom asserts either one.  Lean proves the formal composition
+unrelated theorem silently supplies either one.  The dedicated
+`Planar.ExternalAssumptions` module declares exactly two project axioms:
+
+\[
+\texttt{branchPurityA2}:\texttt{BranchPurityA2},
+\qquad
+\texttt{affinePlaneFiniteEtaleRigidity}:
+  \texttt{AffinePlaneFiniteEtaleRigidity}.
+\]
+
+The branch-purity assumption consumes actual height-one local
+unramifiedness through `NoCodimensionOneRamification`; it is not quantified
+over an arbitrary, potentially non-exhaustive valuation family.
+
+`Planar.ConditionalVanishing` packages the remaining internal data for one
+map as `PlanarHiddenInertiaRigidity F`: a selected normal-closure model,
+height-one unramifiedness of that model, and the generic-degree-one descent
+to the off-diagonal collision scheme.  Lean proves the exact conditional
+spine
+
+\[
+\texttt{planarVanishing\_of}\;
+  \texttt{branchPurityA2}\;
+  \texttt{affinePlaneFiniteEtaleRigidity}\;
+  h_{\mathrm{hidden}}\;
+  h_{\mathrm{Keller}}
+\;:\;
+\operatorname{Obs}(F)=0.
+\]
+
+Consequently,
+`Planar.planarVanishing_assuming_externalAG hHidden hKeller`
+supplies the two isolated external assumptions automatically.  No generic
+fiber hypothesis is silently asserted as a third axiom: its map-specific
+form is a named field of `hHidden`.  Lean then proves the formal
+composition
 
 \[
 \texttt{DetectsInertia}
