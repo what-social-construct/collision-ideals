@@ -7,6 +7,7 @@ import CollisionIdeals.FiniteFieldSymmetry
 import CollisionIdeals.FiniteOrderFixedPoint
 import CollisionIdeals.FiberProduct
 import CollisionIdeals.FixedPointIdeal
+import CollisionIdeals.JacobianConjecture
 import CollisionIdeals.OffDiagonal
 import CollisionIdeals.OffDiagonalScheme
 import CollisionIdeals.Planar

@@ -69,6 +69,18 @@ tuples gives \(I_\Delta\subseteq I_R(F)\).  Conversely, vanishing gives
 \(I_R(F)=I_\Delta\), hence injectivity on complex points; Ax–Grothendieck
 then gives a polynomial automorphism.
 
+The Lean proposition `PlanarJacobianConjecture` records the usual
+automorphism formulation.  The proposition `PlanarAxGrothendieck` records
+the classical injective-polynomial-map automorphism principle as an explicit
+hypothesis, not as a new axiom.  Lean proves
+
+```text
+PlanarAxGrothendieck →
+  (PlanarJacobianConjecture ↔ PlanarVanishing)
+```
+
+in `planarJacobianConjecture_iff_planarVanishing`.
+
 Geometrically, if \(A_F=S/I_R(F)\), then
 
 \[
@@ -139,7 +151,9 @@ The current development is dimension-generic and proves:
   \(\operatorname{Spec}(S/I_R)\cong
     \operatorname{Spec}(S/I_\Delta)\sqcup R_F^\circ\);
 - emptiness of \(R_F^\circ\), vanishing of the obstruction ideal, and
-  equality \(I_R=I_\Delta\) are equivalent.
+  equality \(I_R=I_\Delta\) are equivalent;
+- assuming the explicit Ax–Grothendieck interface, the standard planar
+  Jacobian conjecture is equivalent to `PlanarVanishing`.
 
 The definitions are generic in the coefficient ring, source variables, and
 output coordinates.  The planar specialization uses
