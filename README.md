@@ -911,10 +911,20 @@ proved, not an axiom or a completed theorem; this is the decisive planar
 Jacobian-conjecture step.
 
 Once normalization rigidity supplies \(L=K\), Lean proves that the
-function-field finrank is one.  The remaining generic-fiber bridge is
-isolated as `PlanarGenericDegreeOneExcludesOffDiagonal`: a nonempty
-component of the étale self-fiber product has open image under its first
-projection and hence would contribute another generic sheet.  Therefore
+function-field finrank is one.  Lean also proves the concrete generic
+source-fiber calculation
+\[
+\texttt{planarGenericSourceTensorEquiv}:\qquad
+K\otimes_B A\simeq_K L.
+\]
+The map is \(k\otimes a\mapsto ka\).  Mathlib identifies its source with
+the localization of \(A\) at the image of the non-zero-divisors of \(B\),
+which proves injectivity; surjectivity is exactly the hypothesis \(L=K\).
+
+The remaining generic-collision step is isolated as
+`PlanarGenericDegreeOneExcludesOffDiagonal`: a nonempty component of the
+étale self-fiber product has open image under its first projection and
+hence would contribute another generic sheet.  Therefore
 
 \[
 L=K
