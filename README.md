@@ -140,6 +140,13 @@ The current development is dimension-generic and proves:
 - a polynomial left inverse forces \(I_R(F)=I_\Delta\);
 - the abstract secant-determinant identities and resulting idempotent
   decomposition;
+- a concrete planar secant decomposition whose chosen determinant restricts
+  to the planar Jacobian determinant;
+- for planar Keller maps,
+  \(I_R:I_\Delta=I_R+(\delta_F)\) and
+  \(I_R=I_\Delta\iff I_R+(\delta_F)=S\);
+- the concrete secant projector witnessing that the planar collision
+  diagonal is a clopen factor;
 - saturation stabilizes at \(I_R:I_\Delta\) when the diagonal is clopen;
 - the complementary-ideal identities and Chinese-remainder sheet
   decomposition;
@@ -366,10 +373,11 @@ are governed generically by \(N_G(H)/H\).  The global normal-closure
 argument below avoids identifying nonfiniteness of an individual component
 with ramification.
 
-The next formal step is the local theorem: for a Keller map, the diagonal is
-an open-and-closed subscheme of the self-fiber product, so
-\(\operatorname{Obs}(F)\) is supported on the off-diagonal complement.  The
-substantive planar step is then to prove that this complement is empty.
+The concrete secant construction now supplies the idempotent witnessing
+that, for a Keller map, the diagonal is an open-and-closed factor of the
+self-fiber product.  Thus \(\operatorname{Obs}(F)\) is supported on the
+off-diagonal complement.  The substantive planar step is to prove that this
+complement is empty.
 
 ## Secant determinant and annihilator
 
@@ -438,6 +446,37 @@ q_F=0
 The secant argument constructs this decomposition; it does not by itself
 prove that \(q_F=0\).  Forcing that vanishing is the specifically planar
 step.
+
+For a planar Keller map, a chosen secant determinant \(\delta_F\) gives an
+especially direct description of the complementary ideal:
+
+\[
+\boxed{
+I_{\mathrm{off}}
+=I_R:I_\Delta
+=I_R+(\delta_F).
+}
+\]
+
+Consequently Lean proves
+
+\[
+\boxed{
+\operatorname{Obs}(F)=0
+\Longleftrightarrow
+I_R=I_\Delta
+\Longleftrightarrow
+I_R+(\delta_F)=S.
+}
+\]
+
+Although \(\delta_F\) comes from a fixed choice of secant coefficients, the
+ideal it generates together with \(I_R\) is canonical here because it equals
+\(I_R:I_\Delta\).  The proposition `PlanarSecantVanishing` is the assertion
+that the last ideal is the unit ideal for every planar Keller map, and Lean
+proves `PlanarSecantVanishing ↔ PlanarVanishing`.  This packages the
+remaining mathematical target as one concrete ideal statement without
+claiming its vanishing.
 
 ### Off-diagonal saturation and Chinese remainders
 
