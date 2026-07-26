@@ -245,8 +245,11 @@ two-dimensional specialization:
   \(e=|I|\);
 - `DecompositionSheets` specializes the generic
   \(D_E\backslash G/H\) calculation to planar valuation inertia;
-- `ConjugateBoundary` records the visible conjugate sheets and isolates
-  the global detection/coverage condition on their affine opens;
+- `NormalizationDiagram` wires those existing double-coset classes to
+  centers on the finite normalization and separates local visible-sheet
+  inertia from the later global planar boundary-rigidity theorem;
+- `ConjugateBoundary` retains the earlier abstract visible-subset and
+  stabilizer-detection interface;
 - `PurityRigidity` states divisorial purity and affine-plane finite-étale
   rigidity as two explicit geometric inputs and proves their formal
   composition;
@@ -898,10 +901,14 @@ I_E\neq1
 \exists q\in D_E\backslash G/H,\quad
 \iota_E(q):=[I_E:I_E\cap gHg^{-1}]>1.
 \]
-The remaining valuation-theoretic adapter is the standard equivalence
-between these double-coset classes and the actual prime divisors \(q_g\)
-of the intermediate normalization, including equality with their DVR
-ramification indices.
+`Planar.NormalizationDiagram` now exposes the missing wiring without
+introducing another double-coset object.  Its `NormalizationDiagram`
+structure uses the existing `PlanarDecompositionSheetClasses` and records
+a center on \(\overline X\) for each class, compatibility of every center
+with the map to \(Y\), and identification of the identity class with the
+canonical contraction \(Z\to\overline X\).  Constructing these fields from
+the standard prime/double-coset classification, including the relative
+DVR ramification formula, remains an explicit obligation.
 
 The normalization-form planar target is:
 
@@ -992,13 +999,40 @@ condition \(V_E=G/H\) works because the intersection is then
 \(\operatorname{core}_G(H)=1\); smaller visible families also suffice when
 their stabilizer intersection is trivial.
 
-`Planar.ConjugateBoundary` records this as
-`PlanarConjugateOpenVisibility.DetectsInertia`.  Lean proves that it is
-incompatible with any nonempty supplied family of nontrivial valuation
-inertia, and derives it from `AllSheetsVisible` using the already-proved
-core-freeness theorem.  Constructing the visible sets from the actual
-conjugate open immersions and proving this detection property is the
-remaining global planar boundary theorem.
+The canonical normalization-diagram route now separates the two missing
+geometric statements exactly.
+
+First, `VisibleConjugateSheetInertiaAt D E q` is pointwise:
+
+\[
+\overline q\in j(X)
+\quad\Longrightarrow\quad
+\iota_E(q)=1
+\]
+
+when the affine-plane sheet is étale.  Its family version
+`VisibleConjugateSheetInertia` quantifies over the existing classes
+\(q\in D_E\backslash G/H\).  Lean formally derives the contrapositive:
+every class with \(\iota_E(q)\ne1\) has its recorded center in the deleted
+boundary.
+
+Second, `NormalizationDiagram.PlanarBoundaryRigidity` is deliberately
+global and later:
+
+\[
+\left(
+  \forall q,\ \iota_E(q)\ne1
+    \Longrightarrow \overline q\in\overline X\setminus X
+\right)
+\Longrightarrow I_E=1.
+\]
+
+The diagram is indexed by the canonical subtype of actual ramified
+height-one primes of \(Z\), not by an arbitrary divisor family.  Therefore
+local visible-sheet inertia plus global boundary rigidity makes that
+subtype empty and yields `NoCodimensionOneRamification` with no hidden
+exhaustiveness assumption.  `Planar.ConjugateBoundary` remains available
+as the earlier dimension-independent visible-stabilizer shadow.
 
 `Planar.PurityRigidity` now separates the two geometric inputs used after
 hidden-inertia detection:
@@ -1030,10 +1064,12 @@ unramifiedness through `NoCodimensionOneRamification`; it is not quantified
 over an arbitrary, potentially non-exhaustive valuation family.
 
 `Planar.ConditionalVanishing` packages the remaining internal data for one
-map as `PlanarHiddenInertiaRigidity F`: a selected normal-closure model,
-height-one unramifiedness of that model, and the generic-degree-one descent
-to the off-diagonal collision scheme.  Lean proves the exact conditional
-spine
+map as `PlanarHiddenInertiaRigidity F`: the normalization diagram, the
+Keller-to-étale bridge, pointwise visible-conjugate-sheet inertia, the
+separate global planar boundary-rigidity theorem, and the generic-degree-one
+descent to the off-diagonal collision scheme.  From the middle three
+fields Lean now derives height-one unramifiedness rather than storing it
+as an opaque field.  It then proves the exact conditional spine
 
 \[
 \texttt{planarVanishing\_of}\;

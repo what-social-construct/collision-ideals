@@ -1,4 +1,5 @@
 import CollisionIdeals.Planar.ExternalAssumptions
+import CollisionIdeals.Planar.EtaleBoundary
 import CollisionIdeals.Planar.GenericFiber
 
 set_option autoImplicit false
@@ -10,25 +11,32 @@ noncomputable section
 /--
 The internal hidden-inertia package for one planar map.
 
-It supplies a finite normal-closure model, proves that every height-one
-point of that model is unramified, and records the generic-fiber descent
-from `L = K` to emptiness of the off-diagonal collision scheme.  Branch
-purity and affine-plane finite-étale rigidity are deliberately not fields:
-they enter only through the two explicit external interfaces.
+It supplies the normalization diagram with all pointwise
+inertia/visible-sheet facts, separately supplies the later planar boundary
+rigidity theorem for that diagram, and records the generic-fiber descent
+from `L = K` to emptiness of the off-diagonal collision scheme.
+
+Branch purity and affine-plane finite-étale rigidity are deliberately not
+fields: they enter only through the two explicit external interfaces.
 -/
 structure PlanarHiddenInertiaRigidity
     (F : Fin 2 → PlanePolynomial) where
   N : Type
   fieldN : Field N
   algebraN : Algebra (PlanarBaseFunctionField F) N
-  cover :
+  diagram :
     letI : Field N := fieldN
     letI : Algebra (PlanarBaseFunctionField F) N := algebraN
-    PlanarNormalizedCover (F := F) (N := N)
-  noCodimensionOneRamification :
+    NormalizationDiagram (F := F) (N := N)
+  kellerEtale : PlanarKellerEtaleBridge F
+  visibleConjugateSheetInertia :
     letI : Field N := fieldN
     letI : Algebra (PlanarBaseFunctionField F) N := algebraN
-    NoCodimensionOneRamification (F := F) (N := N)
+    diagram.VisibleConjugateSheetInertia
+  boundaryRigidity :
+    letI : Field N := fieldN
+    letI : Algebra (PlanarBaseFunctionField F) N := algebraN
+    diagram.PlanarBoundaryRigidity
   genericDegreeOneExcludesOffDiagonal :
     PlanarFunctionFieldExtensionTrivial F →
       CollisionOffDiagonalVanishing F
@@ -50,18 +58,26 @@ theorem functionFieldExtension_trivial
   letI : Field hHidden.N := hHidden.fieldN
   letI : Algebra (PlanarBaseFunctionField F) hHidden.N :=
     hHidden.algebraN
-  have hEtale :
+  have hNoCodimensionOneRamification :
+      NoCodimensionOneRamification
+        (F := F) (N := hHidden.N) :=
+    hHidden.diagram.noCodimensionOneRamification
+      hHidden.visibleConjugateSheetInertia
+      hHidden.boundaryRigidity
+      (hHidden.kellerEtale hKeller)
+  have hNormalizationEtale :
       AlgebraicGeometry.IsEtale
         (planarNormalizationInExtensionToBase
           (F := F) (N := hHidden.N)) :=
-    hPurity hHidden.cover hKeller
-      hHidden.noCodimensionOneRamification
+    hPurity hHidden.diagram.cover hKeller
+      hNoCodimensionOneRamification
   have hNormalClosure :
-      hHidden.cover.normalClosure.ExtensionTrivial :=
-    hFiniteEtaleRigidity hHidden.cover hKeller hEtale
+      hHidden.diagram.cover.normalClosure.ExtensionTrivial :=
+    hFiniteEtaleRigidity hHidden.diagram.cover hKeller
+      hNormalizationEtale
   exact
     PlanarNormalClosureData.functionFieldExtensionTrivial_of_extensionTrivial
-      hHidden.cover.normalClosure hNormalClosure
+      hHidden.diagram.cover.normalClosure hNormalClosure
 
 end PlanarHiddenInertiaRigidity
 

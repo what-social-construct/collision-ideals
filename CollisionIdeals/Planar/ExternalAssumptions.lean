@@ -1,6 +1,5 @@
 import CollisionIdeals.Planar.PurityRigidity
-import Mathlib.RingTheory.Ideal.Height
-import Mathlib.RingTheory.Unramified.Locus
+import CollisionIdeals.Planar.NormalizationDiagram
 
 set_option autoImplicit false
 
@@ -9,27 +8,6 @@ namespace CollisionIdeals.Planar
 open AlgebraicGeometry
 
 noncomputable section
-
-/--
-The finite normal-closure model has no ramification at any height-one
-prime.
-
-This is the concrete local input consumed by branch purity.  It is stated
-directly on every codimension-one point of the normalization ring, rather
-than through an arbitrary family of valuation witnesses.
--/
-def NoCodimensionOneRamification
-    {F : Fin 2 → PlanePolynomial}
-    {N : Type} [Field N]
-    [Algebra (PlanarBaseFunctionField F) N] : Prop :=
-  letI : Algebra (planarImageAlgebra F) N :=
-    planarNormalClosureBaseAlgebra (F := F) (N := N)
-  ∀ q :
-      PrimeSpectrum
-        (PlanarNormalizationInExtensionRing (F := F) (N := N)),
-    q.asIdeal.primeHeight = 1 →
-      Algebra.IsUnramifiedAt
-        (planarImageAlgebra F) q.asIdeal
 
 /--
 Specialized branch purity for a finite normal cover of the complex affine
