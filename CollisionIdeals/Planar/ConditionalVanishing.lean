@@ -1,6 +1,7 @@
 import CollisionIdeals.Planar.ExternalAssumptions
 import CollisionIdeals.Planar.EtaleBoundary
 import CollisionIdeals.Planar.GenericFiber
+import CollisionIdeals.Planar.VisibleRamification
 
 set_option autoImplicit false
 
@@ -11,10 +12,11 @@ noncomputable section
 /--
 The internal hidden-inertia package for one planar map.
 
-It supplies the normalization diagram with all pointwise
-inertia/visible-sheet facts, separately supplies the later planar boundary
-rigidity theorem for that diagram, and records the generic-fiber descent
-from `L = K` to emptiness of the off-diagonal collision scheme.
+It supplies the normalization diagram and the standard valuation formula
+realizing double-coset inertia indices as geometric ramification indices,
+separately supplies the later planar boundary-rigidity theorem, and records
+the generic-fiber descent from `L = K` to emptiness of the off-diagonal
+collision scheme.
 
 Branch purity and affine-plane finite-étale rigidity are deliberately not
 fields: they enter only through the two explicit external interfaces.
@@ -29,10 +31,10 @@ structure PlanarHiddenInertiaRigidity
     letI : Algebra (PlanarBaseFunctionField F) N := algebraN
     NormalizationDiagram (F := F) (N := N)
   kellerEtale : PlanarKellerEtaleBridge F
-  visibleConjugateSheetInertia :
+  ramificationRealization :
     letI : Field N := fieldN
     letI : Algebra (PlanarBaseFunctionField F) N := algebraN
-    diagram.VisibleConjugateSheetInertia
+    diagram.ConjugateRamificationRealization
   boundaryRigidity :
     letI : Field N := fieldN
     letI : Algebra (PlanarBaseFunctionField F) N := algebraN
@@ -62,7 +64,8 @@ theorem functionFieldExtension_trivial
       NoCodimensionOneRamification
         (F := F) (N := hHidden.N) :=
     hHidden.diagram.noCodimensionOneRamification
-      hHidden.visibleConjugateSheetInertia
+      (hHidden.diagram.visibleConjugateSheetInertia
+        hHidden.ramificationRealization)
       hHidden.boundaryRigidity
       (hHidden.kellerEtale hKeller)
   have hNormalizationEtale :

@@ -9,6 +9,7 @@ import CollisionIdeals.Planar.GenericFiber
 import CollisionIdeals.Planar.Inertia
 import CollisionIdeals.Planar.Normalization
 import CollisionIdeals.Planar.NormalizationDiagram
+import CollisionIdeals.Planar.VisibleRamification
 import CollisionIdeals.Planar.PurityRigidity
 import CollisionIdeals.Planar.ValuationInertia
 import CollisionIdeals.Planar.Vanishing

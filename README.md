@@ -248,8 +248,11 @@ two-dimensional specialization:
 - `DecompositionSheets` specializes the generic
   \(D_E\backslash G/H\) calculation to planar valuation inertia;
 - `NormalizationDiagram` wires those existing double-coset classes to
-  centers on the finite normalization and separates local visible-sheet
-  inertia from the later global planar boundary-rigidity theorem;
+  centers on the finite normalization and separates their valuation
+  realization from the later global planar boundary-rigidity theorem;
+- `VisibleRamification` defines the actual ideal-theoretic ramification
+  index at each conjugate center and proves from the open immersion and
+  étaleness that every visible center has ramification index one;
 - `ConjugateBoundary` retains the earlier abstract visible-subset and
   stabilizer-detection interface;
 - `PurityRigidity` states divisorial purity and affine-plane finite-étale
@@ -1004,7 +1007,16 @@ their stabilizer intersection is trivial.
 The canonical normalization-diagram route now separates the two missing
 geometric statements exactly.
 
-First, `VisibleConjugateSheetInertiaAt D E q` is pointwise:
+First, `VisibleRamification` turns every recorded conjugate center into an
+actual prime ideal of \(\overline X\) and defines its geometric
+ramification index.  `ConjugateRamificationRealization` isolates the
+standard valuation identity
+\[
+e(\overline q/B)=
+[I_E:I_E\cap gHg^{-1}].
+\]
+Lean then proves from the open immersion and étaleness—rather than assuming
+as a field—that
 
 \[
 \overline q\in j(X)
@@ -1012,11 +1024,9 @@ First, `VisibleConjugateSheetInertiaAt D E q` is pointwise:
 \iota_E(q)=1
 \]
 
-when the affine-plane sheet is étale.  Its family version
-`VisibleConjugateSheetInertia` quantifies over the existing classes
-\(q\in D_E\backslash G/H\).  Lean formally derives the contrapositive:
-every class with \(\iota_E(q)\ne1\) has its recorded center in the deleted
-boundary.
+for every existing class \(q\in D_E\backslash G/H\).  It formally derives
+the contrapositive: every class with \(\iota_E(q)\ne1\) has its recorded
+center in the deleted boundary.
 
 Second, `NormalizationDiagram.PlanarBoundaryRigidity` is deliberately
 global and later:
@@ -1071,11 +1081,12 @@ over an arbitrary, potentially non-exhaustive valuation family.
 
 `Planar.ConditionalVanishing` packages the remaining internal data for one
 map as `PlanarHiddenInertiaRigidity F`: the normalization diagram, the
-Keller-to-étale bridge, pointwise visible-conjugate-sheet inertia, the
+Keller-to-étale bridge, the conjugate-center ramification realization, the
 separate global planar boundary-rigidity theorem, and the generic-degree-one
-descent to the off-diagonal collision scheme.  From the middle three
-fields Lean now derives height-one unramifiedness rather than storing it
-as an opaque field.  It then proves the exact conditional spine
+descent to the off-diagonal collision scheme.  From these inputs Lean now
+derives visible-sheet inertia and then height-one unramifiedness rather than
+storing either as an opaque field.  It then proves the exact conditional
+spine
 
 \[
 \texttt{planarVanishing\_of}\;
