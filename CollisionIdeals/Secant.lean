@@ -121,7 +121,7 @@ def secantDet (a b c d : A) : A :=
 The adjugate identity before passing to the collision quotient:
 `det(M) I_Δ ⊆ I_R`.
 -/
-theorem secantDet_mul_diagonalIdeal_mem_relationIdeal
+theorem secantDet_mul_diagonalIdeal_mem_collisionIdeal
     (a b c d dx dy z : A)
     (hz : z ∈ Ideal.span ({dx, dy} : Set A)) :
     secantDet a b c d * z ∈

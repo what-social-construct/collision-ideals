@@ -1,6 +1,5 @@
-import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.OffDiagonal
-import CollisionIdeals.Planar.Vanishing
+import CollisionIdeals.Planar.Basic
 import CollisionIdeals.Secant
 import CollisionIdeals.SecantIdeal
 
@@ -167,11 +166,11 @@ theorem diagonalEval_planarSecantDet
     (planarSecantData (F 1)).diagonal_second]
 
 /-- The chosen planar secant determinant annihilates `I_Δ / I_R`. -/
-theorem planarSecantDet_mul_diagonalIdeal_mem_relationIdeal
+theorem planarSecantDet_mul_diagonalIdeal_mem_collisionIdeal
     (F : Fin 2 → SourceRing R (Fin 2))
     (z : PairRing R (Fin 2))
     (hz : z ∈ diagonalIdeal (R := R) (ι := Fin 2)) :
-    planarSecantDet F * z ∈ relationIdeal F := by
+    planarSecantDet F * z ∈ collisionIdeal F := by
   let a := (planarSecantData (F 0)).first
   let b := (planarSecantData (F 0)).second
   let c := (planarSecantData (F 1)).first
@@ -183,7 +182,7 @@ theorem planarSecantDet_mul_diagonalIdeal_mem_relationIdeal
           Set (PairRing R (Fin 2))) := by
     rwa [← diagonalIdeal_fin_two_eq_span_pair]
   have hmem :=
-    secantDet_mul_diagonalIdeal_mem_relationIdeal
+    secantDet_mul_diagonalIdeal_mem_collisionIdeal
       a b c d
       (diagonalGenerator (R := R) 0)
       (diagonalGenerator (R := R) 1)
@@ -191,21 +190,21 @@ theorem planarSecantDet_mul_diagonalIdeal_mem_relationIdeal
   have hzero :
       a * diagonalGenerator (R := R) 0 +
           b * diagonalGenerator (R := R) 1 =
-        relationGenerator F 0 := by
+        collisionGenerator F 0 := by
     exact (planarSecantData (F 0)).equation.symm
   have hone :
       c * diagonalGenerator (R := R) 0 +
           d * diagonalGenerator (R := R) 1 =
-        relationGenerator F 1 := by
+        collisionGenerator F 1 := by
     exact (planarSecantData (F 1)).equation.symm
   rw [hzero, hone] at hmem
-  change secantDet a b c d * z ∈ relationIdeal F
+  change secantDet a b c d * z ∈ collisionIdeal F
   apply
     (show
       Ideal.span
-          ({relationGenerator F 0, relationGenerator F 1} :
+          ({collisionGenerator F 0, collisionGenerator F 1} :
             Set (PairRing R (Fin 2))) ≤
-        relationIdeal F from ?_)
+        collisionIdeal F from ?_)
     hmem
   rw [Ideal.span_le]
   intro x hx
@@ -216,17 +215,18 @@ theorem planarSecantDet_mul_diagonalIdeal_mem_relationIdeal
 
 /-- Over `ℂ`, the diagonal value of the chosen secant determinant is `planarJacobianDet`. -/
 theorem diagonalEval_planarSecantDet_eq_planarJacobianDet
-    (F : Fin 2 → PlanePolynomial) :
+    (F : PlanarPolynomialMap) :
     diagonalEval (planarSecantDet F) =
       planarJacobianDet F := by
-  exact diagonalEval_planarSecantDet F
+  simpa only [planarJacobianDet, jacobianDet_fin_two] using
+    diagonalEval_planarSecantDet F
 
 /--
 For a constant planar Jacobian `c`, the secant determinant is congruent to
 the constant polynomial `c` modulo the diagonal ideal.
 -/
 theorem planarSecantDet_sub_constant_mem_diagonalIdeal
-    (F : Fin 2 → PlanePolynomial)
+    (F : PlanarPolynomialMap)
     (c : ℂ)
     (hJacobian : planarJacobianDet F = C c) :
     planarSecantDet F - C c ∈
@@ -250,16 +250,16 @@ private theorem pairConstantUnit_val
 
 /-- The collision equations together with the planar secant determinant. -/
 noncomputable def planarSecantIdeal
-    (F : Fin 2 → PlanePolynomial) :
+    (F : PlanarPolynomialMap) :
     Ideal (PairRing ℂ (Fin 2)) :=
-  relationIdeal F ⊔ Ideal.span {planarSecantDet F}
+  collisionIdeal F ⊔ Ideal.span {planarSecantDet F}
 
 /--
 For a planar Keller map, the canonical off-diagonal colon ideal is the
 collision ideal together with the chosen secant determinant.
 -/
 theorem collisionOffDiagonalIdeal_eq_planarSecantIdeal
-    (F : Fin 2 → PlanePolynomial)
+    (F : PlanarPolynomialMap)
     (hKeller : IsPlanarKeller F) :
     collisionOffDiagonalIdeal F =
       planarSecantIdeal F := by
@@ -267,11 +267,11 @@ theorem collisionOffDiagonalIdeal_eq_planarSecantIdeal
   rw [collisionOffDiagonalIdeal, offDiagonalColonIdeal,
     planarSecantIdeal]
   apply colon_eq_sup_span_singleton_of_secant
-    (relationIdeal F)
+    (collisionIdeal F)
     (diagonalIdeal (R := ℂ) (ι := Fin 2))
     (planarSecantDet F)
     (pairConstantUnit c hc)
-  · exact planarSecantDet_mul_diagonalIdeal_mem_relationIdeal F
+  · exact planarSecantDet_mul_diagonalIdeal_mem_collisionIdeal F
   · simpa using
       planarSecantDet_sub_constant_mem_diagonalIdeal
         F c hJacobian
@@ -280,21 +280,21 @@ theorem collisionOffDiagonalIdeal_eq_planarSecantIdeal
 For a planar Keller map, equality of the collision and diagonal ideals is
 equivalent to the concrete secant ideal being the unit ideal.
 -/
-theorem relationIdeal_eq_diagonalIdeal_iff_planarSecantIdeal_eq_top
-    (F : Fin 2 → PlanePolynomial)
+theorem collisionIdeal_eq_diagonalIdeal_iff_planarSecantIdeal_eq_top
+    (F : PlanarPolynomialMap)
     (hKeller : IsPlanarKeller F) :
-    relationIdeal F =
+    collisionIdeal F =
         diagonalIdeal (R := ℂ) (ι := Fin 2) ↔
       planarSecantIdeal F = ⊤ := by
   obtain ⟨c, hc, hJacobian⟩ := hKeller
   rw [planarSecantIdeal]
   apply ideal_eq_iff_sup_span_singleton_eq_top_of_secant
-    (relationIdeal F)
+    (collisionIdeal F)
     (diagonalIdeal (R := ℂ) (ι := Fin 2))
     (planarSecantDet F)
     (pairConstantUnit c hc)
-    (relationIdeal_le_diagonalIdeal F)
-  · exact planarSecantDet_mul_diagonalIdeal_mem_relationIdeal F
+    (collisionIdeal_le_diagonalIdeal F)
+  · exact planarSecantDet_mul_diagonalIdeal_mem_collisionIdeal F
   · simpa using
       planarSecantDet_sub_constant_mem_diagonalIdeal
         F c hJacobian
@@ -304,52 +304,29 @@ For a planar Keller map, the obstruction vanishes exactly when the concrete
 secant ideal is the unit ideal.
 -/
 theorem obstructionIdeal_eq_bot_iff_planarSecantIdeal_eq_top
-    (F : Fin 2 → PlanePolynomial)
+    (F : PlanarPolynomialMap)
     (hKeller : IsPlanarKeller F) :
     obstructionIdeal F = ⊥ ↔
       planarSecantIdeal F = ⊤ := by
   exact
     (obstructionIdeal_eq_bot_iff F).trans
-      (relationIdeal_eq_diagonalIdeal_iff_planarSecantIdeal_eq_top
+      (collisionIdeal_eq_diagonalIdeal_iff_planarSecantIdeal_eq_top
         F hKeller)
 
-/-- The unit-ideal formulation of the planar vanishing theorem target. -/
-def PlanarSecantVanishing : Prop :=
-  ∀ F : Fin 2 → PlanePolynomial,
-    IsPlanarKeller F →
-      planarSecantIdeal F = ⊤
-
-/--
-The concrete secant unit-ideal criterion is equivalent to planar vanishing.
--/
-theorem planarSecantVanishing_iff_planarVanishing :
-    PlanarSecantVanishing ↔ PlanarVanishing := by
-  constructor
-  · intro h F hKeller
-    exact
-      (obstructionIdeal_eq_bot_iff_planarSecantIdeal_eq_top
-        F hKeller).2
-        (h F hKeller)
-  · intro h F hKeller
-    exact
-      (obstructionIdeal_eq_bot_iff_planarSecantIdeal_eq_top
-        F hKeller).1
-        (h F hKeller)
-
 private noncomputable def collisionConstantUnit
-    (F : Fin 2 → PlanePolynomial)
+    (F : PlanarPolynomialMap)
     (c : ℂ) (hc : c ≠ 0) :
     (CollisionRing F)ˣ :=
   Units.map
-    (Ideal.Quotient.mk (relationIdeal F)).toMonoidHom
+    (Ideal.Quotient.mk (collisionIdeal F)).toMonoidHom
     (pairConstantUnit c hc)
 
 @[simp]
 private theorem collisionConstantUnit_val
-    (F : Fin 2 → PlanePolynomial)
+    (F : PlanarPolynomialMap)
     (c : ℂ) (hc : c ≠ 0) :
     (collisionConstantUnit F c hc : CollisionRing F) =
-      Ideal.Quotient.mk (relationIdeal F) (C c) := by
+      Ideal.Quotient.mk (collisionIdeal F) (C c) := by
   rfl
 
 /--
@@ -357,23 +334,23 @@ A planar Keller map supplies an explicit idempotent generator of its
 off-diagonal obstruction in the collision ring.
 -/
 theorem exists_collisionOffDiagonalProjector_of_isPlanarKeller
-    (F : Fin 2 → PlanePolynomial)
+    (F : PlanarPolynomialMap)
     (hKeller : IsPlanarKeller F) :
     ∃ q : CollisionRing F,
       IsCollisionOffDiagonalProjector F q := by
   obtain ⟨c, hc, hJacobian⟩ := hKeller
   let δbar : CollisionRing F :=
-    Ideal.Quotient.mk (relationIdeal F) (planarSecantDet F)
+    Ideal.Quotient.mk (collisionIdeal F) (planarSecantDet F)
   let cbar : (CollisionRing F)ˣ :=
     collisionConstantUnit F c hc
   have hδann :
       δbar ∈ (obstructionIdeal F).annihilator := by
     exact
       quotient_mk_mem_annihilator_obstruction
-        (relationIdeal F)
+        (collisionIdeal F)
         (diagonalIdeal (R := ℂ) (ι := Fin 2))
         (planarSecantDet F)
-        (planarSecantDet_mul_diagonalIdeal_mem_relationIdeal F)
+        (planarSecantDet_mul_diagonalIdeal_mem_collisionIdeal F)
   have hann :
       ∀ j ∈ obstructionIdeal F, δbar * j = 0 := by
     intro j hj
@@ -386,7 +363,7 @@ theorem exists_collisionOffDiagonalProjector_of_isPlanarKeller
         F c hJacobian
     exact
       Ideal.mem_map_of_mem
-        (Ideal.Quotient.mk (relationIdeal F)) hsource
+        (Ideal.Quotient.mk (collisionIdeal F)) hsource
   refine
     ⟨offDiagonalIdempotent δbar cbar,
       offDiagonalIdempotent_isIdempotent
@@ -401,14 +378,14 @@ For a planar Keller map, the conventional saturation `I_R : I_Δ^∞` is the
 same concrete secant ideal `I_R + (δ_F)`.
 -/
 theorem collisionIdealSaturation_eq_planarSecantIdeal
-    (F : Fin 2 → PlanePolynomial)
+    (F : PlanarPolynomialMap)
     (hKeller : IsPlanarKeller F) :
     collisionIdealSaturation F =
       planarSecantIdeal F := by
   obtain ⟨q, hq⟩ :=
     exists_collisionOffDiagonalProjector_of_isPlanarKeller F hKeller
   exact
-    (collisionIdealSaturation_eq_offDiagonalIdeal F q hq).trans
+    (collisionIdealSaturation_eq_collisionOffDiagonalIdeal F q hq).trans
       (collisionOffDiagonalIdeal_eq_planarSecantIdeal F hKeller)
 
 end

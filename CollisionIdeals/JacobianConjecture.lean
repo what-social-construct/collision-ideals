@@ -1,45 +1,52 @@
-import CollisionIdeals.Planar
+import CollisionIdeals.AutomorphismCriterion
+import CollisionIdeals.CollisionDiagonal
+import CollisionIdeals.Keller
+import Mathlib.Data.Complex.Basic
 
 set_option autoImplicit false
 
 namespace CollisionIdeals
 
-open MvPolynomial
-
 noncomputable section
 
-universe u v
-
-variable {R : Type u} [CommRing R]
-variable {ι : Type v}
-
-/-- Every polynomial automorphism has vanishing collision obstruction. -/
-theorem obstructionIdeal_eq_bot_of_isPolynomialAutomorphism
-    {F : ι → SourceRing R ι}
-    (hF : IsPolynomialAutomorphism F) :
-    obstructionIdeal F = ⊥ := by
-  apply (obstructionIdeal_eq_bot_iff F).2
-  exact
-    relationIdeal_eq_diagonalIdeal_of_hasPolynomialLeftInverse
-      F hF.hasPolynomialLeftInverse
+/-- A polynomial self-map of complex affine `n`-space. -/
+abbrev ComplexPolynomialSelfMap (n : ℕ) :=
+  PolynomialSelfMap ℂ n
 
 /--
-The explicit complex-plane automorphism statement: every polynomial
-self-map of `𝔸²_ℂ` with constant nonzero Jacobian determinant is a
-polynomial automorphism of `𝔸²_ℂ`.
+Ax--Grothendieck in dimension `n`: an injective polynomial self-map of
+complex affine `n`-space is a polynomial automorphism.
 -/
-def PlanarJacobianConjecture : Prop :=
-  ∀ F : Fin 2 → PlanePolynomial,
-    IsPlanarKeller F →
+def ComplexAxGrothendieck (n : ℕ) : Prop :=
+  ∀ F : ComplexPolynomialSelfMap n,
+    Function.Injective (pointMap F) →
       IsPolynomialAutomorphism F
 
+/-- The Jacobian conjecture in complex dimension `n`. -/
+def ComplexJacobianConjecture (n : ℕ) : Prop :=
+  ∀ F : ComplexPolynomialSelfMap n,
+    IsKeller F →
+      IsPolynomialAutomorphism F
+
+/-- Collision-obstruction vanishing for every complex Keller map in dimension `n`. -/
+def ComplexKellerVanishing (n : ℕ) : Prop :=
+  ∀ F : ComplexPolynomialSelfMap n,
+    IsKeller F →
+      obstructionIdeal F = ⊥
+
+/-- A Keller map that is not a polynomial automorphism. -/
+def IsComplexJacobianCounterexample
+    {n : ℕ} (F : ComplexPolynomialSelfMap n) : Prop :=
+  IsKeller F ∧ ¬ IsPolynomialAutomorphism F
+
 /--
-Assuming the classical Ax--Grothendieck principle, the obstruction detects
+Assuming Ax--Grothendieck in dimension `n`, the obstruction detects
 polynomial automorphisms map by map.
 -/
-theorem planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
-    (hAx : PlanarAxGrothendieck)
-    (F : Fin 2 → PlanePolynomial) :
+theorem complexPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
+    {n : ℕ}
+    (hAx : ComplexAxGrothendieck n)
+    (F : ComplexPolynomialSelfMap n) :
     IsPolynomialAutomorphism F ↔
       obstructionIdeal F = ⊥ := by
   constructor
@@ -47,53 +54,43 @@ theorem planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
   · intro hObstruction
     apply hAx F
     exact
-      pointMap_injective_of_relationIdeal_eq_diagonalIdeal F
+      pointMap_injective_of_collisionIdeal_eq_diagonalIdeal F
         ((obstructionIdeal_eq_bot_iff F).1 hObstruction)
 
 /--
-Modulo Ax--Grothendieck, a polynomial self-map of the complex affine plane
-is a polynomial automorphism exactly when its collision-to-diagonal map is
-injective.
+Modulo Ax--Grothendieck, the Jacobian conjecture in dimension `n` is
+exactly collision-obstruction vanishing for every Keller map.
 -/
-theorem planarPolynomialAutomorphism_iff_collisionDiagonalMap_injective
-    (hAx : PlanarAxGrothendieck)
-    (F : Fin 2 → PlanePolynomial) :
-    IsPolynomialAutomorphism F ↔
-      Function.Injective (collisionDiagonalMap F) := by
-  rw [RingHom.injective_iff_ker_eq_bot, collisionDiagonalMap_ker]
-  exact
-    planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
-      hAx F
-
-/--
-Modulo the classical Ax--Grothendieck theorem, the usual planar Jacobian
-conjecture is exactly vanishing of `I_Δ / I_R` for every planar Keller map.
--/
-theorem planarJacobianConjecture_iff_planarVanishing
-    (hAx : PlanarAxGrothendieck) :
-    PlanarJacobianConjecture ↔ PlanarVanishing := by
+theorem complexJacobianConjecture_iff_kellerVanishing
+    {n : ℕ}
+    (hAx : ComplexAxGrothendieck n) :
+    ComplexJacobianConjecture n ↔
+      ComplexKellerVanishing n := by
   constructor
   · intro hJC F hKeller
     exact
-      (planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
+      (complexPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
         hAx F).1
         (hJC F hKeller)
   · intro hVanishing F hKeller
     exact
-      (planarPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
+      (complexPolynomialAutomorphism_iff_obstructionIdeal_eq_bot
         hAx F).2
         (hVanishing F hKeller)
 
 /--
-Modulo Ax--Grothendieck, the explicit statement that every planar Keller
-map is a polynomial automorphism is equivalent to kernel vanishing for the
-canonical collision-to-diagonal map.
+Modulo Ax--Grothendieck, every possible Jacobian-conjecture counterexample
+is exactly a Keller map with nonzero collision obstruction.
 -/
-theorem planarJacobianConjecture_iff_planarKernelVanishing
-    (hAx : PlanarAxGrothendieck) :
-    PlanarJacobianConjecture ↔ PlanarKernelVanishing :=
-  (planarJacobianConjecture_iff_planarVanishing hAx).trans
-    planarKernelVanishing_iff_planarVanishing.symm
+theorem isComplexJacobianCounterexample_iff
+    {n : ℕ}
+    (hAx : ComplexAxGrothendieck n)
+    (F : ComplexPolynomialSelfMap n) :
+    IsComplexJacobianCounterexample F ↔
+      IsKeller F ∧ obstructionIdeal F ≠ ⊥ := by
+  unfold IsComplexJacobianCounterexample
+  rw [not_congr
+    (complexPolynomialAutomorphism_iff_obstructionIdeal_eq_bot hAx F)]
 
 end
 

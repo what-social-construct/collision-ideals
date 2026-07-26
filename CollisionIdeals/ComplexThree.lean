@@ -1,5 +1,2 @@
-import CollisionIdeals.ComplexThree.Basic
-import CollisionIdeals.DiagonalKernel
-import CollisionIdeals.FiniteFieldSymmetry
-import CollisionIdeals.GaloisSheets
-import CollisionIdeals.OffDiagonal
+import CollisionIdeals.ComplexThree.CubicS3
+import CollisionIdeals.ComplexThree.JacobianConjecture

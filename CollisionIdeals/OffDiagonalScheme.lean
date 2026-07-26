@@ -1,9 +1,6 @@
-import CollisionIdeals.DiagonalKernel
 import CollisionIdeals.OffDiagonal
-import CollisionIdeals.Planar.Vanishing
 import CollisionIdeals.PolynomialFiberProduct
 import Mathlib.AlgebraicGeometry.Limits
-import Mathlib.AlgebraicGeometry.Pullbacks
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -85,36 +82,17 @@ def diagonalCollisionScheme : Scheme :=
         diagonalIdeal (R := R) (ι := ι)))
 
 /--
-The canonical off-diagonal collision scheme
+The first-colon residual collision scheme
 
 `R_F° = Spec(S / (I_R(F) : I_Δ))`.
 
 When the collision diagonal is clopen, the colon is also the saturation
-`I_R(F) : I_Δ^∞` and this affine scheme is the complementary clopen factor.
+`I_R(F) : I_Δ^∞`, and this affine scheme is the complementary clopen
+off-diagonal factor.
 -/
 def offDiagonalCollisionScheme
     (F : κ → SourceRing R ι) : Scheme :=
-  Spec
-    (.of
-      (PairRing R ι ⧸ collisionOffDiagonalIdeal F))
-
-/-- Diagonal evaluation is surjective because left renaming is a section. -/
-theorem diagonalEval_surjective :
-    Function.Surjective
-      (diagonalEval (R := R) (ι := ι)).toRingHom := by
-  intro p
-  exact ⟨leftRename p, by simp⟩
-
-/-- The coordinate ring `S / I_Δ` is canonically the source ring. -/
-noncomputable def diagonalQuotientEquiv :
-    (PairRing R ι ⧸
-        diagonalIdeal (R := R) (ι := ι)) ≃+*
-      SourceRing R ι :=
-  (Ideal.quotEquivOfEq
-      (diagonalEval_ker (R := R) (ι := ι)).symm).trans
-    (RingHom.quotientKerEquivOfSurjective
-      (f := (diagonalEval (R := R) (ι := ι)).toRingHom)
-      (diagonalEval_surjective (R := R) (ι := ι)))
+  Spec (.of (OffDiagonalRing F))
 
 /-- The diagonal collision factor is canonically the source affine scheme. -/
 noncomputable def diagonalCollisionSchemeIsoSource :
@@ -172,8 +150,7 @@ ring.
 theorem offDiagonalCollisionScheme_isEmpty_iff_subsingleton
     (F : κ → SourceRing R ι) :
     IsEmpty (offDiagonalCollisionScheme F) ↔
-      Subsingleton
-        (PairRing R ι ⧸ collisionOffDiagonalIdeal F) := by
+      Subsingleton (OffDiagonalRing F) := by
   exact PrimeSpectrum.isEmpty_iff_subsingleton
 
 /--
@@ -215,7 +192,7 @@ theorem collisionOffDiagonalVanishing_iff_obstructionIdeal_eq_bot
   rw [CollisionOffDiagonalVanishing,
     offDiagonalCollisionScheme_isEmpty_iff_subsingleton]
   exact
-    (obstructionIdeal_eq_bot_iff_offDiagonalFactor_subsingleton F).symm
+    (obstructionIdeal_eq_bot_iff_offDiagonalRing_subsingleton F).symm
 
 /--
 If the off-diagonal collision scheme is empty, the collision scheme is
@@ -229,7 +206,7 @@ noncomputable def collisionSchemeIsoDiagonalOfOffDiagonalVanishing
   have hObstruction : obstructionIdeal F = ⊥ :=
     (collisionOffDiagonalVanishing_iff_obstructionIdeal_eq_bot F).mp h
   have hIdeals :
-      relationIdeal F =
+      collisionIdeal F =
         diagonalIdeal (R := R) (ι := ι) :=
     (obstructionIdeal_eq_bot_iff F).mp hObstruction
   exact
@@ -278,31 +255,6 @@ noncomputable def selfFiberProductSchemeIsoSourceOfVanishing
     collisionSchemeIsoSourceOfOffDiagonalVanishing F h
 
 end AffinePullbackVanishing
-
-/--
-The planar geometric target: every planar Keller map has empty
-off-diagonal collision scheme.
--/
-def PlanarOffDiagonalVanishing : Prop :=
-  ∀ F : Fin 2 → PlanePolynomial,
-    IsPlanarKeller F →
-      CollisionOffDiagonalVanishing F
-
-/--
-The affine-scheme formulation of the planar target is exactly the original
-obstruction-ideal formulation.
--/
-theorem planarOffDiagonalVanishing_iff_planarVanishing :
-    PlanarOffDiagonalVanishing ↔ PlanarVanishing := by
-  constructor
-  · intro h F hF
-    exact
-      (collisionOffDiagonalVanishing_iff_obstructionIdeal_eq_bot F).mp
-        (h F hF)
-  · intro h F hF
-    exact
-      (collisionOffDiagonalVanishing_iff_obstructionIdeal_eq_bot F).mpr
-        (h F hF)
 
 end
 

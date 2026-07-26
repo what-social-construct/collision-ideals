@@ -83,7 +83,7 @@ theorem annihilator_span_idempotent
       (a * b) * ((1 - q) * q) by ring]
     rw [sub_mul, one_mul, hq.eq, sub_self, mul_zero]
 
-theorem span_idempotent_inf_span_one_sub
+theorem span_idempotent_inf_span_one_sub_eq_bot
     {q : A} (hq : IsIdempotentElem q) :
     Ideal.span {q} ⊓ Ideal.span {1 - q} = ⊥ := by
   rw [← annihilator_span_idempotent hq]
@@ -97,7 +97,7 @@ theorem span_idempotent_inf_span_one_sub
   rw [Ideal.mem_bot]
   simpa [mul_assoc, hq.eq] using hxq
 
-theorem span_idempotent_sup_span_one_sub
+theorem span_idempotent_sup_span_one_sub_eq_top
     (q : A) :
     Ideal.span {q} ⊔ Ideal.span {1 - q} = ⊤ := by
   rw [Ideal.eq_top_iff_one]
@@ -172,7 +172,7 @@ theorem inf_offDiagonalColonIdeal_eq
     simpa [π, Ideal.mk_ker] using h.1
   rw [offDiagonalColonIdeal_eq_comap_complement I J q h,
     ← hJ, ← Ideal.comap_inf,
-    span_idempotent_inf_span_one_sub h.2.1,
+    span_idempotent_inf_span_one_sub_eq_bot h.2.1,
     ← RingHom.ker_eq_comap_bot, Ideal.mk_ker]
 
 /-- A clopen ideal and its residual complement are comaximal. -/
@@ -202,7 +202,7 @@ theorem sup_offDiagonalColonIdeal_eq_top
             Ideal.map_comap_of_surjective
               π Ideal.Quotient.mk_surjective]
     _ = ⊤ := by
-          rw [span_idempotent_sup_span_one_sub,
+          rw [span_idempotent_sup_span_one_sub_eq_top,
             Ideal.comap_top]
 
 /--
@@ -264,22 +264,32 @@ variable {R : Type u} [CommRing R]
 variable {ι : Type v} {κ : Type w}
 
 /--
-The ideal of the off-diagonal collision summand.  Once the diagonal is
-clopen, saturation by `I_Δ` stabilizes at this first colon ideal.
+The first-colon residual ideal `I_R(F) : I_Δ`.
+
+Once the collision diagonal is clopen, saturation by `I_Δ` stabilizes at
+this ideal and it cuts out the complementary off-diagonal summand.
 -/
 def collisionOffDiagonalIdeal
     (F : κ → SourceRing R ι) :
     Ideal (PairRing R ι) :=
   offDiagonalColonIdeal
-    (relationIdeal F)
+    (collisionIdeal F)
     (diagonalIdeal (R := R) (ι := ι))
+
+/--
+The coordinate ring of the first-colon residual scheme. When the collision
+diagonal is clopen, this is the complementary off-diagonal factor.
+-/
+abbrev OffDiagonalRing
+    (F : κ → SourceRing R ι) :=
+  PairRing R ι ⧸ collisionOffDiagonalIdeal F
 
 /-- The conventional saturation `I_R(F) : I_Δ^∞`. -/
 def collisionIdealSaturation
     (F : κ → SourceRing R ι) :
     Ideal (PairRing R ι) :=
   idealSaturation
-    (relationIdeal F)
+    (collisionIdeal F)
     (diagonalIdeal (R := R) (ι := ι))
 
 /--
@@ -297,14 +307,14 @@ theorem isClopenModulo_of_collisionOffDiagonalProjector
     (q : CollisionRing F)
     (hq : IsCollisionOffDiagonalProjector F q) :
     IsClopenModulo
-      (relationIdeal F)
+      (collisionIdeal F)
       (diagonalIdeal (R := R) (ι := ι))
       q := by
-  refine ⟨relationIdeal_le_diagonalIdeal F, hq.1, ?_⟩
+  refine ⟨collisionIdeal_le_diagonalIdeal F, hq.1, ?_⟩
   exact hq.2
 
 /-- For a clopen collision diagonal, `I_R : I_Δ^∞ = I_R : I_Δ`. -/
-theorem collisionIdealSaturation_eq_offDiagonalIdeal
+theorem collisionIdealSaturation_eq_collisionOffDiagonalIdeal
     (F : κ → SourceRing R ι)
     (q : CollisionRing F)
     (hq : IsCollisionOffDiagonalProjector F q) :
@@ -312,21 +322,21 @@ theorem collisionIdealSaturation_eq_offDiagonalIdeal
       collisionOffDiagonalIdeal F := by
   exact
     idealSaturation_eq_offDiagonalColonIdeal
-      (relationIdeal F)
+      (collisionIdeal F)
       (diagonalIdeal (R := R) (ι := ι))
       q
       (isClopenModulo_of_collisionOffDiagonalProjector F q hq)
 
-theorem relationIdeal_eq_diagonal_inf_offDiagonal
+theorem collisionIdeal_eq_diagonalIdeal_inf_collisionOffDiagonalIdeal
     (F : κ → SourceRing R ι)
     (q : CollisionRing F)
     (hq : IsCollisionOffDiagonalProjector F q) :
-    relationIdeal F =
+    collisionIdeal F =
       diagonalIdeal (R := R) (ι := ι) ⊓
         collisionOffDiagonalIdeal F := by
   exact
     (inf_offDiagonalColonIdeal_eq
-      (relationIdeal F)
+      (collisionIdeal F)
       (diagonalIdeal (R := R) (ι := ι))
       q
       (isClopenModulo_of_collisionOffDiagonalProjector F q hq)).symm
@@ -339,7 +349,7 @@ theorem diagonal_sup_collisionOffDiagonalIdeal_eq_top
       collisionOffDiagonalIdeal F = ⊤ := by
   exact
     sup_offDiagonalColonIdeal_eq_top
-      (relationIdeal F)
+      (collisionIdeal F)
       (diagonalIdeal (R := R) (ι := ι))
       q
       (isClopenModulo_of_collisionOffDiagonalProjector F q hq)
@@ -355,10 +365,10 @@ theorem exists_collision_diagonal_neighborhood_element
     ∃ h : PairRing R ι,
       h - 1 ∈ diagonalIdeal (R := R) (ι := ι) ∧
         ∀ z ∈ diagonalIdeal (R := R) (ι := ι),
-          h * z ∈ relationIdeal F := by
+          h * z ∈ collisionIdeal F := by
   exact
     exists_neighborhood_element_of_isClopenModulo
-      (relationIdeal F)
+      (collisionIdeal F)
       (diagonalIdeal (R := R) (ι := ι))
       q
       (isClopenModulo_of_collisionOffDiagonalProjector F q hq)
@@ -372,7 +382,7 @@ noncomputable def collisionRingEquivDiagonalProdOffDiagonal
       (PairRing R ι ⧸ diagonalIdeal (R := R) (ι := ι)) ×
       (PairRing R ι ⧸ collisionOffDiagonalIdeal F) :=
   quotientEquivDiagonalProdOffDiagonal
-    (relationIdeal F)
+    (collisionIdeal F)
     (diagonalIdeal (R := R) (ι := ι))
     q
     (isClopenModulo_of_collisionOffDiagonalProjector F q hq)
@@ -391,7 +401,7 @@ theorem obstructionIdeal_eq_bot_iff_collisionOffDiagonalIdeal_eq_top
     intro x hx
     simpa using hx
   · intro h
-    apply le_antisymm (relationIdeal_le_diagonalIdeal F)
+    apply le_antisymm (collisionIdeal_le_diagonalIdeal F)
     intro x hx
     rw [collisionOffDiagonalIdeal, offDiagonalColonIdeal,
       Ideal.eq_top_iff_one] at h
@@ -399,15 +409,92 @@ theorem obstructionIdeal_eq_bot_iff_collisionOffDiagonalIdeal_eq_top
     simpa using hx'
 
 /-- Equivalently, the off-diagonal quotient ring is the zero ring. -/
-theorem obstructionIdeal_eq_bot_iff_offDiagonalFactor_subsingleton
+theorem obstructionIdeal_eq_bot_iff_offDiagonalRing_subsingleton
     (F : κ → SourceRing R ι) :
     obstructionIdeal F = ⊥ ↔
       Subsingleton
-        (PairRing R ι ⧸ collisionOffDiagonalIdeal F) := by
+        (OffDiagonalRing F) := by
   rw [Ideal.Quotient.subsingleton_iff]
   exact
     obstructionIdeal_eq_bot_iff_collisionOffDiagonalIdeal_eq_top
       F
+
+/--
+A collision off-diagonal projector vanishes exactly when the obstruction
+ideal vanishes.
+-/
+theorem collisionOffDiagonalProjector_eq_zero_iff_obstructionIdeal_eq_bot
+    (F : κ → SourceRing R ι)
+    (q : CollisionRing F)
+    (hq : IsCollisionOffDiagonalProjector F q) :
+    q = 0 ↔ obstructionIdeal F = ⊥ := by
+  rw [hq.2, Ideal.span_singleton_eq_bot]
+
+/--
+A collision off-diagonal projector vanishes exactly when the collision and
+diagonal ideals agree.
+-/
+theorem collisionOffDiagonalProjector_eq_zero_iff_collisionIdeal_eq_diagonalIdeal
+    (F : κ → SourceRing R ι)
+    (q : CollisionRing F)
+    (hq : IsCollisionOffDiagonalProjector F q) :
+    q = 0 ↔
+      collisionIdeal F =
+        diagonalIdeal (R := R) (ι := ι) :=
+  (collisionOffDiagonalProjector_eq_zero_iff_obstructionIdeal_eq_bot
+      F q hq).trans
+    (obstructionIdeal_eq_bot_iff F)
+
+/--
+A collision off-diagonal projector is nonzero exactly when the collision
+ideal differs from the diagonal ideal.
+-/
+theorem collisionOffDiagonalProjector_ne_zero_iff_collisionIdeal_ne_diagonalIdeal
+    (F : κ → SourceRing R ι)
+    (q : CollisionRing F)
+    (hq : IsCollisionOffDiagonalProjector F q) :
+    q ≠ 0 ↔
+      collisionIdeal F ≠
+        diagonalIdeal (R := R) (ι := ι) :=
+  not_congr
+    (collisionOffDiagonalProjector_eq_zero_iff_collisionIdeal_eq_diagonalIdeal
+      F q hq)
+
+/--
+Since the collision ideal is always contained in the diagonal ideal, a
+collision off-diagonal projector is nonzero exactly when that containment is
+strict.
+-/
+theorem collisionOffDiagonalProjector_ne_zero_iff_collisionIdeal_lt_diagonalIdeal
+    (F : κ → SourceRing R ι)
+    (q : CollisionRing F)
+    (hq : IsCollisionOffDiagonalProjector F q) :
+    q ≠ 0 ↔
+      collisionIdeal F <
+        diagonalIdeal (R := R) (ι := ι) := by
+  rw [collisionOffDiagonalProjector_ne_zero_iff_collisionIdeal_ne_diagonalIdeal
+      F q hq,
+    lt_iff_le_and_ne]
+  exact
+    ⟨fun h ↦ ⟨collisionIdeal_le_diagonalIdeal F, h⟩,
+      fun h ↦ h.2⟩
+
+/--
+A collision off-diagonal projector is nonzero exactly when its complementary
+off-diagonal factor is a nontrivial ring.
+-/
+theorem collisionOffDiagonalProjector_ne_zero_iff_offDiagonalRing_nontrivial
+    (F : κ → SourceRing R ι)
+    (q : CollisionRing F)
+    (hq : IsCollisionOffDiagonalProjector F q) :
+    q ≠ 0 ↔ Nontrivial (OffDiagonalRing F) := by
+  exact
+    (not_congr
+      (collisionOffDiagonalProjector_eq_zero_iff_obstructionIdeal_eq_bot
+        F q hq)).trans
+      ((not_congr
+        (obstructionIdeal_eq_bot_iff_offDiagonalRing_subsingleton F)).trans
+        not_subsingleton_iff_nontrivial)
 
 end Collision
 

@@ -47,7 +47,7 @@ theorem inertiaIndexAtSheet_eq_one_iff
 Inertia has index one on every sheet exactly when it lies in the normal
 core of the intermediate subgroup.
 -/
-theorem inertiaIndexAtSheet_eq_one_forall_iff_le_normalCore
+theorem forall_inertiaIndexAtSheet_eq_one_iff_le_normalCore
     (I H : Subgroup G) :
     (∀ s : GaloisSheets H,
       inertiaIndexAtSheet I H s = 1) ↔
@@ -103,7 +103,7 @@ theorem inertiaIndexAtRepresentative_eq_stabilizer_relIndex
     _ = inertiaIndexAtRepresentative J H g := rfl
 
 /-- The representative formula agrees with the stabilizer index of its sheet. -/
-theorem inertiaIndexAtRepresentative_eq_sheet
+theorem inertiaIndexAtRepresentative_eq_inertiaIndexAtSheet
     {D : Subgroup G}
     (J : Subgroup D)
     (H : Subgroup G)
@@ -125,7 +125,7 @@ theorem inertiaIndexAtRepresentative_eq_one_iff
     inertiaIndexAtRepresentative J H g = 1 ↔
       InertiaInvisibleAt (J.map D.subtype) H
         (g • ((1 : G) : GaloisSheets H)) := by
-  rw [inertiaIndexAtRepresentative_eq_sheet,
+  rw [inertiaIndexAtRepresentative_eq_inertiaIndexAtSheet,
     inertiaIndexAtSheet_eq_one_iff]
 
 /--
@@ -175,8 +175,8 @@ theorem inertiaIndexAtRepresentative_right_mul
     (h : H) :
     inertiaIndexAtRepresentative J H (g * (h : G)) =
       inertiaIndexAtRepresentative J H g := by
-  rw [inertiaIndexAtRepresentative_eq_sheet,
-    inertiaIndexAtRepresentative_eq_sheet]
+  rw [inertiaIndexAtRepresentative_eq_inertiaIndexAtSheet,
+    inertiaIndexAtRepresentative_eq_inertiaIndexAtSheet]
   congr 1
   change
     (g * (h : G)) • ((1 : G) : GaloisSheets H) =

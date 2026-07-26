@@ -1,11 +1,20 @@
-import CollisionIdeals.Planar.NormalizationDiagram
+import CollisionIdeals.PolynomialNormalizationDiagram
 import Mathlib.NumberTheory.RamificationInertia.Unramified
+
+/-!
+# Visible ramification on conjugate polynomial sheets
+
+The results in this file are dimension-independent.  They turn the
+scheme-theoretic étaleness of the marked affine-space sheet into the
+statement that every conjugate center with nontrivial inertia lies in the
+deleted normalization boundary.
+-/
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
 set_option synthInstance.maxHeartbeats 100000
 
-namespace CollisionIdeals.Planar
+namespace CollisionIdeals
 
 noncomputable section
 
@@ -13,16 +22,15 @@ open AlgebraicGeometry CategoryTheory
 
 universe u
 
-variable {F : Fin 2 → PlanePolynomial}
-variable {N : Type} [Field N]
-variable [Algebra (PlanarBaseFunctionField F) N]
+variable {k : Type u} [Field k]
+variable {n : ℕ}
+variable {F : PolynomialSelfMap k n}
+variable {N : Type u} [Field N]
+variable [Algebra (PolynomialMapBaseFunctionField F) N]
 
 /--
 Formal unramifiedness survives passage from a ring map to the induced map
 between local rings at a prime.
-
-This is the local ring adapter needed below to read scheme-theoretic
-étaleness as `Algebra.IsUnramifiedAt`.
 -/
 lemma ringHom_formallyUnramified_localRingHom
     {R S : Type u} [CommRing R] [CommRing S]
@@ -31,7 +39,8 @@ lemma ringHom_formallyUnramified_localRingHom
     (Localization.localRingHom (J.comap f) J f rfl).FormallyUnramified := by
   algebraize [f, Localization.localRingHom (J.comap f) J f rfl]
   haveI : Algebra.FormallyUnramified R S := hf
-  haveI : Algebra.FormallyUnramified R (Localization.AtPrime J) := inferInstance
+  haveI : Algebra.FormallyUnramified R (Localization.AtPrime J) :=
+    inferInstance
   haveI : IsScalarTower R
       (Localization.AtPrime (J.comap (algebraMap R S)))
       (Localization.AtPrime J) :=
@@ -47,9 +56,6 @@ lemma ringHom_formallyUnramified_localRingHom
 Let `j : U ⟶ X` be an open immersion between affine schemes.  If the
 composite `U ⟶ X ⟶ Spec R` is formally unramified, then `X` is unramified
 over `R` at every point represented by `U`.
-
-The proof cancels the stalk isomorphism supplied by the open immersion and
-then identifies affine stalk maps with maps of localizations.
 -/
 lemma isUnramifiedAt_of_openImmersion_comp_formallyUnramified
     {R A C : Type u} [CommRing R] [CommRing A] [CommRing C] [Algebra R C]
@@ -118,19 +124,22 @@ lemma isUnramifiedAt_of_openImmersion_comp_formallyUnramified
     (Localization.AtPrime q.asIdeal)
   exact RingHom.formallyUnramified_algebraMap.mp htotal
 
-namespace NormalizationDiagram
+namespace PolynomialNormalizationDiagram
 
-variable (D : NormalizationDiagram (F := F) (N := N))
+variable
+    (D : PolynomialNormalizationDiagram (F := F) (N := N))
 
 /-- The actual prime of `X̄` realizing one double-coset sheet class. -/
 def centerPrime
-    (E : RamifiedCodimensionOnePoint (F := F) (N := N))
+    (E :
+      PolynomialRamifiedCodimensionOnePoint (F := F) (N := N))
     (q : D.sheetClasses E) :
-    Ideal (PlanarFiniteCompletionRing F) :=
+    Ideal (PolynomialIntermediateNormalizationRing F) :=
   (D.centerAtClass E q).asIdeal
 
 instance centerPrime_isPrime
-    (E : RamifiedCodimensionOnePoint (F := F) (N := N))
+    (E :
+      PolynomialRamifiedCodimensionOnePoint (F := F) (N := N))
     (q : D.sheetClasses E) :
     (D.centerPrime E q).IsPrime :=
   (D.centerAtClass E q).isPrime
@@ -140,31 +149,27 @@ The geometric ramification index of the prime on `X̄` selected by a
 double-coset class.
 -/
 noncomputable def geometricRamificationIndex
-    (E : RamifiedCodimensionOnePoint (F := F) (N := N))
+    (E :
+      PolynomialRamifiedCodimensionOnePoint (F := F) (N := N))
     (q : D.sheetClasses E) : ℕ :=
   Ideal.ramificationIdx
-    (R := planarImageAlgebra F)
-    (S := PlanarFiniteCompletionRing F)
+    (R := PolynomialImageAlgebra F)
+    (S := PolynomialIntermediateNormalizationRing F)
     ((algebraMap
-      (planarImageAlgebra F)
-      (PlanarFiniteCompletionRing F)) :
-        planarImageAlgebra F →+* PlanarFiniteCompletionRing F)
+      (PolynomialImageAlgebra F)
+      (PolynomialIntermediateNormalizationRing F)) :
+        PolynomialImageAlgebra F →+*
+          PolynomialIntermediateNormalizationRing F)
     (Ideal.under
-      (B := PlanarFiniteCompletionRing F)
-      (planarImageAlgebra F) (D.centerPrime E q))
+      (B := PolynomialIntermediateNormalizationRing F)
+      (PolynomialImageAlgebra F) (D.centerPrime E q))
     (D.centerPrime E q)
 
 /--
-The exact valuation-theoretic realization still required after constructing
-the double-coset centers.
+The valuation-theoretic realization of the selected double-coset centers.
 
 It records that the selected centers are divisorial and that their
-geometric ramification indices are the standard group indices
-
-`[I_E : I_E ∩ gHg⁻¹]`.
-
-Unlike the older visible-sheet predicate, it does not assume the
-consequence of étaleness; that consequence is proved below.
+geometric ramification indices are the standard group indices.
 -/
 structure ConjugateRamificationRealization : Prop where
   center_ne_bot :
@@ -175,39 +180,41 @@ structure ConjugateRamificationRealization : Prop where
         D.geometricRamificationIndex E q
 
 /--
-An actual conjugate center that remains in the affine-plane open sheet is
-unramified over the base.  This is derived from the open immersion and the
-étaleness of the original planar map.
+An actual conjugate center that remains in the affine-space open sheet is
+unramified over the base.
 -/
 theorem centerPrime_isUnramifiedAt_of_visible
-    (E : RamifiedCodimensionOnePoint (F := F) (N := N))
+    (E :
+      PolynomialRamifiedCodimensionOnePoint (F := F) (N := N))
     (q : D.sheetClasses E)
-    (hEtale : IsEtale (planarSourceToImageBase F))
+    (hEtale : IsEtale (polynomialSourceToImageBase F))
     (hVisible : D.ConjugateCenterVisible E q) :
     Algebra.IsUnramifiedAt
-      (A := PlanarFiniteCompletionRing F)
-      (planarImageAlgebra F) (D.centerPrime E q) := by
-  letI : IsOpenImmersion (planarSourceToFiniteCompletion F) :=
+      (A := PolynomialIntermediateNormalizationRing F)
+      (PolynomialImageAlgebra F) (D.centerPrime E q) := by
+  letI :
+      IsOpenImmersion
+        (polynomialSourceToIntermediateNormalization F) :=
     D.cover.intermediateOpen
-  letI : IsEtale (planarSourceToImageBase F) := hEtale
+  letI : IsEtale (polynomialSourceToImageBase F) := hEtale
   haveI : AlgebraicGeometry.FormallyUnramified
-      (planarSourceToFiniteCompletion F ≫
+      (polynomialSourceToIntermediateNormalization F ≫
         Spec.map (CommRingCat.ofHom
           (algebraMap
-            (planarImageAlgebra F)
-            (PlanarFiniteCompletionRing F)))) := by
+            (PolynomialImageAlgebra F)
+            (PolynomialIntermediateNormalizationRing F)))) := by
     change AlgebraicGeometry.FormallyUnramified
-      (planarSourceToFiniteCompletion F ≫
-        planarFiniteCompletionToBase F)
-    rw [planarSourceToFiniteCompletion_comp_toBase]
+      (polynomialSourceToIntermediateNormalization F ≫
+        polynomialIntermediateNormalizationToBase F)
+    rw [polynomialSourceToIntermediateNormalization_comp_toBase]
     infer_instance
   rcases hVisible with ⟨x, hx⟩
   change Algebra.IsUnramifiedAt
-    (planarImageAlgebra F) (D.centerAtClass E q).asIdeal
+    (PolynomialImageAlgebra F) (D.centerAtClass E q).asIdeal
   rw [← hx]
   exact
     isUnramifiedAt_of_openImmersion_comp_formallyUnramified
-      (planarSourceToFiniteCompletion F) x
+      (polynomialSourceToIntermediateNormalization F) x
 
 /--
 At a visible conjugate center, scheme-theoretic étaleness forces the
@@ -215,44 +222,68 @@ geometric ramification index to be one.
 -/
 theorem geometricRamificationIndex_eq_one_of_visible
     (R : D.ConjugateRamificationRealization)
-    (E : RamifiedCodimensionOnePoint (F := F) (N := N))
+    (E :
+      PolynomialRamifiedCodimensionOnePoint (F := F) (N := N))
     (q : D.sheetClasses E)
-    (hEtale : IsEtale (planarSourceToImageBase F))
+    (hEtale : IsEtale (polynomialSourceToImageBase F))
     (hVisible : D.ConjugateCenterVisible E q) :
     D.geometricRamificationIndex E q = 1 := by
   letI : Module.Finite
-      (planarImageAlgebra F) (PlanarFiniteCompletionRing F) :=
+      (PolynomialImageAlgebra F)
+      (PolynomialIntermediateNormalizationRing F) :=
     D.cover.finiteIntermediateModel
-  letI : IsNoetherianRing (planarImageAlgebra F) := by
-    unfold planarImageAlgebra
+  letI : IsNoetherianRing (PolynomialImageAlgebra F) := by
+    unfold PolynomialImageAlgebra polynomialMapImageAlgebra
     infer_instance
-  letI : IsNoetherianRing (PlanarFiniteCompletionRing F) :=
+  letI :
+      IsNoetherianRing (PolynomialIntermediateNormalizationRing F) :=
     IsNoetherianRing.of_finite
-      (planarImageAlgebra F) (PlanarFiniteCompletionRing F)
+      (PolynomialImageAlgebra F)
+      (PolynomialIntermediateNormalizationRing F)
   letI : Algebra.IsUnramifiedAt
-      (A := PlanarFiniteCompletionRing F)
-      (planarImageAlgebra F) (D.centerPrime E q) :=
+      (A := PolynomialIntermediateNormalizationRing F)
+      (PolynomialImageAlgebra F) (D.centerPrime E q) :=
     D.centerPrime_isUnramifiedAt_of_visible E q hEtale hVisible
   exact
     Ideal.ramificationIdx_eq_one_of_isUnramifiedAt
       (R.center_ne_bot E q)
 
 /--
-The former pointwise visible-sheet input is now a theorem: the standard
-valuation-index formula plus étaleness gives inertia index one at every
-visible conjugate center.
+Étaleness sends a conjugate center with nontrivial relative inertia into
+the deleted boundary.
 -/
-theorem visibleConjugateSheetInertia
-    (R : D.ConjugateRamificationRealization) :
-    D.VisibleConjugateSheetInertia := by
-  intro E q hEtale hVisible
+theorem ramifiedCenter_mem_boundary
+    (R : D.ConjugateRamificationRealization)
+    (hEtale : IsEtale (polynomialSourceToImageBase F))
+    (E :
+      PolynomialRamifiedCodimensionOnePoint (F := F) (N := N))
+    (q : D.sheetClasses E)
+    (hq : D.inertiaIndex E q ≠ 1) :
+    D.centerAtClass E q ∈
+      polynomialIntermediateNormalizationBoundary F := by
+  change
+    D.centerAtClass E q ∉
+      Set.range (polynomialSourceToIntermediateNormalization F).base
+  intro hVisible
+  apply hq
   rw [R.inertiaIndex_eq_geometricRamificationIndex]
   exact
     D.geometricRamificationIndex_eq_one_of_visible
       R E q hEtale hVisible
 
-end NormalizationDiagram
+/--
+The ramification realization and étaleness place every positive-index
+conjugate center in the deleted boundary.
+-/
+theorem ramifiedConjugateCentersInBoundary
+    (R : D.ConjugateRamificationRealization)
+    (hEtale : IsEtale (polynomialSourceToImageBase F)) :
+    D.RamifiedConjugateCentersInBoundary := by
+  intro E q hq
+  exact D.ramifiedCenter_mem_boundary R hEtale E q hq
+
+end PolynomialNormalizationDiagram
 
 end
 
-end CollisionIdeals.Planar
+end CollisionIdeals

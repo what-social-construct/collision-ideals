@@ -1,10 +1,13 @@
-import CollisionIdeals.Basic
+import Mathlib.Algebra.MvPolynomial.CommRing
+import Mathlib.Algebra.MvPolynomial.Monad
+import Mathlib.Algebra.MvPolynomial.Rename
+import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 set_option autoImplicit false
 
 namespace CollisionIdeals
 
-universe u v w
+universe u v
 
 open MvPolynomial
 
@@ -12,11 +15,83 @@ noncomputable section
 
 variable {R : Type u} [CommRing R]
 variable {ι : Type v}
-variable {κ : Type w}
+
+/-- Two labelled copies of the source variables. -/
+abbrev PairVars (ι : Type v) := Sum ι ι
+
+/-- The polynomial ring on one copy of affine space. -/
+abbrev SourceRing (R : Type u) (ι : Type v) [CommRing R] :=
+  MvPolynomial ι R
+
+/-- The polynomial ring on two copies of affine space. -/
+abbrev PairRing (R : Type u) (ι : Type v) [CommRing R] :=
+  MvPolynomial (PairVars ι) R
+
+/-- Put a polynomial in the left copy of the source variables. -/
+def leftRename : SourceRing R ι →ₐ[R] PairRing R ι :=
+  MvPolynomial.rename Sum.inl
+
+/-- Put a polynomial in the right copy of the source variables. -/
+def rightRename : SourceRing R ι →ₐ[R] PairRing R ι :=
+  MvPolynomial.rename Sum.inr
+
+/-- A standard generator `xᵢ(left) - xᵢ(right)` of the diagonal ideal. -/
+def diagonalGenerator (i : ι) : PairRing R ι :=
+  (X (Sum.inl i : PairVars ι) : PairRing R ι) -
+    (X (Sum.inr i : PairVars ι) : PairRing R ι)
+
+/-- The diagonal ideal in the coordinate ring of two copies of affine space. -/
+def diagonalIdeal : Ideal (PairRing R ι) :=
+  Ideal.span (Set.range (diagonalGenerator (R := R) (ι := ι)))
 
 /-- Collapse the two labelled copies of the source variables to one copy. -/
 def diagonalEval : PairRing R ι →ₐ[R] SourceRing R ι :=
   MvPolynomial.rename (Sum.elim id id)
+
+@[simp]
+theorem leftRename_C (r : R) :
+    leftRename (ι := ι) (C r) = C r := by
+  simp [leftRename]
+
+@[simp]
+theorem rightRename_C (r : R) :
+    rightRename (ι := ι) (C r) = C r := by
+  simp [rightRename]
+
+@[simp]
+theorem leftRename_X (i : ι) :
+    leftRename (R := R) (X i) = X (Sum.inl i) := by
+  simp [leftRename]
+
+@[simp]
+theorem rightRename_X (i : ι) :
+    rightRename (R := R) (X i) = X (Sum.inr i) := by
+  simp [rightRename]
+
+@[simp]
+theorem leftRename_add (p q : SourceRing R ι) :
+    leftRename (p + q) = leftRename p + leftRename q := by
+  exact map_add _ _ _
+
+@[simp]
+theorem rightRename_add (p q : SourceRing R ι) :
+    rightRename (p + q) = rightRename p + rightRename q := by
+  exact map_add _ _ _
+
+@[simp]
+theorem leftRename_mul (p q : SourceRing R ι) :
+    leftRename (p * q) = leftRename p * leftRename q := by
+  exact map_mul _ _ _
+
+@[simp]
+theorem rightRename_mul (p q : SourceRing R ι) :
+    rightRename (p * q) = rightRename p * rightRename q := by
+  exact map_mul _ _ _
+
+theorem diagonalGenerator_mem (i : ι) :
+    diagonalGenerator (R := R) i ∈
+      diagonalIdeal (R := R) (ι := ι) := by
+  exact Ideal.subset_span (Set.mem_range_self i)
 
 @[simp]
 theorem diagonalEval_leftRename (p : SourceRing R ι) :
@@ -105,47 +180,23 @@ theorem diagonalEval_ker :
       (diagonalGenerator (R := R) i) = 0
     exact diagonalEval_diagonalGenerator (R := R) i
 
-/-- The collision equations vanish under diagonal evaluation. -/
-theorem relationIdeal_le_diagonalEval_ker
-    (F : κ → SourceRing R ι) :
-    relationIdeal F ≤
-      RingHom.ker (diagonalEval (R := R) (ι := ι)).toRingHom := by
-  rw [diagonalEval_ker]
-  exact relationIdeal_le_diagonalIdeal F
+/-- Diagonal evaluation is surjective because left renaming is a section. -/
+theorem diagonalEval_surjective :
+    Function.Surjective
+      (diagonalEval (R := R) (ι := ι)).toRingHom := by
+  intro p
+  exact ⟨leftRename p, by simp⟩
 
-/--
-The morphism on coordinate rings dual to the diagonal
-`X → X ×_Y X`.
--/
-def collisionDiagonal (F : κ → SourceRing R ι) :
-    CollisionRing F →ₐ[R] SourceRing R ι :=
-  Ideal.Quotient.liftₐ
-    (relationIdeal F)
-    (diagonalEval (R := R) (ι := ι))
-    (relationIdeal_le_diagonalEval_ker F)
-
-@[simp]
-theorem collisionDiagonal_mk
-    (F : κ → SourceRing R ι) (p : PairRing R ι) :
-    collisionDiagonal F (Ideal.Quotient.mk (relationIdeal F) p) =
-      diagonalEval (R := R) (ι := ι) p := by
-  rfl
-
-/--
-The concrete obstruction ideal is precisely the ideal defining the diagonal
-inside the collision fiber product.
--/
-theorem collisionDiagonal_ker (F : κ → SourceRing R ι) :
-    RingHom.ker (collisionDiagonal F).toRingHom = obstructionIdeal F := by
-  change
-    RingHom.ker
-        (Ideal.Quotient.lift
-          (relationIdeal F)
-          (diagonalEval (R := R) (ι := ι)).toRingHom
-          (relationIdeal_le_diagonalEval_ker F)) =
-      obstructionIdeal F
-  rw [Ideal.ker_quotient_lift, diagonalEval_ker]
-  rfl
+/-- The coordinate ring `S / I_Δ` is canonically the source ring. -/
+noncomputable def diagonalQuotientEquiv :
+    (PairRing R ι ⧸
+        diagonalIdeal (R := R) (ι := ι)) ≃+*
+      SourceRing R ι :=
+  (Ideal.quotEquivOfEq
+      (diagonalEval_ker (R := R) (ι := ι)).symm).trans
+    (RingHom.quotientKerEquivOfSurjective
+      (f := (diagonalEval (R := R) (ι := ι)).toRingHom)
+      (diagonalEval_surjective (R := R) (ι := ι)))
 
 end
 

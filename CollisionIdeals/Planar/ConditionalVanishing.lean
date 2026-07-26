@@ -1,7 +1,8 @@
+import CollisionIdeals.AutomorphismCriterion
+import CollisionIdeals.GenericDegreeOne
+import CollisionIdeals.KellerCollisionModel
 import CollisionIdeals.Planar.ExternalAssumptions
-import CollisionIdeals.Planar.EtaleBoundary
-import CollisionIdeals.Planar.GenericFiber
-import CollisionIdeals.Planar.VisibleRamification
+import CollisionIdeals.Planar.NormalizationDiagram
 
 set_option autoImplicit false
 
@@ -10,130 +11,115 @@ namespace CollisionIdeals.Planar
 noncomputable section
 
 /--
-The internal hidden-inertia package for one planar map.
-
-It supplies the normalization diagram and the standard valuation formula
-realizing double-coset inertia indices as geometric ramification indices,
-separately supplies the later planar boundary-rigidity theorem, and records
-the generic-fiber descent from `L = K` to emptiness of the off-diagonal
-collision scheme.
-
-Branch purity and affine-plane finite-étale rigidity are deliberately not
-fields: they enter only through the two explicit external interfaces.
+The shared Keller collision-normalization model, specialized to
+`𝔸²_ℂ`.  Planar no-hidden-inertia remains a separate hypothesis.
 -/
-structure PlanarHiddenInertiaRigidity
-    (F : Fin 2 → PlanePolynomial) where
-  N : Type
-  fieldN : Field N
-  algebraN : Algebra (PlanarBaseFunctionField F) N
-  diagram :
-    letI : Field N := fieldN
-    letI : Algebra (PlanarBaseFunctionField F) N := algebraN
-    NormalizationDiagram (F := F) (N := N)
-  kellerEtale : PlanarKellerEtaleBridge F
-  ramificationRealization :
-    letI : Field N := fieldN
-    letI : Algebra (PlanarBaseFunctionField F) N := algebraN
-    diagram.ConjugateRamificationRealization
-  boundaryRigidity :
-    letI : Field N := fieldN
-    letI : Algebra (PlanarBaseFunctionField F) N := algebraN
-    diagram.PlanarBoundaryRigidity
-  genericDegreeOneExcludesOffDiagonal :
-    PlanarFunctionFieldExtensionTrivial F →
-      CollisionOffDiagonalVanishing F
+abbrev PlanarKellerCollisionModel
+    (F : PlanarPolynomialMap) :=
+  PolynomialKellerCollisionModel F
 
-namespace PlanarHiddenInertiaRigidity
+namespace PlanarKellerCollisionModel
 
-variable {F : Fin 2 → PlanePolynomial}
+variable {F : PlanarPolynomialMap}
 
 /--
-The two external algebraic-geometry inputs turn a hidden-inertia package
-into the type-correct equality `L = K`.
+The two external algebraic-geometry inputs turn the Keller collision
+model and the separate no-hidden-inertia hypothesis into the type-correct
+equality `L = K`.
 -/
-theorem functionFieldExtension_trivial
+theorem functionFieldExtensionTrivial
     (hPurity : BranchPurityA2)
     (hFiniteEtaleRigidity : AffinePlaneFiniteEtaleRigidity)
-    (hHidden : PlanarHiddenInertiaRigidity F)
-    (hKeller : IsPlanarKeller F) :
+    (M : PlanarKellerCollisionModel F)
+    (hNoHidden :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      PlanarNoHiddenInertia M.diagram) :
     PlanarFunctionFieldExtensionTrivial F := by
-  letI : Field hHidden.N := hHidden.fieldN
-  letI : Algebra (PlanarBaseFunctionField F) hHidden.N :=
-    hHidden.algebraN
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N :=
+    M.algebraN
   have hNoCodimensionOneRamification :
       NoCodimensionOneRamification
-        (F := F) (N := hHidden.N) :=
-    hHidden.diagram.noCodimensionOneRamification
-      (hHidden.diagram.visibleConjugateSheetInertia
-        hHidden.ramificationRealization)
-      hHidden.boundaryRigidity
-      (hHidden.kellerEtale hKeller)
+        (F := F) (N := M.N) :=
+    M.diagram.noCodimensionOneRamification
+      M.ramifiedConjugateCentersInBoundary_of_keller
+      hNoHidden
   have hNormalizationEtale :
       AlgebraicGeometry.IsEtale
         (planarNormalizationInExtensionToBase
-          (F := F) (N := hHidden.N)) :=
-    hPurity hHidden.diagram.cover hKeller
-      hNoCodimensionOneRamification
+          (F := F) (N := M.N)) :=
+    hPurity M.diagram.cover hNoCodimensionOneRamification
   have hNormalClosure :
-      hHidden.diagram.cover.normalClosure.ExtensionTrivial :=
-    hFiniteEtaleRigidity hHidden.diagram.cover hKeller
-      hNormalizationEtale
+      M.diagram.cover.normalClosure.ExtensionTrivial :=
+    hFiniteEtaleRigidity M.diagram.cover hNormalizationEtale
   exact
-    PlanarNormalClosureData.functionFieldExtensionTrivial_of_extensionTrivial
-      hHidden.diagram.cover.normalClosure hNormalClosure
+    PolynomialNormalClosureData.functionFieldExtensionTrivial_of_extensionTrivial
+      M.diagram.cover.normalClosure hNormalClosure
 
-end PlanarHiddenInertiaRigidity
+end PlanarKellerCollisionModel
 
 /--
 The conditional planar vanishing spine.
 
-All normalization and hidden-inertia construction is carried by
-`hHidden`; the only external algebraic-geometry inputs are branch purity
-and finite-étale rigidity of the complex affine plane.
+All concrete normalization and collision data is carried by `M`.
+The planar no-hidden-inertia statement and the two external
+algebraic-geometry inputs remain explicit arguments.
 -/
 theorem planarVanishing_of
-    {F : Fin 2 → PlanePolynomial}
+    {F : PlanarPolynomialMap}
     (hPurity : BranchPurityA2)
     (hFiniteEtaleRigidity : AffinePlaneFiniteEtaleRigidity)
-    (hHidden : PlanarHiddenInertiaRigidity F)
-    (hKeller : IsPlanarKeller F) :
+    (M : PlanarKellerCollisionModel F)
+    (hNoHidden :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      PlanarNoHiddenInertia M.diagram) :
     obstructionIdeal F = ⊥ := by
-  apply
-    (collisionOffDiagonalVanishing_iff_obstructionIdeal_eq_bot F).mp
   exact
-    hHidden.genericDegreeOneExcludesOffDiagonal
-      (hHidden.functionFieldExtension_trivial
-        hPurity hFiniteEtaleRigidity hKeller)
+    obstructionIdeal_eq_bot_of_functionFieldExtensionTrivial
+      F (M.kellerFlat M.keller)
+      (M.functionFieldExtensionTrivial
+        hPurity hFiniteEtaleRigidity hNoHidden)
 
 /--
 The user-facing theorem with the two external algebraic-geometry
 assumptions supplied by the dedicated assumptions module.
 -/
-theorem planarVanishing_assuming_externalAG
-    {F : Fin 2 → PlanePolynomial}
-    (hHidden : PlanarHiddenInertiaRigidity F)
-    (hKeller : IsPlanarKeller F) :
+theorem planarVanishing_assuming_standardGeometry
+    {F : PlanarPolynomialMap}
+    (M : PlanarKellerCollisionModel F)
+    (hNoHidden :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      PlanarNoHiddenInertia M.diagram) :
     obstructionIdeal F = ⊥ :=
   planarVanishing_of
     ExternalAssumptions.branchPurityA2
     ExternalAssumptions.affinePlaneFiniteEtaleRigidity
-    hHidden
-    hKeller
+    M hNoHidden
 
 /--
 Using the third external literature theorem, Ax--Grothendieck, the
 conditional ideal-vanishing result yields a polynomial automorphism.
 -/
 theorem planarAutomorphism_assuming_externalLiterature
-    {F : Fin 2 → PlanePolynomial}
-    (hHidden : PlanarHiddenInertiaRigidity F)
-    (hKeller : IsPlanarKeller F) :
+    {F : PlanarPolynomialMap}
+    (M : PlanarKellerCollisionModel F)
+    (hNoHidden :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      PlanarNoHiddenInertia M.diagram) :
     IsPolynomialAutomorphism F := by
   apply ExternalAssumptions.axGrothendieckA2 F
   exact
-    pointMap_injective_of_relationIdeal_eq_diagonalIdeal F
+    pointMap_injective_of_collisionIdeal_eq_diagonalIdeal F
       ((obstructionIdeal_eq_bot_iff F).1
-        (planarVanishing_assuming_externalAG hHidden hKeller))
+        (planarVanishing_assuming_standardGeometry M hNoHidden))
 
 end
 

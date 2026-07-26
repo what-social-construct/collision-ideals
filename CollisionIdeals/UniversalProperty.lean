@@ -1,4 +1,4 @@
-import CollisionIdeals.DiagonalKernel
+import CollisionIdeals.Basic
 
 set_option autoImplicit false
 
@@ -19,27 +19,27 @@ variable {F : κ → SourceRing R ι}
 /-- The first projection on coordinate rings, followed by the collision quotient. -/
 def collisionLeft (F : κ → SourceRing R ι) :
     SourceRing R ι →ₐ[R] CollisionRing F :=
-  (Ideal.Quotient.mkₐ R (relationIdeal F)).comp
+  (Ideal.Quotient.mkₐ R (collisionIdeal F)).comp
     (leftRename (R := R) (ι := ι))
 
 /-- The second projection on coordinate rings, followed by the collision quotient. -/
 def collisionRight (F : κ → SourceRing R ι) :
     SourceRing R ι →ₐ[R] CollisionRing F :=
-  (Ideal.Quotient.mkₐ R (relationIdeal F)).comp
+  (Ideal.Quotient.mkₐ R (collisionIdeal F)).comp
     (rightRename (R := R) (ι := ι))
 
 @[simp]
 theorem collisionLeft_apply
     (F : κ → SourceRing R ι) (p : SourceRing R ι) :
     collisionLeft F p =
-      Ideal.Quotient.mk (relationIdeal F) (leftRename p) := by
+      Ideal.Quotient.mk (collisionIdeal F) (leftRename p) := by
   rfl
 
 @[simp]
 theorem collisionRight_apply
     (F : κ → SourceRing R ι) (p : SourceRing R ι) :
     collisionRight F p =
-      Ideal.Quotient.mk (relationIdeal F) (rightRename p) := by
+      Ideal.Quotient.mk (collisionIdeal F) (rightRename p) := by
   rfl
 
 /-- The two collision projections agree after applying each coordinate of `F`. -/
@@ -87,10 +87,10 @@ theorem collisionPairMap_comp_rightRename
   intro i
   simp [collisionPairMap, rightRename]
 
-theorem relationIdeal_le_collisionPairMap_ker
+theorem collisionIdeal_le_collisionPairMap_ker
     (c : CollisionCocone F T) :
-    relationIdeal F ≤ RingHom.ker (collisionPairMap c).toRingHom := by
-  rw [relationIdeal, Ideal.span_le]
+    collisionIdeal F ≤ RingHom.ker (collisionPairMap c).toRingHom := by
+  rw [collisionIdeal, Ideal.span_le]
   rintro _ ⟨j, rfl⟩
   change collisionPairMap c (leftRename (F j) - rightRename (F j)) = 0
   rw [map_sub]
@@ -110,9 +110,9 @@ def collisionLift
     (c : CollisionCocone F T) :
     CollisionRing F →ₐ[R] T :=
   Ideal.Quotient.liftₐ
-    (relationIdeal F)
+    (collisionIdeal F)
     (collisionPairMap c)
-    (relationIdeal_le_collisionPairMap_ker c)
+    (collisionIdeal_le_collisionPairMap_ker c)
 
 @[simp]
 theorem collisionLift_comp_left
@@ -166,8 +166,8 @@ theorem collisionHom_ext
   intro q
   obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective q
   have hpair :
-      h.comp (Ideal.Quotient.mkₐ R (relationIdeal F)) =
-        k.comp (Ideal.Quotient.mkₐ R (relationIdeal F)) := by
+      h.comp (Ideal.Quotient.mkₐ R (collisionIdeal F)) =
+        k.comp (Ideal.Quotient.mkₐ R (collisionIdeal F)) := by
     apply MvPolynomial.algHom_ext
     intro s
     cases s with
