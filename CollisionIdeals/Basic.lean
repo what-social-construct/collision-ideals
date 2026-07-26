@@ -256,6 +256,22 @@ def HasPolynomialLeftInverse (F : κ → SourceRing R ι) : Prop :=
   ∃ G : ι → MvPolynomial κ R,
     ∀ i, MvPolynomial.bind₁ F (G i) = X i
 
+/--
+A polynomial self-map is an automorphism when substitution by its
+coordinate polynomials is a bijection of the coordinate polynomial ring.
+-/
+def IsPolynomialAutomorphism
+    (F : ι → SourceRing R ι) : Prop :=
+  Function.Bijective (MvPolynomial.bind₁ F)
+
+/-- A polynomial automorphism has a polynomial left inverse. -/
+theorem IsPolynomialAutomorphism.hasPolynomialLeftInverse
+    {F : ι → SourceRing R ι}
+    (hF : IsPolynomialAutomorphism F) :
+    HasPolynomialLeftInverse F := by
+  choose G hG using fun i ↦ hF.2 (X i)
+  exact ⟨G, hG⟩
+
 /-- A polynomial left inverse forces the collision relation to be the diagonal. -/
 theorem relationIdeal_eq_diagonalIdeal_of_hasPolynomialLeftInverse
     (F : κ → SourceRing R ι) (hF : HasPolynomialLeftInverse F) :

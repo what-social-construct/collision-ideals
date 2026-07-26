@@ -13,22 +13,6 @@ universe u v
 variable {R : Type u} [CommRing R]
 variable {ι : Type v}
 
-/--
-A polynomial self-map is an automorphism when substitution by its
-coordinate polynomials is a bijection of the coordinate polynomial ring.
--/
-def IsPolynomialAutomorphism
-    (F : ι → SourceRing R ι) : Prop :=
-  Function.Bijective (MvPolynomial.bind₁ F)
-
-/-- A polynomial automorphism has a polynomial left inverse. -/
-theorem IsPolynomialAutomorphism.hasPolynomialLeftInverse
-    {F : ι → SourceRing R ι}
-    (hF : IsPolynomialAutomorphism F) :
-    HasPolynomialLeftInverse F := by
-  choose G hG using fun i ↦ hF.2 (X i)
-  exact ⟨G, hG⟩
-
 /-- Every polynomial automorphism has vanishing collision obstruction. -/
 theorem obstructionIdeal_eq_bot_of_isPolynomialAutomorphism
     {F : ι → SourceRing R ι}
@@ -47,18 +31,6 @@ polynomial automorphism of `𝔸²_ℂ`.
 def PlanarJacobianConjecture : Prop :=
   ∀ F : Fin 2 → PlanePolynomial,
     IsPlanarKeller F →
-      IsPolynomialAutomorphism F
-
-/--
-The classical Ax--Grothendieck automorphism principle used in the
-reformulation: an injective polynomial self-map of the complex affine
-plane is a polynomial automorphism.
-
-It is an explicit hypothesis below, not a new axiom of this development.
--/
-def PlanarAxGrothendieck : Prop :=
-  ∀ F : Fin 2 → PlanePolynomial,
-    Function.Injective (pointMap F) →
       IsPolynomialAutomorphism F
 
 /--

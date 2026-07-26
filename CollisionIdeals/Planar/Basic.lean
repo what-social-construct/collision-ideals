@@ -22,6 +22,16 @@ def planarJacobianDet (F : Fin 2 → PlanePolynomial) : PlanePolynomial :=
 def IsPlanarKeller (F : Fin 2 → PlanePolynomial) : Prop :=
   ∃ c : ℂ, c ≠ 0 ∧ planarJacobianDet F = C c
 
+/--
+The classical Ax--Grothendieck automorphism principle in the exact planar
+form consumed by this project: an injective polynomial self-map of
+`𝔸²_ℂ` is a polynomial automorphism.
+-/
+def PlanarAxGrothendieck : Prop :=
+  ∀ F : Fin 2 → PlanePolynomial,
+    Function.Injective (pointMap F) →
+      IsPolynomialAutomorphism F
+
 end
 
 end CollisionIdeals

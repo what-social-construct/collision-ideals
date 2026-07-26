@@ -96,8 +96,10 @@ then gives a polynomial automorphism.
 
 The Lean proposition `PlanarJacobianConjecture` records the usual
 automorphism formulation.  The proposition `PlanarAxGrothendieck` records
-the classical injective-polynomial-map automorphism principle as an explicit
-hypothesis, not as a new axiom.  Lean proves
+the classical injective-polynomial-map automorphism principle as an
+explicit interface.  Most theorems continue to accept it parametrically;
+`Planar.ExternalAssumptions.axGrothendieckA2` is the isolated project axiom
+used by the literature-backed corollary.  Lean proves
 
 ```text
 PlanarAxGrothendieck →
@@ -255,9 +257,9 @@ two-dimensional specialization:
   composition;
 - `EtaleBoundary` isolates both the Keller-to-scheme-étale theorem and the
   valuation/inertia-to-boundary theorem still needed;
-- `ExternalAssumptions` contains exactly the two explicitly declared
-  algebraic-geometry axioms used by the conditional spine: specialized
-  branch purity and finite-étale rigidity of \(\mathbb A^2_{\mathbb C}\);
+- `ExternalAssumptions` contains exactly the three explicitly declared
+  literature inputs: specialized branch purity, finite-étale rigidity of
+  \(\mathbb A^2_{\mathbb C}\), and planar Ax–Grothendieck;
 - `ConditionalVanishing` packages the remaining internal hidden-inertia
   data and proves the user-facing conditional planar-vanishing theorem;
 - `GenericFiber` isolates the passage from generic degree one to emptiness
@@ -1048,15 +1050,19 @@ hidden-inertia detection:
 \end{aligned}
 \]
 
-Both are explicit propositions supplied to the downstream theorems; no
-unrelated theorem silently supplies either one.  The dedicated
-`Planar.ExternalAssumptions` module declares exactly two project axioms:
+The first two are explicit geometric propositions supplied to the
+normalization spine.  Ax–Grothendieck enters only at the final
+injective-to-automorphism arrow.  The dedicated
+`Planar.ExternalAssumptions` module declares exactly three project axioms:
 
 \[
 \texttt{branchPurityA2}:\texttt{BranchPurityA2},
 \qquad
 \texttt{affinePlaneFiniteEtaleRigidity}:
-  \texttt{AffinePlaneFiniteEtaleRigidity}.
+  \texttt{AffinePlaneFiniteEtaleRigidity},
+\qquad
+\texttt{axGrothendieckA2}:
+  \texttt{PlanarAxGrothendieck}.
 \]
 
 The branch-purity assumption consumes actual height-one local
@@ -1083,10 +1089,43 @@ as an opaque field.  It then proves the exact conditional spine
 
 Consequently,
 `Planar.planarVanishing_assuming_externalAG hHidden hKeller`
-supplies the two isolated external assumptions automatically.  No generic
-fiber hypothesis is silently asserted as a third axiom: its map-specific
-form is a named field of `hHidden`.  Lean then proves the formal
-composition
+supplies the first two isolated external assumptions automatically.
+`Planar.planarAutomorphism_assuming_externalLiterature` then supplies
+Ax–Grothendieck at the final arrow.  The generic-fiber hypothesis is not
+silently asserted as another axiom: its map-specific form is a named field
+of `hHidden`.  Lean then proves the formal composition
+
+\[
+\begin{array}{c}
+\text{collision nerve / iterated fiber products}\\
+\downarrow\\
+\text{normal closure and double-coset centers}\\
+\downarrow\\
+\operatorname{core}_G(H)=1\\
+\downarrow\\
+I_E\ne1\Longrightarrow
+  \exists q\in D_E\backslash G/H,\ \iota_E(q)>1\\
+\downarrow\\
+\text{étale visibility would give }\iota_E(q)=1\\
+\downarrow\\
+\iota_E(q)>1\Longrightarrow
+  \overline q\in\overline X\setminus X\\
+\downarrow\\
+\text{PlanarBoundaryRigidity}\\
+\downarrow\\
+\text{all divisorial inertia is trivial}\\
+\downarrow\quad\text{\rm(branch purity)}\\
+Z\to Y\text{ is finite étale}\\
+\downarrow\quad\text{\rm(finite-étale rigidity of }\mathbb A^2_{\mathbb C}\text{\rm)}\\
+N=K\Longrightarrow L=K\\
+\downarrow\quad\text{\rm(generic collision bridge)}\\
+q_F=0\\
+\downarrow\\
+I_R=I_\Delta\Longrightarrow F\text{ injective}\\
+\downarrow\quad\text{\rm(Ax--Grothendieck)}\\
+F\text{ is a polynomial automorphism.}
+\end{array}
+\]
 
 \[
 \texttt{DetectsInertia}
@@ -1323,8 +1362,9 @@ F\text{ is a polynomial automorphism}.
 
 Likewise, `planarVanishing_implies_jc2` proves
 `JacobianConjectureTwo` from uniform vanishing of the canonical
-idempotent, with Ax--Grothendieck kept as a visible hypothesis rather than
-introduced as a Lean axiom.
+idempotent while keeping Ax--Grothendieck as a visible parameter; the
+new external-literature corollary is the one that supplies the isolated
+project axiom.
 
 For the Galois-sheet stage, a twofold generic collision component indexed
 by \(HgH\) has field

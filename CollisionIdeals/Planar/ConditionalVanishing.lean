@@ -117,6 +117,21 @@ theorem planarVanishing_assuming_externalAG
     hHidden
     hKeller
 
+/--
+Using the third external literature theorem, Ax--Grothendieck, the
+conditional ideal-vanishing result yields a polynomial automorphism.
+-/
+theorem planarAutomorphism_assuming_externalLiterature
+    {F : Fin 2 → PlanePolynomial}
+    (hHidden : PlanarHiddenInertiaRigidity F)
+    (hKeller : IsPlanarKeller F) :
+    IsPolynomialAutomorphism F := by
+  apply ExternalAssumptions.axGrothendieckA2 F
+  exact
+    pointMap_injective_of_relationIdeal_eq_diagonalIdeal F
+      ((obstructionIdeal_eq_bot_iff F).1
+        (planarVanishing_assuming_externalAG hHidden hKeller))
+
 end
 
 end CollisionIdeals.Planar

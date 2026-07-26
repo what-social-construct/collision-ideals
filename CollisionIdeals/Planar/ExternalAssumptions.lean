@@ -49,8 +49,8 @@ def AffinePlaneFiniteEtaleRigidity : Prop :=
         M.normalClosure.ExtensionTrivial
 
 /-!
-The two external algebraic-geometry inputs used by the conditional planar
-spine.
+The three external literature inputs used by the conditional planar spine
+and its final automorphism corollary.
 
 They live in a dedicated namespace so every downstream dependency remains
 visible in `#print axioms`.
@@ -70,6 +70,13 @@ Mathlib.
 -/
 axiom affinePlaneFiniteEtaleRigidity :
   AffinePlaneFiniteEtaleRigidity
+
+/--
+The classical Ax--Grothendieck theorem in the planar form used here,
+presently assumed because the corresponding result is not available in
+Mathlib.
+-/
+axiom axGrothendieckA2 : PlanarAxGrothendieck
 
 end ExternalAssumptions
 
