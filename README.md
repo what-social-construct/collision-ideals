@@ -31,15 +31,15 @@ I_R(F)\subseteq I_\Delta
 and therefore a canonical $S/I_R(F)$-module
 
 ```math
-\operatorname{Obs}(F):=I_\Delta/I_R(F).
+\mathrm{Obs}(F):=I_\Delta/I_R(F).
 ```
 
-Thus $\operatorname{Obs}(F)$ is not an additional independent object: it
+Thus $\mathrm{Obs}(F)$ is not an additional independent object: it
 is the canonical defect module in the exact sequence
 
 ```math
 0\longrightarrow I_R(F)\longrightarrow I_\Delta
-\longrightarrow\operatorname{Obs}(F)\longrightarrow0.
+\longrightarrow\mathrm{Obs}(F)\longrightarrow0.
 ```
 
 Equivalently, let
@@ -56,25 +56,25 @@ diagonal evaluation on $S$ is $I_\Delta$, we have
 
 ```math
 \boxed{
-\ker(\bar\mu_F)=\operatorname{Obs}(F)=I_\Delta/I_R(F),
+\ker(\bar\mu_F)=\mathrm{Obs}(F)=I_\Delta/I_R(F),
 }
 ```
 
 so there is a second canonical exact sequence
 
 ```math
-0\longrightarrow\operatorname{Obs}(F)
+0\longrightarrow\mathrm{Obs}(F)
 \longrightarrow S/I_R(F)
 \xrightarrow{\bar\mu_F}\mathbb C[x_1,\ldots,x_n]
 \longrightarrow0.
 ```
 
 The purpose of this project is to study the vanishing of
-$\operatorname{Obs}(F)$.
+$\mathrm{Obs}(F)$.
 Since $I_R(F)\subseteq I_\Delta$, the elementary module criterion gives
 
 ```math
-\operatorname{Obs}(F)=0
+\mathrm{Obs}(F)=0
 \quad\Longleftrightarrow\quad
 I_R(F)=I_\Delta.
 ```
@@ -87,7 +87,7 @@ Over $\mathbb C$, the quotient has a direct interpretation:
 \boxed{
 F\text{ is a polynomial automorphism}
 \quad\Longleftrightarrow\quad
-\operatorname{Obs}(F)=0.
+\mathrm{Obs}(F)=0.
 }
 ```
 
@@ -120,14 +120,14 @@ instance, are listed together in the canonical planar spine below.
 Geometrically, if $A_F=S/I_R(F)$, then
 
 ```math
-\operatorname{Spec}(A_F)
+\mathrm{Spec}(A_F)
 =
 \mathbb A^n\times_{\mathbb A^n}\mathbb A^n
 ```
 
 parametrizes ordered pairs with the same image under $F$.  The closed
-subscheme cut out by $\operatorname{Obs}(F)$, regarded as an ideal of
-$A_F$, is the diagonal.  Thus $\operatorname{Obs}(F)=0$ says that the
+subscheme cut out by $\mathrm{Obs}(F)$, regarded as an ideal of
+$A_F$, is the diagonal.  Thus $\mathrm{Obs}(F)=0$ says that the
 self-fiber product is scheme-theoretically only the diagonal.
 
 ## Universal property
@@ -142,7 +142,7 @@ A=R[x_i]_{i\in\iota},\qquad B=R[t_j]_{j\in\kappa},
 For every commutative $R$-algebra $T$, the collision quotient satisfies
 
 ```math
-\operatorname{Hom}_{R\text{-alg}}(S/I_R(F),T)
+\mathrm{Hom}_{R\text{-alg}}(S/I_R(F),T)
 \cong
 \left\{
 (f,g):A\rightrightarrows T:
@@ -160,7 +160,7 @@ This universal construction does not assert vanishing.  The planar target
 asks for the off-diagonal factor to vanish.  Under the explicit separable
 cubic normal-closure conditions formalized here, the generic collision
 algebra decomposes as $L\otimes_KL\simeq L\times N$, and the same residual
-field satisfies $\operatorname{Gal}(N/K)\simeq S_3$.  No concrete
+field satisfies $\mathrm{Gal}(N/K)\simeq S_3$.  No concrete
 three-dimensional Keller counterexample is asserted.
 
 ## Lean status
@@ -173,7 +173,7 @@ The current development is dimension-generic and proves:
 - the canonical equivalence $S/I_R(F)\simeq A\otimes_BA$;
 - the obstruction ideal is the kernel of the diagonal map
   $S/I_R(F)\to A$;
-- $\operatorname{Obs}(F)=0$ if and only if $I_R(F)=I_\Delta$;
+- $\mathrm{Obs}(F)=0$ if and only if $I_R(F)=I_\Delta$;
 - equality of the two ideals implies injectivity on points;
 - a polynomial left inverse forces $I_R(F)=I_\Delta$;
 - the abstract secant-determinant identities and resulting idempotent
@@ -189,18 +189,18 @@ The current development is dimension-generic and proves:
 - the complementary-ideal identities and Chinese-remainder sheet
   decomposition;
 - the affine off-diagonal collision scheme
-  $R_F^\circ=\operatorname{Spec}(S/(I_R:I_\Delta))$;
-- the canonical identification of $\operatorname{Spec}(S/I_R)$ with
+  $R_F^\circ=\mathrm{Spec}(S/(I_R:I_\Delta))$;
+- the canonical identification of $\mathrm{Spec}(S/I_R)$ with
   the categorical affine self-fiber product $X\times_YX$;
 - the concrete planar function fields
   $K=\mathbb C(P,Q)\subset L=\mathbb C(x,y)$, a finite normal-closure
   interface $L\hookrightarrow N$, and the fixing subgroup
-  $H=\operatorname{Gal}(N/L)$;
+  $H=\mathrm{Gal}(N/L)$;
 - the normalized affine models
-  \[
-  Z=\operatorname{Norm}_N(Y)\longrightarrow
-  \overline X=\operatorname{Norm}_L(Y)\longrightarrow Y
-  \]
+  ```math
+  Z=\mathrm{Norm}_N(Y)\longrightarrow
+  \overline X=\mathrm{Norm}_L(Y)\longrightarrow Y
+  ```
   and the commuting normalization triangle;
 - the dimension-independent double-coset index on
   $D_E\backslash G/H$, with its planar type specialization;
@@ -218,15 +218,15 @@ The current development is dimension-generic and proves:
   $K\otimes_B(S/I_R)\simeq L\otimes_KL$, under the explicit
   generic-source surjectivity condition;
 - for a separable cubic power-basis extension, the proved CRT decomposition
-  $L\otimes_KL\simeq L\times\operatorname{AdjoinRoot}(\operatorname{minpolyDiv})$, with first
+  $L\otimes_KL\simeq L\times\mathrm{AdjoinRoot}(\mathrm{minpolyDiv})$, with first
   projection equal to diagonal multiplication;
 - a compatible nontrivial second factor in the generic collision algebra
-  descends, by flatness of $K=\operatorname{Frac}(B)$, to
-  $\operatorname{Obs}(F)\ne0$ and $I_R(F)\subsetneq I_\Delta$;
+  descends, by flatness of $K=\mathrm{Frac}(B)$, to
+  $\mathrm{Obs}(F)\ne0$ and $I_R(F)\subsetneq I_\Delta$;
 - under explicit residual-field, degree-three, marked-normal-closure,
   marked-embedding compatibility, and nontrivial-fixing-subgroup
   conditions, the same residual field $N$ satisfies
-  $\operatorname{Gal}(N/K)\simeq S_3$;
+  $\mathrm{Gal}(N/K)\simeq S_3$;
 - for $F:\mathbb A^3_{\mathbb C}\to\mathbb A^3_{\mathbb C}$, the theorem
   `complexThreeCubicS3Collision` packages the Keller condition, the
   generic decomposition $K\otimes_BC_F\simeq L\times N$, the $S_3$
@@ -234,7 +234,7 @@ The current development is dimension-generic and proves:
   the off-diagonal collision scheme, and strict containment
   $I_R(F)\subsetneq I_\Delta$;
 - from the clopen-projector datum, the scheme coproduct decomposition
-  $\operatorname{Spec}(S/I_R)\cong\operatorname{Spec}(S/I_\Delta)\sqcup R_F^\circ$;
+  $\mathrm{Spec}(S/I_R)\cong\mathrm{Spec}(S/I_\Delta)\sqcup R_F^\circ$;
 - emptiness of $R_F^\circ$, vanishing of the obstruction ideal, and
   equality $I_R=I_\Delta$ are equivalent;
 - assuming the explicit Ax–Grothendieck interface, the standard planar
@@ -308,7 +308,7 @@ abbreviation of the dimension-independent
   indices.
 
 The generic-degree-one descent from $L=K$, together with the model's
-Keller-to-flat bridge, to $\operatorname{Obs}(F)=0$ is proved in
+Keller-to-flat bridge, to $\mathrm{Obs}(F)=0$ is proved in
 `GenericDegreeOne`; it is not stored as opaque data in the model.
 
 It does **not** contain planar no-hidden-inertia rigidity.  That assertion
@@ -415,7 +415,7 @@ L=K\\
 \downarrow\quad\text{generic collision descent using }A/B\text{ flat}\\
 R_F^\circ=\varnothing\\
 \downarrow\\
-\operatorname{Obs}(F)=0\\
+\mathrm{Obs}(F)=0\\
 \downarrow\\
 I_R(F)=I_\Delta.
 \end{array}
@@ -490,7 +490,7 @@ q_F=1-\frac{\overline\delta_F}{c}
 with
 
 ```math
-\operatorname{Obs}(F)=A_Fq_F.
+\mathrm{Obs}(F)=A_Fq_F.
 ```
 
 The complementary ideal in the polynomial ring is canonical:
@@ -505,7 +505,7 @@ Consequently,
 
 ```math
 \boxed{
-\operatorname{Obs}(F)=0
+\mathrm{Obs}(F)=0
 \Longleftrightarrow
 I_R(F)=I_\Delta
 \Longleftrightarrow
@@ -532,12 +532,12 @@ The intended comparison is:
 ```math
 \begin{array}{c|c}
 \text{conditional planar Keller target} &
-\operatorname{Keller}(F)+\text{normalization model}
+\mathrm{Keller}(F)+\text{normalization model}
 +\text{no hidden inertia}
-\Longrightarrow\operatorname{Obs}(F)=0
+\Longrightarrow\mathrm{Obs}(F)=0
 \\[2mm]
 \text{separable non-Galois cubic class} &
-\operatorname{Obs}(F)\neq0
+\mathrm{Obs}(F)\neq0
 \quad\text{under the cubic residual/Galois conditions.}
 \end{array}
 ```
@@ -569,14 +569,14 @@ L\otimes_KL\cong L\times N,
 ```
 
 where the first factor is the diagonal and
-$\operatorname{Gal}(N/K)\cong S_3$.  The original cubic sheet marks one
+$\mathrm{Gal}(N/K)\cong S_3$.  The original cubic sheet marks one
 root; the generic off-diagonal factor marks a second distinct root; those
 two roots determine the third.  Thus the generic factor is the ordered-root
 $S_3$-Galois closure $N$.  The formal theorem requires that the marked
 embedding in `NormalClosureData` agree with the $L$-algebra structure
 used for this residual factor.  It identifies $N$ at the generic
 base-changed level; it does not assert an equivalence
-$\operatorname{Frac}(C_F^{\mathrm{off}})\simeq N$.
+$\mathrm{Frac}(C_F^{\mathrm{off}})\simeq N$.
 The nonzero generic kernel nevertheless descends to the affine
 obstruction and records the failure of
 
