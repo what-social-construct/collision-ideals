@@ -598,6 +598,6 @@ counterexample to the three-dimensional Jacobian conjecture.
 ## License
 
 The Lean source and other software in this repository are available under
-the [MIT License](LICENSE).  The manuscript and other non-code material in
-[`paper/`](paper/) are available under
-[CC BY 4.0](paper/LICENSE).
+the [MIT License](LICENSE).  The manuscript PDF
+[`collision-ideals.pdf`](collision-ideals.pdf) and other non-code material
+in [`paper/`](paper/) are available under [CC BY 4.0](paper/LICENSE).
