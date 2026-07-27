@@ -2,94 +2,94 @@
 
 Let
 
-$$
+```math
 F=(F_1,\ldots,F_n):\mathbb A^n_{\mathbb C}\longrightarrow
 \mathbb A^n_{\mathbb C}
-$$
+```
 
 be a polynomial map.  In the coordinate ring of two copies of the source,
 
-$$
+```math
 S=\mathbb C[x_1,\ldots,x_n,y_1,\ldots,y_n],
-$$
+```
 
 there are two canonical ideals:
 
-$$
+```math
 I_R(F)=\bigl(F_i(x)-F_i(y)\bigr)_{i=1}^n,
 \qquad
 I_\Delta=\bigl(x_i-y_i\bigr)_{i=1}^n.
-$$
+```
 
 Every polynomial difference vanishes on the diagonal, so there is a
 canonical inclusion
 
-$$
+```math
 I_R(F)\subseteq I_\Delta
-$$
+```
 
 and therefore a canonical $S/I_R(F)$-module
 
-$$
+```math
 \operatorname{Obs}(F):=I_\Delta/I_R(F).
-$$
+```
 
 Thus $\operatorname{Obs}(F)$ is not an additional independent object: it
 is the canonical defect module in the exact sequence
 
-$$
+```math
 0\longrightarrow I_R(F)\longrightarrow I_\Delta
 \longrightarrow\operatorname{Obs}(F)\longrightarrow0.
-$$
+```
 
 Equivalently, let
 
-$$
+```math
 \bar\mu_F:S/I_R(F)\longrightarrow
 \mathbb C[x_1,\ldots,x_n],
 \qquad
 [f]_{I_R}\longmapsto f(x,x),
-$$
+```
 
 be diagonal evaluation on the collision ring.  Since the kernel of
 diagonal evaluation on $S$ is $I_\Delta$, we have
 
-$$
+```math
 \boxed{
 \ker(\bar\mu_F)=\operatorname{Obs}(F)=I_\Delta/I_R(F),
 }
-$$
+```
 
 so there is a second canonical exact sequence
 
-$$
+```math
 0\longrightarrow\operatorname{Obs}(F)
 \longrightarrow S/I_R(F)
 \xrightarrow{\bar\mu_F}\mathbb C[x_1,\ldots,x_n]
 \longrightarrow0.
-$$
+```
 
 The purpose of this project is to study the vanishing of
 $\operatorname{Obs}(F)$.
 Since $I_R(F)\subseteq I_\Delta$, the elementary module criterion gives
 
-$$
+```math
 \operatorname{Obs}(F)=0
 \quad\Longleftrightarrow\quad
 I_R(F)=I_\Delta.
-$$
+```
 
 ## Automorphism criterion
 
 Over $\mathbb C$, the quotient has a direct interpretation:
 
-$$
+```math
 \boxed{
 F\text{ is a polynomial automorphism}
 \quad\Longleftrightarrow\quad
 \operatorname{Obs}(F)=0.
 }
-$$
+```
 
 If $F$ has a polynomial inverse, applying the inverse to the two output
 tuples gives $I_\Delta\subseteq I_R(F)$.  Conversely, vanishing gives
@@ -119,11 +119,11 @@ instance, are listed together in the canonical planar spine below.
 
 Geometrically, if $A_F=S/I_R(F)$, then
 
-$$
+```math
 \operatorname{Spec}(A_F)
 =
 \mathbb A^n\times_{\mathbb A^n}\mathbb A^n
-$$
+```
 
 parametrizes ordered pairs with the same image under $F$.  The closed
 subscheme cut out by $\operatorname{Obs}(F)$, regarded as an ideal of
@@ -134,27 +134,27 @@ self-fiber product is scheme-theoretically only the diagonal.
 
 The construction is dimension-generic.  Put
 
-$$
+```math
 A=R[x_i]_{i\in\iota},\qquad B=R[t_j]_{j\in\kappa},
 \qquad t_j\longmapsto F_j.
-$$
+```
 
 For every commutative $R$-algebra $T$, the collision quotient satisfies
 
-$$
+```math
 \operatorname{Hom}_{R\text{-alg}}(S/I_R(F),T)
 \cong
 \left\{
 (f,g):A\rightrightarrows T:
 f(F_j)=g(F_j)\text{ for every }j
 \right\}.
-$$
+```
 
 Consequently there is a canonical equivalence
 
-$$
+```math
 S/I_R(F)\cong A\otimes_BA.
-$$
+```
 
 This universal construction does not assert vanishing.  The planar target
 asks for the off-diagonal factor to vanish.  Under the explicit separable
@@ -320,11 +320,11 @@ the global planar rigidity input cannot be conflated.
 For a ramified height-one point $E$ of the normal cover and a conjugate
 sheet $q\in D_E\backslash G/H$, let
 
-$$
+```math
 \iota_E(q)
 =
 [I_E:I_E\cap gHg^{-1}]
-$$
+```
 
 be the relative inertia index.  The normalization diagram records the
 corresponding center $\overline q$ on the intermediate finite model.
@@ -336,12 +336,12 @@ RamifiedConjugateCentersInBoundaryAt E
 
 means
 
-$$
+```math
 \forall q,\qquad
 \iota_E(q)\ne1
 \Longrightarrow
 \overline q\in\overline X\setminus X.
-$$
+```
 
 Its family version is
 
@@ -378,7 +378,7 @@ PlanarNoHiddenInertia := ¬ HasHiddenInertiaOrbit.
 
 Thus the logical step is short and explicit:
 
-$$
+```math
 \begin{aligned}
 &\texttt{RamifiedConjugateCentersInBoundary},\\
 &\texttt{core}(H)=1
@@ -387,7 +387,7 @@ $$
 \end{aligned}
 \quad\Longrightarrow\quad
 \text{there are no ramified height-one points.}
-$$
+```
 
 In Lean this is
 
@@ -403,7 +403,7 @@ visible-sheet API remains available.
 
 Once height-one ramification is absent, the remaining arrows are:
 
-$$
+```math
 \begin{array}{c}
 \text{no codimension-one ramification}\\
 \downarrow\quad\text{branch purity}\\
@@ -419,7 +419,7 @@ R_F^\circ=\varnothing\\
 \downarrow\\
 I_R(F)=I_\Delta.
 \end{array}
-$$
+```
 
 Ax–Grothendieck is used only after this chain, to pass from injectivity to
 a polynomial automorphism.
@@ -468,42 +468,42 @@ literature axioms internally; those dependencies are visible with
 
 Choose a secant matrix $M_F(x,y)$ satisfying
 
-$$
+```math
 F(x)-F(y)=M_F(x,y)(x-y)
-$$
+```
 
 and let $\delta_F=\det M_F$.  For a planar Keller map with
 $\det JF=c\in\mathbb C^\times$,
 
-$$
+```math
 \delta_F I_\Delta\subseteq I_R(F),
 \qquad
 \delta_F\equiv c\pmod {I_\Delta}.
-$$
+```
 
 In the collision ring $A_F=S/I_R(F)$, this produces the idempotent
 
-$$
+```math
 q_F=1-\frac{\overline\delta_F}{c}
-$$
+```
 
 with
 
-$$
+```math
 \operatorname{Obs}(F)=A_Fq_F.
-$$
+```
 
 The complementary ideal in the polynomial ring is canonical:
 
-$$
+```math
 I_{\mathrm{off}}
 =I_R:I_\Delta
 =I_R+(\delta_F).
-$$
+```
 
 Consequently,
 
-$$
+```math
 \boxed{
 \operatorname{Obs}(F)=0
 \Longleftrightarrow
@@ -513,7 +513,7 @@ I_R+(\delta_F)=S
 \Longleftrightarrow
 R_F^\circ=\varnothing.
 }
-$$
+```
 
 The secant construction gives the clopen diagonal/off-diagonal
 decomposition.  The planar no-hidden-inertia route is what conditionally
@@ -529,7 +529,7 @@ the single planar boundary API.
 
 The intended comparison is:
 
-$$
+```math
 \begin{array}{c|c}
 \text{conditional planar Keller target} &
 \operatorname{Keller}(F)+\text{normalization model}
@@ -540,7 +540,7 @@ $$
 \operatorname{Obs}(F)\neq0
 \quad\text{under the cubic residual/Galois conditions.}
 \end{array}
-$$
+```
 
 The cubic class is the intended dimension-three case study, but the
 $S_3$ mechanism comes from the degree-three field extension, not from
@@ -548,25 +548,25 @@ ambient dimension alone.
 
 For such a map, strict containment
 
-$$
+```math
 I_R\subsetneq I_\Delta
-$$
+```
 
 is equivalent to
 
-$$
+```math
 \ker(\bar\mu_F)\neq0,
 \qquad
 C_F^{\mathrm{off}}\neq0.
-$$
+```
 
 Generically, suppose the associated function-field extension $L/K$ is
 separable, cubic, and non-Galois, with normal closure $N/K$.  Then, as
 $L$-algebras,
 
-$$
+```math
 L\otimes_KL\cong L\times N,
-$$
+```
 
 where the first factor is the diagonal and
 $\operatorname{Gal}(N/K)\cong S_3$.  The original cubic sheet marks one
@@ -580,9 +580,9 @@ $\operatorname{Frac}(C_F^{\mathrm{off}})\simeq N$.
 The nonzero generic kernel nevertheless descends to the affine
 obstruction and records the failure of
 
-$$
+```math
 F(u)=F(v)\Longrightarrow u=v.
-$$
+```
 
 The dimension-three specialization is organized by
 `ComplexThree.FunctionField`, `ComplexThree.S3Collision`,
