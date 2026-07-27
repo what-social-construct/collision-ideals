@@ -24,6 +24,7 @@ namespace PlanarKellerCollisionModel
 variable {F : PlanarPolynomialMap}
 
 /--
+The two external algebraic-geometry inputs first trivialize the supplied
 normal closure over the planar base field.  This is the type-correct
 formal counterpart of `N = K`.
 -/
