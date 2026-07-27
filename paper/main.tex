@@ -1623,33 +1623,15 @@ Planar Vanishing supplies the left-hand side for every planar Keller
 map under the stated condition.
 \end{proof}
 
-\paragraph{External inputs to the formalization.}
-The Lean development takes the following established results as
-explicit inputs:
-\begin{enumerate}[
-  label=\textup{(E\arabic*)},
-  leftmargin=*,
-  itemsep=2pt,
-  topsep=3pt
-]
-  \item The planar Ax--Grothendieck theorem: every injective polynomial
-    self-map of \(\A^2_{\C}\) is a polynomial automorphism
-    \cite{Ax1969}.
-  \item Purity of the branch locus in the specialized form of
-    Theorem~\ref{thm:branch-purity} \cite{StacksPurity}.
-  \item Every connected finite \'etale cover of \(\A^2_{\C}\) is
-    trivial, as in Theorem~\ref{thm:a2-etale-rigidity}
-    \cite[Expos\'e XII]{SGA1}.
-\end{enumerate}
-The condition \(\mathcal H(\mathcal D_F)=\varnothing\) is not included
-among these inputs; it remains the explicit premise of
-Theorem~\ref{thm:planar-vanishing}.
-
 \begin{leanfiles}
 The conditional planar chain is collected in
-\leanpath{CollisionIdeals/Planar.lean}.  The three inputs above are
-isolated in
-\leanpath{CollisionIdeals/Planar/ExternalAssumptions.lean}.
+\leanpath{CollisionIdeals/Planar.lean}.  The development takes the
+following established results as explicit inputs: planar
+Ax--Grothendieck, branch purity, and finite-\'etale rigidity of
+\(\A^2_{\C}\).  It also takes a supplied
+\leanpath{PlanarKellerCollisionModel F} and the no-hidden-inertia
+hypothesis; constructing the model and proving that hypothesis remain
+separate formalization tasks.
 \end{leanfiles}
 
 \section{\texorpdfstring{The cubic \(S_3\) obstruction in dimension three}
