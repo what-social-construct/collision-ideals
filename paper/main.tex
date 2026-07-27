@@ -48,7 +48,7 @@
   {\par\endgroup\medskip}
 
 \title{Collision Ideals and Off-Diagonal Sheets}
-\author{Chloe van der Vlugt \and Codex 5.6 Sol}
+\author{Chloe van der Vlugt\\Codex 5.6 Sol}
 \date{\today}
 
 \begin{document}
@@ -56,39 +56,35 @@
 \maketitle
 
 \begin{abstract}
-For a polynomial self-map
-\(F\colon\A^n_{\C}\to\A^n_{\C}\), the collision ideal
-\(I_R(F)\), encoding equality of images, and the diagonal ideal
-\(I_\Delta\), encoding equality of points, satisfy
-\(I_R(F)\subseteq I_\Delta\).  The resulting obstruction
+For a polynomial map
+\(F=(F_1,\dots,F_n)\colon\A^n_{\C}\to\A^n_{\C}\), define in
+\(S=\C[x_1,\dots,x_n,y_1,\dots,y_n]\) the collision and diagonal ideals
 \[
-  \Obs(F)=I_\Delta/I_R(F)
+  I_R=\bigl(F_i(x)-F_i(y)\bigr)_{i=1}^n,
+  \qquad
+  I_\Delta=(x_i-y_i)_{i=1}^n.
 \]
-is canonically the kernel of diagonal evaluation on the collision ring
+The canonical inclusion \(I_R\subseteq I_\Delta\) gives the obstruction
+module \(I_\Delta/I_R\), and
 \[
-  C_F\cong A\otimes_B A.
+  I_\Delta/I_R=0
+  \quad\Longleftrightarrow\quad
+  I_R=I_\Delta
+  \quad\Longleftrightarrow\quad
+  F\text{ is a polynomial automorphism}.
 \]
-Over \(\C\), its vanishing detects polynomial automorphisms.  When the
-diagonal is clopen, this kernel is the
-off-diagonal factor of \(X\times_YX\).  Alongside the generic collision
-bridge, a supplied finite marked normal closure
-\(K\subseteq L\subseteq N\) and normalization diagram organize the
-conjugate-sheet, valuation, and inertia data.
-
-We then specialize.  In dimension two, a supplied Keller
-collision-normalization model and Planar No-Hidden-Inertia reduce, via
-branch purity and finite-\'etale rigidity, to
-\(I_R(F)=I_\Delta\); Ax--Grothendieck then gives polynomial automorphy.
-In dimension three, supplied nonnormal separable cubic normal-closure
-data instead give
+In dimension two, every polynomial map with constant nonzero Jacobian
+determinant and a collision-normalization diagram satisfying Planar
+No-Hidden-Inertia has \(I_R=I_\Delta\).  For separable nonnormal cubic
+data in dimension three, with \(N\) the normal closure of \(L/K\),
 \[
   L\otimes_K L\simeq L\times N,
   \qquad
   \Gal(N/K)\simeq S_3.
 \]
-Thus the nonzero generic off-diagonal factor is the ordered-root
-Galois-closure sheet.  The construction and its dependency structure are
-formalized in Lean~4.
+The off-diagonal factor \(N\) is the ordered-root Galois-closure sheet.
+Consequently, \(I_\Delta/I_R\neq0\).  The dependency chain is formalized
+in Lean~4, with its external inputs isolated explicitly.
 \end{abstract}
 
 \begin{center}
@@ -330,8 +326,8 @@ The affine collision algebra has the following generic fiber.
 
 \begin{theorem}[Generic collision bridge]
 \label{thm:generic-collision-base-change}
-Assume that the canonical map \(K\otimes_BA\to L\) is surjective
-(it is always injective in the setting formalized here).  Then
+Assume that the canonical map \(K\otimes_BA\to L\) is surjective; under
+the standing conditions it is already injective.  Then
 \[
   K\otimes_BC_F
   \cong
@@ -443,13 +439,8 @@ over \(Y\).  Its complement
 \]
 is the deleted boundary in which ramification invisible on the marked
 affine sheet may occur.  These objects and the commuting triangle are
-dimension-independent.  The formal development packages this first layer
-as
-\[
-  \texttt{PolynomialNormalizedCover}.
-\]
-The divisor data below are packaged by
-\(\texttt{PolynomialNormalizationDiagram}\).
+dimension-independent.  We regard this finite normalized cover and its
+divisor data as fixed throughout.
 
 Fix a prime divisor \(E\) of \(Z\), and write \(b=\nu(E)\) for its image
 in \(Y\).
@@ -484,17 +475,10 @@ In characteristic zero, the valuation-theoretic equality
 \]
 identifies these subgroup indices with ramification indices in the
 intermediate normalization.  This is the bridge from the finite symmetry
-of the normal closure to the geometry of collision sheets.  In the Lean
-development the group-theoretic indices are defined generically, while
-their equality with the geometric ramification indices of the chosen
-centers is supplied explicitly by
-\[
-  \texttt{ConjugateRamificationRealization}.
-\]
-Likewise, the double-coset classes themselves are constructed
-generically; the assignment of an actual normalization center to each
-class is part of the supplied
-\(\texttt{PolynomialNormalizationDiagram}\).
+of the normal closure to the geometry of collision sheets.  The
+double-coset classes are canonical; the supplied normalization diagram
+assigns their centers and realizes the subgroup indices as the
+corresponding geometric ramification indices.
 
 \begin{proposition}[Visibility-to-boundary]
 \label{prop:visibility-to-boundary}
@@ -579,39 +563,11 @@ specializations below.
 \end{remark}
 
 \begin{leanfiles}
-\emph{Core collision construction:}
-\leanpath{CollisionIdeals/Diagonal.lean},
-\leanpath{CollisionIdeals/Basic.lean},
 \leanpath{CollisionIdeals/CollisionDiagonal.lean},
-\leanpath{CollisionIdeals/UniversalProperty.lean},
-\leanpath{CollisionIdeals/PolynomialFiberProduct.lean},
-\leanpath{CollisionIdeals/FiberProduct.lean},
-\leanpath{CollisionIdeals/Secant.lean},
-\leanpath{CollisionIdeals/OffDiagonal.lean},
-\leanpath{CollisionIdeals/OffDiagonalScheme.lean}.
-\par\smallskip
-\emph{Generic fibers:}
-\leanpath{CollisionIdeals/GenericFunctionField.lean},
+\leanpath{CollisionIdeals/OffDiagonalScheme.lean},
 \leanpath{CollisionIdeals/GenericCollisionDiagonal.lean},
-\leanpath{CollisionIdeals/GenericDiagonalObstruction.lean},
-\leanpath{CollisionIdeals/PrimitiveTensorDecomposition.lean},
-\leanpath{CollisionIdeals/GenericDegreeOne.lean}.
-\par\smallskip
-\emph{Normalized covers and inertia:}
-\leanpath{CollisionIdeals/NormalClosure.lean},
-\leanpath{CollisionIdeals/PolynomialNormalization.lean},
-\leanpath{CollisionIdeals/GaloisSheets.lean},
-\leanpath{CollisionIdeals/InertiaQuotient.lean},
-\leanpath{CollisionIdeals/DecompositionSheets.lean},
-\leanpath{CollisionIdeals/ValuationInertia.lean},
 \leanpath{CollisionIdeals/PolynomialNormalizationDiagram.lean},
-\leanpath{CollisionIdeals/VisibleRamification.lean},
-\leanpath{CollisionIdeals/KellerGeometry.lean},
-\leanpath{CollisionIdeals/KellerCollisionModel.lean}.
-\par\smallskip
-\emph{Automorphism endpoint:}
-\leanpath{CollisionIdeals/AutomorphismCriterion.lean}, and
-\leanpath{CollisionIdeals/JacobianConjecture.lean}.
+and \leanpath{CollisionIdeals/AutomorphismCriterion.lean}.
 \end{leanfiles}
 
 \section{Planar vanishing}
@@ -732,9 +688,9 @@ vanishing.
 
 \subsection{Boundary exclusion and inertia}
 
-Fix a supplied \(\texttt{PlanarKellerCollisionModel F}\).  The model
-selects a marked finite normal closure \(N/K\) and instantiates the
-general finite normalized-cover and normalization-diagram data of
+Fix a collision-normalization model for the Keller map \(F\).  It selects
+a marked finite normal closure \(N/K\) and instantiates the general
+finite normalized-cover and normalization-diagram data of
 Section~\ref{sec:normalized-covers-inertia}.  With
 \[
   K=\C(P,Q),
@@ -770,15 +726,13 @@ collision model, gives
 The additional planar condition is that this diagram satisfies the
 general No-Hidden-Inertia condition of
 Definition~\ref{def:no-hidden-inertia}.  We call this specialization
-\emph{Planar No-Hidden-Inertia}; in Lean,
-\(\texttt{PlanarNoHiddenInertia}\) is an exact abbreviation of the
-dimension-independent predicate.
+\emph{Planar No-Hidden-Inertia}.
 
 \begin{corollary}[Planar codimension-one unramifiedness]
 \label{cor:planar-codimension-one-unramified}
 If the diagram satisfies Planar No-Hidden-Inertia, then the finite
 normalization \(Z\to Y\) is unramified at every height-one point.
-Equivalently, the type of ramified codimension-one points is empty.
+Equivalently, there are no ramified height-one points.
 \end{corollary}
 
 \begin{proof}
@@ -810,14 +764,6 @@ For the normalization \(Z\to Y\) above, generic separability is automatic:
 its function-field extension is the supplied finite Galois extension
 \(N/K\).
 
-\begin{remark}[Lean dependency]
-At this step the formal development invokes its isolated branch-purity
-interface,
-\[
-  \texttt{branchPurityA2}.
-\]
-\end{remark}
-
 \begin{theorem}[Finite-\'etale rigidity of the affine plane]
 \label{thm:a2-etale-rigidity}
 Every connected finite \'etale cover of \(\A^2_{\C}\) is trivial.
@@ -829,14 +775,6 @@ By the Riemann existence theorem for finite \'etale covers
 cover of \(\C^2\).  Since \(\C^2\) is simply connected, a connected such
 cover has degree one.
 \end{proof}
-
-\begin{remark}[Lean dependency]
-At this step the formal development invokes its isolated
-finite-\'etale-rigidity interface,
-\[
-  \texttt{affinePlaneFiniteEtaleRigidity}.
-\]
-\end{remark}
 
 \begin{corollary}[Triviality of the planar normal closure]
 \label{cor:planar-normal-closure-trivial}
@@ -935,10 +873,7 @@ Theorem~\ref{thm:automorphism-criterion}, Planar Vanishing also yields
 polynomial automorphy under the same conditions.
 
 \begin{leanfiles}
-\leanpath{CollisionIdeals/Planar/Basic.lean},
 \leanpath{CollisionIdeals/Planar/Secant.lean},
-\leanpath{CollisionIdeals/Planar/Normalization.lean},
-\leanpath{CollisionIdeals/Planar/NormalizationDiagram.lean},
 \leanpath{CollisionIdeals/Planar/ExternalAssumptions.lean},
 \leanpath{CollisionIdeals/Planar/ConditionalVanishing.lean}, and
 \leanpath{CollisionIdeals/Planar/Conclusion.lean}.
@@ -976,7 +911,6 @@ residual factor.  Write
   \qquad
   H=\Gal(N/L),
 \]
-and suppose \(H\neq1\).
 
 \begin{corollary}[Cubic residual-factor identification]
 \label{cor:cubic-tensor-decomposition}
@@ -1020,8 +954,8 @@ Hence \(|G|=6\) and the injection is an isomorphism.
 
 \begin{theorem}[Generic cubic \(S_3\) collision]
 \label{thm:cubic-s3-collision}
-Under the cubic residual-field and nonnormal marked-normal-closure data
-above, if \(F\) is Keller, then
+Under the cubic residual-field and marked-normal-closure data above,
+assume \(H\neq1\) and that \(F\) is Keller.  Then
 \[
   K\otimes_BC_F\cong L\times N,
 \]
@@ -1068,6 +1002,26 @@ The \(S_3\) identification is
 Theorem~\ref{thm:index-three-core-free-s3}.
 \end{proof}
 
+\begin{corollary}[Hidden inertia in the \(S_3\)-normalization]
+\label{cor:cubic-hidden-inertia}
+Under the hypotheses of Theorem~\ref{thm:cubic-s3-collision}, assume in
+addition that the same field \(N\) occurs in a supplied Keller
+collision-normalization model, and let \(E\) be a ramified height-one
+point of \(Z=\Norm_N(Y)\).  Then \(E\) determines a hidden-inertia orbit
+in that model.
+\end{corollary}
+
+\begin{proof}
+The full normal-closure Galois group is \(S_3\) by
+Theorem~\ref{thm:index-three-core-free-s3}.  The inertia subgroup at
+\(E\) is nontrivial.  Core-freeness and
+Proposition~\ref{prop:core-free-sheet-action} therefore give a conjugate
+sheet with relative inertia index greater than one.  The Keller
+\'etaleness bridge and Proposition~\ref{prop:visibility-to-boundary}
+place every center with nontrivial relative index in the deleted
+boundary.  These two statements are exactly a hidden-inertia orbit.
+\end{proof}
+
 \begin{remark}[Ordered roots]
 A generic point of the degree-three sheet marks one root of the cubic.
 An off-diagonal ordered pair marks two distinct roots; these determine the
@@ -1076,10 +1030,6 @@ ordered-root normal closure and its \(S_3\)-symmetry.
 \end{remark}
 
 \begin{leanfiles}
-\leanpath{CollisionIdeals/ComplexThree/Basic.lean},
-\leanpath{CollisionIdeals/ComplexThree/FunctionField.lean},
-\leanpath{CollisionIdeals/ComplexThree/OffDiagonal.lean},
-\leanpath{CollisionIdeals/ComplexThree/JacobianConjecture.lean},
 \leanpath{CollisionIdeals/ComplexThree/CubicGaloisGroup.lean},
 \leanpath{CollisionIdeals/ComplexThree/S3Collision.lean}, and
 \leanpath{CollisionIdeals/ComplexThree/CubicS3.lean}.
@@ -1095,6 +1045,20 @@ specialization identifies its nonzero generic factor with the marked
 \(S_3\) normal closure.  Both conclusions are therefore applications of
 the same collision, off-diagonal, and conjugate-sheet constructions.
 
+Under the respective conditions of Sections~\ref{sec:planar-vanishing}
+and \ref{sec:cubic-s3-obstruction}, with a ramified height-one point
+supplied for Corollary~\ref{cor:cubic-hidden-inertia}, the contrast is
+\[
+  \begin{array}{c@{\qquad\qquad}c}
+    \text{\rm dimension two}
+      & \text{\rm dimension three (cubic class)}\\ \hline
+    \text{\rm hidden inertia excluded}
+      & \text{\rm hidden inertia in the \(S_3\)-normalization realized}\\
+    q_F=0 & q_F\neq0\\
+    I_R(F)=I_\Delta & I_R(F)\subsetneq I_\Delta.
+  \end{array}
+\]
+
 \paragraph{Motivating example.}
 The explicit three-dimensional polynomial counterexample announced by
 Levent Alpöge and independently formalized in Isabelle/HOL by Ramos,
@@ -1105,13 +1069,7 @@ the same image.  That particular map is not used in the arguments above:
 the dimension-three result is the structural implication from the
 stated cubic and marked-normal-closure conditions.
 
-\begin{leanfiles}
-The aggregate imports are
-\leanpath{CollisionIdeals.lean},
-\leanpath{CollisionIdeals/Planar.lean}, and
-\leanpath{CollisionIdeals/ComplexThree.lean}.  The formalization uses
-Lean~4 and Mathlib \cite{Lean4,Mathlib}.
-\end{leanfiles}
+The formalization uses Lean~4 and Mathlib \cite{Lean4,Mathlib}.
 
 \bibliographystyle{alpha}
 \bibliography{references}

@@ -64,6 +64,34 @@ theorem ramifiedConjugateCentersInBoundary_of_keller
       M.ramificationRealization
       (M.kellerEtale M.keller)
 
+/--
+An actual ramified height-one point in a Keller collision model produces
+a hidden-inertia orbit.
+
+Core-freeness of the marked normal closure moves some conjugate sheet,
+while the Keller étale bridge places every center with nontrivial relative
+inertia in the deleted boundary.
+-/
+theorem hasHiddenInertiaOrbit_of_ramifiedCodimensionOnePoint
+    [PerfectField (PolynomialMapBaseFunctionField F)]
+    (M : PolynomialKellerCollisionModel F)
+    (E :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PolynomialMapBaseFunctionField F) M.N :=
+        M.algebraN
+      PolynomialRamifiedCodimensionOnePoint
+        (F := F) (N := M.N)) :
+    letI : Field M.N := M.fieldN
+    letI : Algebra (PolynomialMapBaseFunctionField F) M.N :=
+      M.algebraN
+    M.diagram.HasHiddenInertiaOrbit := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PolynomialMapBaseFunctionField F) M.N :=
+    M.algebraN
+  exact
+    ⟨E, M.diagram.exists_one_lt_inertiaIndex E,
+      (M.ramifiedConjugateCentersInBoundary_of_keller) E⟩
+
 end PolynomialKellerCollisionModel
 
 end
