@@ -1,5 +1,7 @@
 # Collision ideals and diagonal ideals
 
+**[Read the paper (PDF)](collision-ideals.pdf)** · [LaTeX source](paper/)
+
 Let
 
 ```math
