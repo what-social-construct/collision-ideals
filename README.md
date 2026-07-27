@@ -165,7 +165,25 @@ algebra decomposes as $L\otimes_KL\simeq L\times N$, and the same residual
 field satisfies $\mathrm{Gal}(N/K)\simeq S_3$.  No concrete
 three-dimensional Keller counterexample is asserted.
 
-## Lean status
+## Formalization status
+
+The Lean development separates the proved algebraic constructions from
+the geometric inputs supplied explicitly at the current library boundary.
+At a glance, it includes:
+
+- the dimension-generic collision quotient, obstruction ideal, fiber-product
+  interpretation, and automorphism criterion;
+- the planar secant and normalization constructions, together with the
+  conditional route from no hidden inertia to obstruction vanishing;
+- the off-diagonal decomposition and obstruction in the separable cubic
+  $S_3$ case in dimension three.
+
+The planar conclusion remains conditional on `PlanarNoHiddenInertia`, and
+the cubic development does not assert a concrete three-dimensional Keller
+counterexample.
+
+<details>
+<summary>Detailed theorem inventory</summary>
 
 The current development is dimension-generic and proves:
 
@@ -246,13 +264,15 @@ The definitions are generic in the coefficient ring, source variables, and
 output coordinates.  The planar specialization uses
 `R := ℂ` and `Fin 2`.
 
+</details>
+
 Build the project with:
 
 ```bash
 lake build
 ```
 
-## Canonical planar dependency spine
+## Planar dependency spine
 
 The planar development has one preferred route.  Its map-specific package is
 
