@@ -1,6 +1,7 @@
 import CollisionIdeals.AutomorphismCriterion
 import CollisionIdeals.GenericDegreeOne
 import CollisionIdeals.KellerCollisionModel
+import CollisionIdeals.NormalClosure
 import CollisionIdeals.Planar.ExternalAssumptions
 import CollisionIdeals.Planar.NormalizationDiagram
 
@@ -23,6 +24,40 @@ namespace PlanarKellerCollisionModel
 variable {F : PlanarPolynomialMap}
 
 /--
+normal closure over the planar base field.  This is the type-correct
+formal counterpart of `N = K`.
+-/
+theorem normalClosureExtensionTrivial
+    (hPurity : BranchPurityA2)
+    (hFiniteEtaleRigidity : AffinePlaneFiniteEtaleRigidity)
+    (M : PlanarKellerCollisionModel F)
+    (hNoHidden :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      PlanarNoHiddenInertia M.diagram) :
+    letI : Field M.N := M.fieldN
+    letI : Algebra (PlanarBaseFunctionField F) M.N :=
+      M.algebraN
+    M.diagram.cover.normalClosure.ExtensionTrivial := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N :=
+    M.algebraN
+  have hNoCodimensionOneRamification :
+      NoCodimensionOneRamification
+        (F := F) (N := M.N) :=
+    M.diagram.noCodimensionOneRamification
+      M.ramifiedConjugateCentersInBoundary_of_keller
+      hNoHidden
+  have hNormalizationEtale :
+      AlgebraicGeometry.IsEtale
+        (planarNormalizationInExtensionToBase
+          (F := F) (N := M.N)) :=
+    hPurity M.diagram.cover hNoCodimensionOneRamification
+  exact
+    hFiniteEtaleRigidity M.diagram.cover hNormalizationEtale
+
+/--
 The two external algebraic-geometry inputs turn the Keller collision
 model and the separate no-hidden-inertia hypothesis into the type-correct
 equality `L = K`.
@@ -40,23 +75,11 @@ theorem functionFieldExtensionTrivial
   letI : Field M.N := M.fieldN
   letI : Algebra (PlanarBaseFunctionField F) M.N :=
     M.algebraN
-  have hNoCodimensionOneRamification :
-      NoCodimensionOneRamification
-        (F := F) (N := M.N) :=
-    M.diagram.noCodimensionOneRamification
-      M.ramifiedConjugateCentersInBoundary_of_keller
-      hNoHidden
-  have hNormalizationEtale :
-      AlgebraicGeometry.IsEtale
-        (planarNormalizationInExtensionToBase
-          (F := F) (N := M.N)) :=
-    hPurity M.diagram.cover hNoCodimensionOneRamification
-  have hNormalClosure :
-      M.diagram.cover.normalClosure.ExtensionTrivial :=
-    hFiniteEtaleRigidity M.diagram.cover hNormalizationEtale
   exact
     PolynomialNormalClosureData.functionFieldExtensionTrivial_of_extensionTrivial
-      M.diagram.cover.normalClosure hNormalClosure
+      M.diagram.cover.normalClosure
+      (M.normalClosureExtensionTrivial
+        hPurity hFiniteEtaleRigidity hNoHidden)
 
 end PlanarKellerCollisionModel
 

@@ -8,7 +8,13 @@
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{xcolor}
+\usepackage{titlesec}
 \usepackage{hyperref}
+
+\titleformat{\section}
+  {\normalfont\LARGE\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\Large\bfseries}{\thesubsection}{1em}{}
 
 \hypersetup{
   colorlinks=true,
@@ -29,6 +35,7 @@
 \DeclareMathOperator{\Spec}{Spec}
 \DeclareMathOperator{\Frac}{Frac}
 \DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Hom}{Hom}
 \DeclareMathOperator{\Aut}{Aut}
 \DeclareMathOperator{\Ram}{Ram}
 \DeclareMathOperator{\Norm}{Norm}
@@ -64,8 +71,8 @@ For a polynomial map
   \qquad
   I_\Delta=(x_i-y_i)_{i=1}^n.
 \]
-The canonical inclusion \(I_R\subseteq I_\Delta\) gives the obstruction
-module \(I_\Delta/I_R\), and
+The inclusion \(I_R\subseteq I_\Delta\) defines the obstruction module
+\(I_\Delta/I_R\), and
 \[
   I_\Delta/I_R=0
   \quad\Longleftrightarrow\quad
@@ -73,18 +80,30 @@ module \(I_\Delta/I_R\), and
   \quad\Longleftrightarrow\quad
   F\text{ is a polynomial automorphism}.
 \]
-In dimension two, every polynomial map with constant nonzero Jacobian
-determinant and a collision-normalization diagram satisfying Planar
-No-Hidden-Inertia has \(I_R=I_\Delta\).  For separable nonnormal cubic
-data in dimension three, with \(N\) the normal closure of \(L/K\),
+In dimension two, let \(\mathcal D_F\) be the finite-cover diagram of a
+map with constant nonzero Jacobian determinant, and let
+\(\mathcal H(\mathcal D_F)\) be its hidden-inertia locus.  Then
+\[
+  \mathcal H(\mathcal D_F)=\varnothing
+  \quad\Longrightarrow\quad
+  I_R=I_\Delta.
+\]
+For the separable nonnormal cubic class in dimension three, let
+\[
+  K=\C(F_1,F_2,F_3),
+  \qquad
+  L=\C(x_1,x_2,x_3),
+\]
+and let \(N\) be the normal closure of \(L/K\).  Then
 \[
   L\otimes_K L\simeq L\times N,
   \qquad
   \Gal(N/K)\simeq S_3.
 \]
 The off-diagonal factor \(N\) is the ordered-root Galois-closure sheet.
-Consequently, \(I_\Delta/I_R\neq0\).  The dependency chain is formalized
-in Lean~4, with its external inputs isolated explicitly.
+Consequently, \(I_\Delta/I_R\neq0\).  These constructions and
+implications are formalized in Lean~4, with the external inputs isolated
+explicitly.
 \end{abstract}
 
 \begin{center}
@@ -101,15 +120,18 @@ in Lean~4, with its external inputs isolated explicitly.
 \subsection{The two ideals and their obstruction}
 \label{sec:collision-ideals}
 
-The basic construction is valid over an arbitrary commutative coefficient
-ring.  We state it over \(\C\) for readability.  Let
+Throughout the paper, the base field is \(\C\).  Let
 \[
   F=(F_1,\dots,F_n)\colon
-  X=\A^n_{\C}\longrightarrow Y=\A^n_{\C}
+  X=\A^n_{\C}\longrightarrow\A^n_{\C}
 \]
-be a polynomial map, and put
+be a polynomial map, and let
 \[
   S=\C[x_1,\dots,x_n,y_1,\dots,y_n].
+\]
+The map \(F\) is Keller if
+\[
+  \det JF\in\C^\times.
 \]
 Define
 \[
@@ -119,8 +141,7 @@ Define
   \qquad
   \Obs(F):=I_\Delta/I_R(F).
 \]
-The first ideal encodes equality of images and the second equality of
-points.
+For a fixed map \(F\), we abbreviate \(I_R(F)\) to \(I_R\).
 
 \begin{proposition}[Canonical containment]
 \label{prop:collision-contained-in-diagonal}
@@ -137,7 +158,7 @@ telescoping each monomial one coordinate at a time.  Apply the statement
 to each coordinate \(F_i\).
 \end{proof}
 
-Set \(C_F:=S/I_R(F)\) and
+Let \(C_F:=S/I_R\) and
 \(A:=\C[x_1,\dots,x_n]\).  Diagonal evaluation induces a surjective ring
 map
 \[
@@ -148,12 +169,13 @@ map
 
 \begin{proposition}[The diagonal kernel]
 \label{prop:obstruction-kernel}
-There is a canonical identification of ideals of \(C_F\)
+As ideals of \(C_F\),
 \[
   \ker(\bar\mu_F)
   =
   \Obs(F)
-  \cong I_\Delta/I_R(F).
+  =
+  I_\Delta/I_R.
 \]
 Consequently,
 \[
@@ -161,15 +183,19 @@ Consequently,
   \quad\Longleftrightarrow\quad
   \Obs(F)=0
   \quad\Longleftrightarrow\quad
-  I_R(F)=I_\Delta.
+  I_R=I_\Delta.
 \]
 \end{proposition}
 
 \begin{proof}
 The kernel of diagonal evaluation \(S\to A\) is \(I_\Delta\).  Passing
-through \(S/I_R(F)\) therefore identifies the displayed kernel with
-\(I_\Delta/I_R(F)\).  The final equivalence is the elementary module fact
-that \(B/A=0\) if and only if \(A=B\).
+through \(S/I_R\) therefore identifies the displayed kernel with
+\(I_\Delta/I_R\).  Since \(I_R\subseteq I_\Delta\),
+\[
+  I_\Delta/I_R=0
+  \quad\Longleftrightarrow\quad
+  I_R=I_\Delta.
+\]
 \end{proof}
 
 \subsection{The fiber-product interpretation}
@@ -180,74 +206,96 @@ Let
   A=\C[x_1,\dots,x_n],\qquad
   B=\C[F_1,\dots,F_n]\subseteq A.
 \]
-Equivalently, one may begin with a polynomial target ring
-\(\C[t_1,\dots,t_n]\) acting on \(A\) by \(t_i\mapsto F_i\) and then pass
-to its image \(B\).
-
-\begin{proposition}[Universal property]
-\label{prop:collision-universal-property}
-For every commutative \(\C\)-algebra \(T\), maps \(C_F\to T\) are
-naturally equivalent to pairs of maps \(f,g\colon A\rightrightarrows T\)
-whose restrictions to \(B\) agree.
-\end{proposition}
-
-\begin{proof}
-A map \(S=A\otimes_{\C}A\to T\) is the same as a pair of
-\(\C\)-algebra maps \(f,g\colon A\rightrightarrows T\).  It factors
-through \(S/I_R(F)\) exactly when
+Let \(X=\Spec A\), let \(Y=\Spec B\), and let
 \[
-  f(F_i)=g(F_i)\qquad(1\leq i\leq n),
+  f_F\colon X\longrightarrow Y
 \]
-which is exactly agreement on \(B\).
-\end{proof}
+be the morphism induced by \(B\hookrightarrow A\).
+The homomorphisms
+\(\iota_x,\iota_y\colon A\rightrightarrows C_F\), defined by
+\(\iota_x(a)=[a(x)]\) and \(\iota_y(a)=[a(y)]\), agree on \(B\) because
+\([F_i(x)]=[F_i(y)]\) in \(C_F\).  Their common restriction equips
+\(C_F\) with a \(B\)-algebra structure.
 
-\begin{theorem}[Collision tensor product]
+\begin{theorem}[Fiber-product interpretation]
 \label{thm:collision-tensor-product}
-There is a canonical \(B\)-algebra equivalence
+There is a canonical \(B\)-algebra equivalence and its dual
+affine-scheme equivalence
 \[
-  C_F\cong A\otimes_B A.
+  C_F\cong A\otimes_B A,
+  \qquad
+  R_F:=\Spec C_F\cong X\times_YX.
 \]
-Under this equivalence, \(\bar\mu_F\) is tensor multiplication
+Under the first equivalence, \(\bar\mu_F\) is tensor multiplication
 \[
   A\otimes_BA\longrightarrow A,\qquad a\otimes a'\longmapsto aa'.
+\]
+Its dual morphism is the diagonal
+\[
+  \Delta_{X/Y}\colon X\longrightarrow X\times_YX.
 \]
 \end{theorem}
 
 \begin{proof}
-The two rings represent the same functor by
-Proposition~\ref{prop:collision-universal-property}.  The description of
-\(\bar\mu_F\) follows on pure tensors.
+A map \(C_F\to T\) to a commutative \(\C\)-algebra \(T\) is equivalent
+to a pair of maps \(f,g\colon A\rightrightarrows T\) satisfying
+\[
+  f(F_i)=g(F_i)\qquad(1\leq i\leq n).
+\]
+Since the \(F_i\) generate \(B\), this is precisely the universal
+property of \(A\otimes_BA\).  Applying \(\Spec\) to this equivalence and
+using
+\[
+  \Spec(A\otimes_BA)
+  \cong
+  \Spec A\times_{\Spec B}\Spec A
+\]
+gives the asserted fiber-product equivalence.
+The statements about multiplication and the diagonal follow on pure
+tensors.
 \end{proof}
 
-Writing \(X=\Spec A\) and \(Y=\Spec B\), we therefore have
 \[
-  R_F:=\Spec C_F\cong X\times_YX.
+  R_F(\C)
+  =
+  \{(u,v)\in X(\C)\times X(\C):F(u)=F(v)\}.
 \]
-Its points are ordered pairs \((u,v)\) satisfying \(F(u)=F(v)\).  The
-map \(\bar\mu_F\) is dual to the diagonal
+Inside
 \[
-  \Delta_{X/Y}\colon X\longrightarrow X\times_YX.
+  X\times X=\Spec S,
 \]
-Thus the algebraic gap \(I_R(F)\subseteq I_\Delta\) is exactly the
-geometric gap
+the ideals \(I_R\) and \(I_\Delta\) define, respectively,
+\(X\times_YX\) and the image of \(\Delta_{X/Y}\).  The
+contravariance of \(I\mapsto V(I)\) therefore gives the equivalences
 \[
-  X\times_YX\supseteq\Delta_X.
+  I_R\subseteq I_\Delta
+  \quad\Longleftrightarrow\quad
+  \Delta_{X/Y}(X)\subseteq X\times_YX
 \]
+and
+\[
+  I_R=I_\Delta
+  \quad\Longleftrightarrow\quad
+  X\times_YX=\Delta_{X/Y}(X)
+\]
+as closed subschemes of \(X\times X\).  Thus the algebraic and
+geometric gaps are two descriptions of the same scheme-theoretic
+containment.
 
 \subsection{The off-diagonal factor and secant projectors}
 \label{sec:secant-projector}
 
 For every polynomial map \(F\), define
 \[
-  I_{\mathrm{off}}(F):=I_R(F):I_\Delta,
+  I_{\mathrm{off}}:=I_R:I_\Delta,
   \qquad
-  C_F^\circ:=S/I_{\mathrm{off}}(F),
+  C_F^\circ:=S/I_{\mathrm{off}},
   \qquad
   R_F^\circ:=\Spec C_F^\circ.
 \]
 This definition does not require the diagonal to be clopen.
 
-\begin{corollary}[Generic off-diagonal criterion]
+\begin{corollary}[Off-diagonal emptiness criterion]
 \label{cor:off-diagonal-empty-criterion}
 For every polynomial map \(F\), the following are equivalent:
 \[
@@ -257,16 +305,28 @@ For every polynomial map \(F\), the following are equivalent:
   \quad\Longleftrightarrow\quad
   \Obs(F)=0
   \quad\Longleftrightarrow\quad
-  I_R(F)=I_\Delta.
+  I_R=I_\Delta.
 \]
 \end{corollary}
 
 \begin{proof}
-The affine spectrum \(R_F^\circ\) is empty exactly when
-\(C_F^\circ\) is the zero ring.  By the definition of the colon ideal,
-\(I_R:I_\Delta=S\) exactly when \(I_\Delta\subseteq I_R\); canonical
-containment then gives equality.  Proposition
-\ref{prop:obstruction-kernel} supplies the remaining equivalence.
+\[
+  R_F^\circ=\varnothing
+  \quad\Longleftrightarrow\quad
+  C_F^\circ=0
+  \quad\Longleftrightarrow\quad
+  I_R:I_\Delta=S.
+\]
+Moreover,
+\[
+  I_R:I_\Delta=S
+  \quad\Longleftrightarrow\quad
+  I_\Delta\subseteq I_R
+  \quad\Longleftrightarrow\quad
+  I_R=I_\Delta.
+\]
+The equivalence with \(\Obs(F)=0\) is
+Proposition~\ref{prop:obstruction-kernel}.
 \end{proof}
 
 The idempotent mechanism behind a clopen diagonal is purely
@@ -303,116 +363,286 @@ The congruence \(\delta\equiv c\pmod J\) gives \(q\in J\).  For every
   qj=j-c^{-1}\delta j=j.
 \]
 Taking \(j=q\) proves \(q^2=q\); the same identity gives \(J=Cq\).
-The annihilator formula is the complementary-idempotent calculation.
+Finally,
+\[
+  aq=0
+  \quad\Longleftrightarrow\quad
+  a=a(1-q),
+\]
+so \(\Ann_C(J)=\Ann_C(Cq)=C(1-q)\).
 \end{proof}
 
-Whenever these data occur in the collision ring with
-\(J=\Obs(F)\), the two complementary idempotents split the collision
-scheme into its diagonal and off-diagonal factors.  The planar secant
-determinant below supplies a canonical instance of this abstract
-construction.
+Whenever the theorem is applied with
+\[
+  C=C_F,
+  \qquad
+  J=\Obs(F),
+\]
+the identities \(J=C_Fq\) and \(C_F/J\cong A\) give
+\[
+  C_F
+  \cong
+  A
+  \times
+  C_F/C_F(1-q).
+\]
+Thus the first factor is the diagonal and the second is its
+off-diagonal complement.
 
 \subsection{Generic fibers and marked-root decomposition}
 \label{sec:generic-galois-bridge}
 
-Let \(F\) be dominant and generically finite, and retain
-\(B=\C[F_1,\dots,F_n]\subseteq A=\C[x_1,\dots,x_n]\).  Put
+Let \(F\) be dominant and generically finite, and let
+\[
+  A=\C[x_1,\dots,x_n],
+  \qquad
+  B=\C[F_1,\dots,F_n]\subseteq A.
+\]
+Let
 \[
   K=\Frac(B),
   \qquad
   L=\Frac(A).
 \]
-The affine collision algebra has the following generic fiber.
+Let
+\[
+  \theta\colon K\otimes_BA\longrightarrow L,
+  \qquad
+  \lambda\otimes a\longmapsto\lambda a.
+\]
 
 \begin{theorem}[Generic collision bridge]
 \label{thm:generic-collision-base-change}
-Assume that the canonical map \(K\otimes_BA\to L\) is surjective; under
-the standing conditions it is already injective.  Then
+The map \(\theta\) is an isomorphism.  Consequently, there is a
+\(K\)-algebra isomorphism
 \[
   K\otimes_BC_F
   \cong
   L\otimes_KL,
 \]
-and this equivalence carries the base change of \(\bar\mu_F\) to tensor
-multiplication
+and the following square commutes:
 \[
-  L\otimes_KL\longrightarrow L.
+  \begin{array}{ccc}
+    K\otimes_BC_F
+      &\xrightarrow{\ 1\otimes\bar\mu_F\ }&
+    K\otimes_BA\\
+    {\scriptstyle\sim}\downarrow
+      &&\downarrow{\scriptstyle\theta\ \sim}\\
+    L\otimes_KL
+      &\xrightarrow{\ \mu_L\ }&
+    L.
+  \end{array}
 \]
 \end{theorem}
 
 \begin{proof}
-Using \(C_F\cong A\otimes_BA\), associativity and base change give
+Let \(U=B\setminus\{0\}\).  Since \(K=U^{-1}B\), localization gives
 \[
-  K\otimes_BC_F
-  \cong
-  (K\otimes_BA)\otimes_K(K\otimes_BA).
+  K\otimes_BA
+  \xrightarrow{\sim}
+  U^{-1}A,
+  \qquad
+  \frac{b}{u}\otimes a\longmapsto\frac{ba}{u}.
 \]
-The stated surjectivity condition identifies each factor
-\(K\otimes_BA\) with \(L\).
-Compatibility with the diagonal follows on pure tensors.
+Because \(B\subseteq A\) and \(A\) is a domain,
+\[
+  U=B\setminus\{0\}\subseteq A\setminus\{0\},
+  \qquad
+  U^{-1}A\hookrightarrow\Frac(A)=L,
+  \qquad
+  \frac{a}{u}\longmapsto\frac{a}{u}.
+\]
+Composing this injection with the displayed isomorphism gives
+\(\theta\), so \(\theta\) is injective.
+
+Since \(F\) is generically finite, \(L/K\) is a finite extension.  The
+image of \(U^{-1}A\) in \(L\) is
+\[
+  K[x_1,\dots,x_n].
+\]
+Each \(x_i\in L\) is algebraic over \(K\), so this is a
+finite-dimensional \(K\)-algebra.  As a finite-dimensional
+\(K\)-domain, it is a field: multiplication by a nonzero element is an
+injective endomorphism of a finite-dimensional \(K\)-vector space and
+therefore is surjective.
+Because it contains \(A\), it contains \(\Frac(A)=L\); the reverse
+inclusion is already given by the embedding above.  Therefore
+\[
+  U^{-1}A=L,
+\]
+and \(\theta\) is an isomorphism.
+
+By Theorem~\ref{thm:collision-tensor-product}, identify
+\(C_F\) with \(A\otimes_BA\).  There is a \(K\)-algebra isomorphism
+\[
+  \beta\colon
+  K\otimes_B(A\otimes_BA)
+  \xrightarrow{\sim}
+  (K\otimes_BA)\otimes_K(K\otimes_BA)
+\]
+defined on pure tensors by
+\[
+  \beta\bigl(\lambda\otimes(a\otimes a')\bigr)
+  =
+  (\lambda\otimes a)\otimes(1\otimes a').
+\]
+Its inverse is
+\[
+  (\lambda\otimes a)\otimes(\lambda'\otimes a')
+  \longmapsto
+  \lambda\lambda'\otimes(a\otimes a').
+\]
+The balancing relations over \(B\) and \(K\) show that these formulas
+are well-defined, and the two displayed maps are mutually inverse.
+Composing \(\beta\) with \(\theta\otimes_K\theta\) gives
+\[
+  \Phi_F\colon K\otimes_BC_F\xrightarrow{\sim}L\otimes_KL.
+\]
+
+It remains to identify the diagonal map.  Under
+\(C_F\cong A\otimes_BA\), the homomorphism \(\bar\mu_F\) is
+multiplication.  Therefore, on a pure tensor,
+\[
+  \begin{aligned}
+  (\mu_L\circ\Phi_F)
+    \bigl(\lambda\otimes(a\otimes a')\bigr)
+    &=(\lambda a)a'
+     =\lambda aa',\\
+  \bigl(\theta\circ(1\otimes\bar\mu_F)\bigr)
+    \bigl(\lambda\otimes(a\otimes a')\bigr)
+    &=\theta(\lambda\otimes aa')
+     =\lambda aa'.
+  \end{aligned}
+\]
+Pure tensors generate \(K\otimes_BC_F\), so the two homomorphisms are
+equal.  This proves the commutative square.
 \end{proof}
 
 Suppose now that \(L/K\) is separable and has a power basis
 \(L=K(\alpha)\).  Let \(m_\alpha(T)\in K[T]\) be the minimal polynomial
-of \(\alpha\), and write
+of \(\alpha\), and let \(h_\alpha(T)\in L[T]\) be determined by
 \[
-  m_\alpha(T)=(T-\alpha)q_\alpha(T)
+  m_\alpha(T)=(T-\alpha)h_\alpha(T)
   \qquad\text{in }L[T].
 \]
 
 \begin{theorem}[Marked-root tensor decomposition]
 \label{thm:marked-root-tensor-decomposition}
-There is an \(L\)-algebra equivalence
+Give \(L\otimes_KL\) its \(L\)-algebra structure through the left tensor
+factor.  There is an \(L\)-algebra equivalence
 \[
   L\otimes_KL
   \cong
-  L\times L[T]/(q_\alpha),
+  L\times L[T]/(h_\alpha),
 \]
 under which tensor multiplication \(L\otimes_KL\to L\) is projection
 onto the first factor.
 \end{theorem}
 
 \begin{proof}
-The power basis gives
+The power-basis presentation
 \[
-  L\otimes_KL\cong L[T]/(m_\alpha).
+  L\cong K[T]/(m_\alpha)
 \]
-Separability makes \(T-\alpha\) and \(q_\alpha\) coprime.  The Chinese
-remainder theorem therefore gives
+and base change from \(K\) to \(L\) give an \(L\)-algebra isomorphism
+\[
+  L\otimes_KL
+  \xrightarrow{\sim}
+  L[T]/(m_\alpha),
+  \qquad
+  1\otimes\alpha\longmapsto T.
+\]
+Since \(m_\alpha\) is separable,
+\(m_\alpha'(\alpha)\neq0\).  Differentiating
+\[
+  m_\alpha(T)=(T-\alpha)h_\alpha(T)
+\]
+and evaluating at \(T=\alpha\) gives
+\[
+  h_\alpha(\alpha)=m_\alpha'(\alpha)\neq0.
+\]
+Thus \(T-\alpha\) does not divide \(h_\alpha\), so these two polynomials
+are coprime in \(L[T]\).  The Chinese remainder theorem now gives
 \[
   L[T]/(m_\alpha)
-  \cong
-  L[T]/(T-\alpha)\times L[T]/(q_\alpha)
-  \cong
-  L\times L[T]/(q_\alpha).
+  \xrightarrow{\sim}
+  L[T]/(T-\alpha)\times L[T]/(h_\alpha)
+  \xrightarrow{\sim}
+  L\times L[T]/(h_\alpha).
 \]
-Evaluation at the marked root \(\alpha\), hence the first projection,
-is tensor multiplication.
+Under the first isomorphism above, a pure tensor
+\(\ell\otimes p(\alpha)\), with \(p\in K[T]\), corresponds to the class
+of \(\ell p(T)\).  Tensor multiplication sends it to
+\(\ell p(\alpha)\), which is evaluation at \(T=\alpha\).  Under the
+Chinese remainder isomorphism, this evaluation map is projection onto
+the factor \(L[T]/(T-\alpha)\cong L\).  Hence tensor multiplication is
+the first projection.
 \end{proof}
 
-Combined with Theorem~\ref{thm:generic-collision-base-change}, this
-identifies the generic collision algebra with the marked diagonal factor
-and the algebra of the remaining conjugates.  The cubic specialization
-in Section~\ref{sec:cubic-s3-obstruction} identifies that second factor
-with the normal-closure field.
+Together with Theorem~\ref{thm:generic-collision-base-change}, this gives
+\[
+  K\otimes_BC_F
+  \cong
+  L\times L[T]/(h_\alpha),
+\]
+where the first projection is the generic diagonal.
 
 \subsection{Normalized covers and inertia}
 \label{sec:normalized-covers-inertia}
 
-Let \(N/K\) be a finite Galois extension containing \(L\), and put
+Let \(L/K\) be finite and separable, and let \(N/K\) be its normal
+closure, with a fixed embedding \(L\hookrightarrow N\).  Let
 \[
   G=\Gal(N/K),
   \qquad
   H=\Gal(N/L).
 \]
-The coset space \(G/H\) records the conjugate marked sheets.  If \(N\) is
-the normal closure of \(L/K\), this action is faithful, or equivalently
+
+\begin{proposition}[Conjugate-embedding action]
+\label{prop:conjugate-embedding-action}
+Restriction induces a bijection
+\[
+  G/H\xrightarrow{\sim}\Hom_K(L,N),
+  \qquad
+  gH\longmapsto g|_L.
+\]
+The induced action of \(G\) on \(G/H\) is faithful; equivalently,
 \[
   \core_G(H)=\bigcap_{g\in G}gHg^{-1}=1.
 \]
+\end{proposition}
 
-To pass from the field-theoretic symmetry to geometry, consider the
-normalization diagram.  Set
+\begin{proof}
+For \(g_1,g_2\in G\),
+\[
+  g_1|_L=g_2|_L
+  \quad\Longleftrightarrow\quad
+  g_2^{-1}g_1\in H
+  \quad\Longleftrightarrow\quad
+  g_1H=g_2H.
+\]
+Every \(K\)-embedding \(L\hookrightarrow N\) extends to an element of
+\(G\), so restriction gives the stated bijection.  Its action kernel is
+\[
+  \ker\!\left(G\curvearrowright G/H\right)
+  =
+  \bigcap_{g\in G}gHg^{-1}
+  =
+  \core_G(H).
+\]
+If \(\sigma\in\core_G(H)\), then
+\[
+  \sigma|_{g(L)}=\id_{g(L)}
+  \quad(g\in G).
+\]
+Since \(N\) is the normal closure,
+\[
+  N=K\bigl(g(L):g\in G\bigr),
+\]
+and therefore \(\sigma=\id_N\).
+\end{proof}
+
+Let
 \[
   Y=\Spec B,
   \qquad
@@ -427,101 +657,232 @@ commutative triangle
   \qquad
   \nu=\bar\nu\circ\pi\colon Z\longrightarrow Y.
 \]
-When the two integral closures are finite over \(B\), both
-\(\bar\nu\) and \(\nu\) are finite.  The finite normalized-cover data
-used below also include an open immersion of the marked affine source
+Suppose that \(\bar\nu\) and \(\nu\) are finite, and fix an open
+immersion over \(Y\)
 \[
   j\colon X=\Spec A\hookrightarrow\overline X
 \]
-over \(Y\).  Its complement
+with \(\bar\nu\circ j=f_F\).  Denote this diagram and its deleted boundary
+by
 \[
-  D=\overline X\setminus j(X)
+  \mathcal D=
+  \left(
+    Z\xrightarrow{\pi}\overline X\xrightarrow{\bar\nu}Y,\,
+    j\colon X\hookrightarrow\overline X
+  \right),
+  \qquad
+  \partial X=\overline X\setminus j(X).
 \]
-is the deleted boundary in which ramification invisible on the marked
-affine sheet may occur.  These objects and the commuting triangle are
-dimension-independent.  We regard this finite normalized cover and its
-divisor data as fixed throughout.
 
-Fix a prime divisor \(E\) of \(Z\), and write \(b=\nu(E)\) for its image
-in \(Y\).
+Fix \(E\in Z^{(1)}\).  Let \(w_E\) be its divisorial
+valuation, let \(b=\nu(E)\), and let \(v_b=w_E|_K\).
 Let \(D_E\leq G\) and \(I_E\trianglelefteq D_E\) be its decomposition and
-inertia groups.  Prime divisors in the intermediate normalization above
-the image of \(E\) are organized by double cosets
+inertia groups.  Let
 \[
-  D_E\backslash G/H.
+  \mathcal Q_E:=D_E\backslash G/H.
 \]
-For a class \(q\) represented by \(g\), write \(c(E,q)\) for its chosen
-center on \(\overline X\).  Its relative inertia index is
+For \(\omega=D_EgH\in\mathcal Q_E\), let
 \[
-  i_E(q)=[I_E:I_E\cap gHg^{-1}].
+  u_\omega=(g^{-1}w_E)|_L,
+  \qquad
+  \operatorname{cent}(E,\omega)
+  =\operatorname{cent}_{\overline X}(u_\omega),
 \]
-
-\begin{proposition}[A nontrivial inertia group moves a sheet]
-\label{prop:core-free-sheet-action}
-If \(\core_G(H)=1\) and \(I_E\neq1\), then some \(gH\in G/H\) has
+and let
 \[
-  [I_E:I_E\cap gHg^{-1}]>1.
+  i_E(\omega)=[I_E:I_E\cap gHg^{-1}].
+\]
+\begin{proposition}[Conjugate divisors and double cosets]
+\label{prop:conjugate-divisor-double-cosets}
+The assignments above are well-defined, and restriction of valuations
+induces a bijection
+\[
+  \mathcal Q_E
+  \xrightarrow{\sim}
+  \{\text{prime divisors of }\overline X\text{ above }b\},
+  \qquad
+  \omega\longmapsto\operatorname{cent}(E,\omega).
 \]
 \end{proposition}
 
 \begin{proof}
-If every index were one, then \(I_E\subseteq gHg^{-1}\) for every \(g\),
-so \(I_E\subseteq\core_G(H)=1\), a contradiction.
+The group \(G\) acts transitively on the extensions of \(v_b\) to \(N\),
+and the stabilizer of \(w_E\) is \(D_E\).  Restricting such a valuation
+to \(L=N^H\) identifies precisely those extensions whose indices differ
+on the right by an element of \(H\).  The resulting orbits are therefore
+indexed by \(D_E\backslash G/H\), giving the stated bijection.
+
+It remains to check independence of representatives.  If
+\(D_Eg'H=D_EgH\), then \(g'=dgh\) for some \(d\in D_E\) and \(h\in H\).
+The element \(d\) fixes \(w_E\), while \(h\) fixes \(L\) pointwise, so
+\[
+  (g'^{-1}w_E)|_L=(g^{-1}w_E)|_L.
+\]
+Moreover, \(I_E\trianglelefteq D_E\), and conjugation by \(d\) identifies
+\[
+  I_E\cap g'Hg'^{-1}
+  \quad\text{with}\quad
+  I_E\cap gHg^{-1}.
+\]
+Thus \(u_\omega\), \(\operatorname{cent}(E,\omega)\), and
+\(i_E(\omega)\) are
+well-defined.
 \end{proof}
 
-In characteristic zero, the valuation-theoretic equality
+We use the notation
 \[
-  e(w_E/v_b)=|I_E|
+  e\bigl(\operatorname{cent}(E,\omega)/b\bigr):=e(u_\omega/v_b).
 \]
-identifies these subgroup indices with ramification indices in the
-intermediate normalization.  This is the bridge from the finite symmetry
-of the normal closure to the geometry of collision sheets.  The
-double-coset classes are canonical; the supplied normalization diagram
-assigns their centers and realizes the subgroup indices as the
-corresponding geometric ramification indices.
+Since the residue characteristic is zero,
+\[
+  \Ram^{(1)}(Z/Y)
+  :=
+  \{E\in Z^{(1)}:e(w_E/v_b)>1\}
+  =
+  \{E\in Z^{(1)}:I_E\neq1\}.
+\]
+
+\begin{proposition}[Detection of inertia on a conjugate sheet]
+\label{prop:core-free-sheet-action}
+If \(I_E\neq1\), then there is an \(\omega\in\mathcal Q_E\) with
+\[
+  i_E(\omega)>1.
+\]
+\end{proposition}
+
+\begin{proof}
+Suppose, to the contrary, that \(i_E(\omega)=1\) for every
+\(\omega\in\mathcal Q_E\).  For each \(g\in G\),
+\[
+  1=i_E(D_EgH)=[I_E:I_E\cap gHg^{-1}],
+\]
+so
+\[
+  I_E=I_E\cap gHg^{-1}\subseteq gHg^{-1}
+  \qquad\text{for every }g\in G.
+\]
+Consequently,
+\[
+  I_E
+  \subseteq
+  \bigcap_{g\in G}gHg^{-1}
+  =
+  \core_G(H)
+  =
+  1,
+\]
+contrary to \(I_E\neq1\).
+\end{proof}
+
+\begin{proposition}[Intermediate ramification index]
+\label{prop:intermediate-ramification-index}
+For \(\omega=D_EgH\in\mathcal Q_E\),
+\[
+  e\bigl(\operatorname{cent}(E,\omega)/b\bigr)
+  =
+  i_E(\omega)
+  =
+  [I_E:I_E\cap gHg^{-1}].
+\]
+\end{proposition}
+
+\begin{proof}
+Let \(w_E\) and \(v_b\) be the divisorial valuations associated with
+\(E\) and \(b\), and let
+\[
+  w_g=g^{-1}w_E,
+  \qquad
+  u_\omega=w_g|_L.
+\]
+The valuation \(u_\omega\) has center \(\operatorname{cent}(E,\omega)\) on
+\(\overline X\).  Since
+the residue fields have characteristic zero,
+\[
+  e(w_g/v_b)=|I_E|.
+\]
+The inertia group of \(w_g\) over \(u_\omega\) is
+\[
+  g^{-1}I_Eg\cap H,
+\]
+and hence
+\[
+  e(w_g/u_\omega)
+  =
+  |g^{-1}I_Eg\cap H|
+  =
+  |I_E\cap gHg^{-1}|.
+\]
+Multiplicativity of ramification indices in the field tower
+\[
+  K\subseteq L\subseteq N
+\]
+therefore gives
+\[
+  e(u_\omega/v_b)
+  =
+  \frac{e(w_g/v_b)}{e(w_g/u_\omega)}
+  =
+  [I_E:I_E\cap gHg^{-1}],
+\]
+which is the asserted formula.
+\end{proof}
 
 \begin{proposition}[Visibility-to-boundary]
 \label{prop:visibility-to-boundary}
-Suppose that \(X\to Y\) is \'etale and that the normalized-cover diagram
-realizes the relative inertia indices as the ramification indices of its
-chosen conjugate centers.  If \(c(E,q)\in\overline X\) is the center
-indexed by a double-coset class \(q\), then
+Suppose that \(X\to Y\) is \'etale.  For \(E\in Z^{(1)}\) and
+\(\omega\in\mathcal Q_E\),
 \[
-  i_E(q)\neq1
+  i_E(\omega)>1
   \quad\Longrightarrow\quad
-  c(E,q)\in D.
+  \operatorname{cent}(E,\omega)\in\partial X.
 \]
 \end{proposition}
 
 \begin{proof}
-If \(c(E,q)\) lay in the marked open \(j(X)\), the open immersion and
-the \'etaleness of \(X\to Y\) would make the corresponding local ring
-extension unramified.  Its geometric ramification index would therefore
-be one.  The supplied ramification realization identifies that index
-with \(i_E(q)\), proving the contrapositive.
+Suppose that \(\operatorname{cent}(E,\omega)\in j(X)\), and let
+\(x\in X\) be the corresponding point under the open immersion \(j\).
+The local homomorphism
+\[
+  \mathcal O_{Y,b}
+  \longrightarrow
+  \mathcal O_{X,x}
+\]
+is \'etale, so
+\(e(\operatorname{cent}(E,\omega)/b)=1\).  Proposition
+\ref{prop:intermediate-ramification-index} now gives
+\[
+  i_E(\omega)
+  =
+  e\bigl(\operatorname{cent}(E,\omega)/b\bigr)
+  =
+  1.
+\]
+Taking the contrapositive gives the result.
 \end{proof}
 
-\begin{definition}[Hidden-inertia orbit]
+\begin{definition}[Hidden-inertia locus]
 \label{def:no-hidden-inertia}
-The normalized-cover diagram has a \emph{hidden-inertia orbit} if there
-is a ramified prime divisor \(E\subset Z\) such that
 \[
-  \bigl(\exists q,\ 1<i_E(q)\bigr)
-  \quad\text{and}\quad
-  \bigl(\forall q,\ i_E(q)\neq1
-    \Longrightarrow c(E,q)\in D\bigr).
+  \mathcal H(\mathcal D)
+  :=
+  \left\{
+  E\in\Ram^{(1)}(Z/Y):
+  \begin{array}{l}
+    \exists\omega\in\mathcal Q_E,\ i_E(\omega)>1,\\
+    \forall\omega\in\mathcal Q_E,\quad
+      i_E(\omega)>1
+      \Longrightarrow
+      \operatorname{cent}(E,\omega)\in\partial X
+  \end{array}
+  \right\}.
 \]
-It satisfies \emph{No-Hidden-Inertia} if no such \(E\) exists.
+Thus \(E\in\mathcal H(\mathcal D)\) precisely when nontrivial inertia
+is visible on a conjugate sheet but every visible center belongs to the
+deleted boundary.
 \end{definition}
-
-Both predicates are dimension-independent.  Only a proof that
-No-Hidden-Inertia holds for a particular class of affine models can
-depend on the dimension.
 
 \subsection{Automorphism detection}
 \label{sec:automorphism-detection}
-
-The general construction has the following final interpretation.
 
 \begin{theorem}[Automorphism criterion]
 \label{thm:automorphism-criterion}
@@ -529,6 +890,7 @@ For an arbitrary polynomial self-map
 \(F\colon\A^n_{\C}\to\A^n_{\C}\), the following are equivalent:
 \begin{enumerate}[label=\textup{(\arabic*)}]
   \item \(F\) is a polynomial automorphism;
+  \item \(F\) is injective on \(\A^n(\C)\);
   \item \(I_R(F)=I_\Delta\);
   \item \(\Obs(F)=0\).
 \end{enumerate}
@@ -541,244 +903,609 @@ Suppose first that \(F\) has polynomial inverse
   x_i-y_i
   =
   G_i(F(x))-G_i(F(y))
-  \in I_R(F)
+  \in I_R
 \]
-for every \(i\), so \(I_\Delta\subseteq I_R(F)\).  Proposition
-\ref{prop:collision-contained-in-diagonal} gives equality.
+for every \(i\), so \(I_\Delta\subseteq I_R\).  Proposition
+\ref{prop:collision-contained-in-diagonal} gives equality.  Thus
+\textup{(1)} implies \textup{(3)}.
 
-Conversely, assume \(I_R(F)=I_\Delta\).  If \(F(a)=F(b)\), evaluation at
-\((a,b)\) kills \(I_R(F)\), hence kills every \(x_i-y_i\).  Thus
-\(a=b\), so \(F\) is injective on complex points.  The
-Ax--Grothendieck theorem \cite{Ax1969} now implies that \(F\) is a
-polynomial automorphism.  The equivalence with \(\Obs(F)=0\) is
-Proposition~\ref{prop:obstruction-kernel}.
+Suppose \(I_R=I_\Delta\), and let
+\(\operatorname{ev}_{(a,b)}\colon S\to\C\) be evaluation at
+\((a,b)\).  If \(F(a)=F(b)\), then
+\[
+  I_R\subseteq\ker(\operatorname{ev}_{(a,b)}).
+\]
+Therefore \(x_i-y_i\in I_\Delta=I_R\) gives \(a_i-b_i=0\) for every
+\(i\).  Thus \(a=b\), proving
+\textup{(3)}\(\Rightarrow\)\textup{(2)}.  The
+Ax--Grothendieck theorem \cite{Ax1969} gives
+\textup{(2)}\(\Rightarrow\)\textup{(1)}.  Finally,
+Proposition~\ref{prop:obstruction-kernel} gives
+\textup{(3)}\(\Longleftrightarrow\)\textup{(4)}.
 \end{proof}
 
-\begin{remark}
-Ax--Grothendieck is used only for the implication from injectivity to
-automorphy.  The ideal equality already gives pointwise injectivity
-directly.  This is a detection criterion, not a vanishing theorem:
-establishing \(I_R(F)=I_\Delta\) remains the substantive task in the
-specializations below.
-\end{remark}
+\begin{corollary}[The Jacobian conjecture as obstruction vanishing]
+\label{cor:jacobian-conjecture-as-vanishing}
+For every \(n\geq1\), the \(n\)-dimensional Jacobian conjecture is
+equivalent to each of the statements
+\[
+  \forall F\colon\A^n_{\C}\to\A^n_{\C},
+  \qquad
+  \det JF\in\C^\times
+  \quad\Longrightarrow\quad
+  \Obs(F)=0,
+\]
+and
+\[
+  \forall F\colon\A^n_{\C}\to\A^n_{\C},
+  \qquad
+  \det JF\in\C^\times
+  \quad\Longrightarrow\quad
+  I_R(F)=I_\Delta.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:automorphism-criterion} to every Keller map.
+Its equivalent conditions \textup{(1)}, \textup{(3)}, and \textup{(4)}
+give the two displayed formulations.
+\end{proof}
+
+\subsection{Generic degree one}
+
+\begin{corollary}[Generic degree-one descent]
+\label{cor:generic-degree-one-descent}
+If
+\[
+  L=K
+  \qquad\text{and}\qquad
+  A\text{ is flat over }B,
+\]
+then
+\[
+  \Obs(F)=0.
+\]
+\end{corollary}
+
+\begin{proof}
+When \(L=K\), Theorem~\ref{thm:generic-collision-base-change}
+identifies the base-changed diagonal with tensor multiplication:
+\[
+  \ker(1\otimes\bar\mu_F)
+  \cong
+  \ker\!\left(
+    K\otimes_KK\xrightarrow{\mu_K}K
+  \right)
+  =
+  0.
+\]
+The fiber-product identification of
+Theorem~\ref{thm:collision-tensor-product} is
+\[
+  C_F\xrightarrow{\sim}A\otimes_BA.
+\]
+Since \(A\) is flat over \(B\), the tensor product \(A\otimes_BA\), and
+therefore \(C_F\), is flat over \(B\).  The localization map
+\[
+  \iota_C\colon C_F\hookrightarrow K\otimes_BC_F
+\]
+is therefore injective, and
+\[
+  \iota_C\bigl(\ker\bar\mu_F\bigr)
+  \subseteq
+  \ker(1\otimes\bar\mu_F)
+  =
+  0.
+\]
+Thus \(\ker\bar\mu_F=0\).  Proposition
+\ref{prop:obstruction-kernel} identifies
+\[
+  \ker(\bar\mu_F)=\Obs(F)=I_\Delta/I_R,
+\]
+so \(\Obs(F)=0\).
+\end{proof}
 
 \begin{leanfiles}
 \leanpath{CollisionIdeals/CollisionDiagonal.lean},
 \leanpath{CollisionIdeals/OffDiagonalScheme.lean},
+\leanpath{CollisionIdeals/Secant.lean},
 \leanpath{CollisionIdeals/GenericCollisionDiagonal.lean},
-\leanpath{CollisionIdeals/PolynomialNormalizationDiagram.lean},
-and \leanpath{CollisionIdeals/AutomorphismCriterion.lean}.
+\leanpath{CollisionIdeals/KellerCollisionModel.lean}, and
+\leanpath{CollisionIdeals/JacobianConjecture.lean}.  The Lean form of
+Theorem~\ref{thm:generic-collision-base-change} takes surjectivity of
+\(\theta\) as a parameter; the proof above derives it from generic
+finiteness.
 \end{leanfiles}
 
 \section{Planar vanishing}
 \label{sec:planar-vanishing}
 
-The constructions of the preceding sections apply in arbitrary
-dimension.  We now specialize to a polynomial map
+Let
 \[
-  F=(P,Q)\colon\A^2_{\C}\longrightarrow\A^2_{\C},
-  \qquad
-  \det JF=c\in\C^\times.
+  F=(P,Q)\colon\A^2_{\C}\longrightarrow\A^2_{\C}
 \]
+be a polynomial map satisfying
+\(\det JF=c\in\C^\times\).
 
 \subsection{The planar secant projector}
 
-Put
+Let \(\Delta=V(I_\Delta)\subseteq\Spec S\).  For \(a\in S\), write
+\(a|_\Delta\) for its image under \(S\to S/I_\Delta\), and apply this
+notation entrywise to matrices.
+Let
 \[
-  d=
+  \mathbf d=
   \begin{pmatrix}
     x_1-y_1\\
     x_2-y_2
   \end{pmatrix},
   \qquad
-  r=
+  \mathbf r=
   \begin{pmatrix}
     P(x)-P(y)\\
     Q(x)-Q(y)
   \end{pmatrix}.
 \]
-Polynomial division along the coordinate differences supplies
-\(M_F\in M_2(S)\) such that
+For \(H\in\C[x_1,x_2]\), let
 \[
-  r=M_Fd,
+  D_1H
+  =
+  \frac{H(x_1,x_2)-H(y_1,x_2)}{x_1-y_1},
+  \qquad
+  D_2H
+  =
+  \frac{H(y_1,x_2)-H(y_1,y_2)}{x_2-y_2}.
+\]
+Both quotients belong to \(S\).  Let
+\[
+  M_F=
+  \begin{pmatrix}
+    D_1P&D_2P\\
+    D_1Q&D_2Q
+  \end{pmatrix}.
+\]
+Then
+\[
+  \mathbf r=M_F\mathbf d,
   \qquad
   M_F\big|_\Delta=JF.
 \]
-Write \(\delta_F=\det(M_F)\).
+Let \(\delta_F=\det(M_F)\).
 
 \begin{proposition}[Planar secant annihilation]
 \label{prop:secant-annihilator}
 The secant determinant satisfies
 \[
-  \delta_F I_\Delta\subseteq I_R(F),
+  \delta_F I_\Delta\subseteq I_R,
   \qquad
   \delta_F\big|_\Delta=c.
 \]
 \end{proposition}
 
 \begin{proof}
-Multiplying \(r=M_Fd\) by \(\operatorname{adj}(M_F)\) gives
+Multiplying \(\mathbf r=M_F\mathbf d\) by
+\(\operatorname{adj}(M_F)\) gives
 \[
-  \delta_Fd=\operatorname{adj}(M_F)r.
+  \delta_F\mathbf d=\operatorname{adj}(M_F)\mathbf r.
 \]
-The first assertion follows coordinatewise, and restriction to the
-diagonal gives the second.
+\[
+  \mathbf r\in I_R^{\oplus2},
+  \qquad
+  \operatorname{adj}(M_F)\in M_2(S)
+  \quad\Longrightarrow\quad
+  \operatorname{adj}(M_F)\mathbf r\in I_R^{\oplus2}.
+\]
+Therefore
+\[
+  \delta_F\mathbf d\in I_R^{\oplus2},
+\]
+or equivalently,
+\[
+  \forall j\in\{1,2\},
+  \qquad
+  \delta_F(x_j-y_j)\in I_R.
+\]
+Hence \(\delta_FI_\Delta\subseteq I_R\).  On the diagonal,
+\[
+  (D_jF_i)|_\Delta=\frac{\partial F_i}{\partial x_j},
+\]
+so \(M_F|_\Delta=JF\) and
+\(\delta_F|_\Delta=\det JF=c\).
 \end{proof}
 
-Let \(\bar\delta_F\) be the class of \(\delta_F\) in \(C_F\).  With
-\(J=\Obs(F)\), Proposition~\ref{prop:secant-annihilator} gives
+Let \(\bar\delta_F\) be the class of \(\delta_F\) in \(C_F\), and define
 \[
-  \bar\delta_FJ=0,
-  \qquad
-  \bar\delta_F-c\in J.
-\]
-Theorem~\ref{thm:abstract-off-diagonal-projector}, applied to
-\[
-  q_F:=1-c^{-1}\bar\delta_F,
-\]
-therefore yields
-\[
-  q_F^2=q_F,
-  \qquad
-  \Obs(F)=C_Fq_F,
-  \qquad
-  \Ann_{C_F}\bigl(\Obs(F)\bigr)=C_F(1-q_F).
+  q_F:=1-c^{-1}\bar\delta_F.
 \]
 
 \begin{theorem}[Planar collision-sheet decomposition]
 \label{thm:collision-sheet-decomposition}
 The collision scheme decomposes as
 \[
-  R_F\cong\Delta_X\amalg R_F^\circ,
+  R_F\cong\Delta_{X/Y}(X)\amalg R_F^\circ,
   \qquad
   C_F\cong A\times C_F^\circ.
 \]
-Moreover,
+The off-diagonal ideal satisfies
 \[
-  I_{\mathrm{off}}(F)
+  I_{\mathrm{off}}
   =
-  I_R(F)+(\delta_F)
+  I_R+(\delta_F)
   =
-  I_R(F):I_\Delta^\infty.
+  I_R:I_\Delta^\infty.
 \]
 \end{theorem}
 
 \begin{proof}
-Pull the two complementary idempotent ideals generated by \(q_F\) and
-\(1-q_F\) back from \(C_F\) to \(S\), then apply the Chinese remainder
-theorem.  The secant identities identify the complementary pullback with
-\(I_R+(\delta_F)\); idempotence makes the saturation stabilize after the
-first colon.
+By Proposition~\ref{prop:obstruction-kernel},
+\[
+  J
+  :=
+  \ker(\bar\mu_F)
+  =
+  I_\Delta/I_R
+  =
+  \Obs(F).
+\]
+Proposition~\ref{prop:secant-annihilator} gives
+\[
+  \bar\delta_FJ=0,
+  \qquad
+  \bar\delta_F-c\in J.
+\]
+Theorem~\ref{thm:abstract-off-diagonal-projector}, applied to these two
+relations and \(q_F=1-c^{-1}\bar\delta_F\), yields
+\[
+  q_F^2=q_F,
+  \qquad
+  J=C_Fq_F,
+  \qquad
+  \Ann_{C_F}(J)=C_F(1-q_F),
+  \qquad
+  J=0\Longleftrightarrow q_F=0.
+\]
+Because \(1-q_F=c^{-1}\bar\delta_F\),
+\[
+  \frac{I_R:I_\Delta}{I_R}
+  =
+  \Ann_{C_F}(J)
+  =
+  C_F(1-q_F)
+  =
+  C_F\bar\delta_F
+  =
+  \frac{I_R+(\delta_F)}{I_R}.
+\]
+Hence
+\[
+  I_{\mathrm{off}}
+  =
+  I_R:I_\Delta
+  =
+  I_R+(\delta_F).
+\]
+
+Idempotence gives \(J^m=C_Fq_F=J\) for every \(m\geq1\).  Therefore
+\[
+  \frac{I_R:I_\Delta^m}{I_R}
+  =
+  \Ann_{C_F}(J^m)
+  =
+  \Ann_{C_F}(J)
+  =
+  \frac{I_R:I_\Delta}{I_R}.
+\]
+Thus
+\[
+  I_R:I_\Delta^\infty
+  =
+  \bigcup_{m\geq1}(I_R:I_\Delta^m)
+  =
+  I_R:I_\Delta.
+\]
+
+The idempotent \(q_F\) also gives a ring isomorphism
+\[
+  C_F
+  \xrightarrow{\ \sim\ }
+  C_F(1-q_F)\times C_Fq_F,
+  \qquad
+  a\longmapsto\bigl(a(1-q_F),aq_F\bigr),
+\]
+whose inverse is addition.  The two factors satisfy
+\[
+  C_F(1-q_F)
+  \cong
+  C_F/C_Fq_F
+  =
+  C_F/J
+  \xrightarrow[\bar\mu_F]{\ \sim\ }
+  A
+\]
+and
+\[
+  C_Fq_F
+  \cong
+  C_F/C_F(1-q_F)
+  \cong
+  S\big/\bigl(I_R+(\delta_F)\bigr)
+  =
+  C_F^\circ.
+\]
+Thus \(C_F\cong A\times C_F^\circ\).  Since the spectrum of a product is
+the disjoint union of the two spectra, this isomorphism dualizes to
+\[
+  R_F\cong\Delta_{X/Y}(X)\amalg R_F^\circ.
+\]
 \end{proof}
 
-Combining this theorem with
-Corollary~\ref{cor:off-diagonal-empty-criterion} gives
+Corollary~\ref{cor:off-diagonal-empty-criterion} states that
+\[
+  R_F^\circ=\varnothing
+  \quad\Longleftrightarrow\quad
+  C_F^\circ=0
+  \quad\Longleftrightarrow\quad
+  \Obs(F)=0
+  \quad\Longleftrightarrow\quad
+  I_R=I_\Delta.
+\]
+The preceding theorem identifies
+\[
+  C_F^\circ
+  =
+  S\big/\bigl(I_R+(\delta_F)\bigr),
+\]
+and Theorem~\ref{thm:abstract-off-diagonal-projector} gives
+\(\Obs(F)=0\Longleftrightarrow q_F=0\).  Hence
 \[
   q_F=0
   \quad\Longleftrightarrow\quad
-  I_R(F)+(\delta_F)=S
+  I_R+(\delta_F)=S
   \quad\Longleftrightarrow\quad
   R_F^\circ=\varnothing
   \quad\Longleftrightarrow\quad
-  I_R(F)=I_\Delta.
+  I_R=I_\Delta.
 \]
-The secant determinant thus identifies the precise support of a possible
-off-diagonal obstruction; annihilation alone does not prove its
-vanishing.
+In particular, the secant determinant cuts out the off-diagonal factor:
+\[
+  R_F^\circ
+  =
+  \Spec\!\bigl(S/(I_R+(\delta_F))\bigr).
+\]
 
 \subsection{Boundary exclusion and inertia}
 
-Fix a collision-normalization model for the Keller map \(F\).  It selects
-a marked finite normal closure \(N/K\) and instantiates the general
-finite normalized-cover and normalization-diagram data of
-Section~\ref{sec:normalized-covers-inertia}.  With
+Let
 \[
+  A=\C[x_1,x_2],
+  \qquad
+  B=\C[P,Q]\subseteq A,
   K=\C(P,Q),
   \qquad
-  L=\C(x,y),
+  L=\C(x_1,x_2),
 \]
-its normalization triangle is
-\[
-  Z=\Norm_N(Y)\longrightarrow
-  \overline X=\Norm_L(Y)\longrightarrow Y=\A^2_{\C}
-\]
-and the marked affine source
-\(X=\A^2_{\C}\) is an open subscheme of \(\overline X\).
-The model also supplies the \'etaleness and flatness consequences of the
-Keller condition and the geometric realization of the double-coset
-inertia indices.  No second normalization construction is made here.
-Write \(G=\Gal(N/K)\) and \(H=\Gal(N/L)\).
+and let \(X=\Spec A\) and \(Y=\Spec B\).
 
-For a ramified height-one point \(E\) of \(Z\), retain the general
-notation \(I_E\) for its inertia group, \(i_E(q)\) for the relative
-inertia index, and \(c(E,q)\) for its conjugate center.
-Proposition~\ref{prop:visibility-to-boundary}, applied through the Keller
-collision model, gives
+\begin{proposition}[Keller local geometry]
+\label{prop:planar-keller-local-geometry}
 \[
-  i_E(q)\neq1
+  \C[u,v]\xrightarrow{\sim}B,
+  \qquad
+  u\longmapsto P,\quad v\longmapsto Q.
+\]
+Moreover,
+\[
+  X\xrightarrow{\ f_F\ }Y\ \text{is \'etale},
+  \qquad
+  A\ \text{is flat over }B,
+  \qquad
+  [L:K]<\infty
+  \ \text{and }L/K\text{ is separable}.
+\]
+\end{proposition}
+
+\begin{proof}
+The identity
+\[
+  dP\wedge dQ
+  =
+  \left(
+    \frac{\partial P}{\partial x_1}
+    \frac{\partial Q}{\partial x_2}
+    -
+    \frac{\partial P}{\partial x_2}
+    \frac{\partial Q}{\partial x_1}
+  \right)dx_1\wedge dx_2
+  =
+  \det(JF)\,dx_1\wedge dx_2
+  =
+  c\,dx_1\wedge dx_2
+  \neq0
+\]
+shows that \(P,Q\) are algebraically independent.  Thus
+\(B\cong\C[u,v]\) and \(Y\cong\A^2_{\C}\).  Moreover,
+\[
+  A
+  \cong
+  B[U,V]\big/\bigl(P(U,V)-u,\ Q(U,V)-v\bigr),
+\]
+whose relative Jacobian determinant is \(c\in A^\times\).  The
+Jacobian criterion therefore makes \(B\to A\) \'etale.  In particular
+it is flat and quasi-finite.  Since \(f_F\) is dominant and
+quasi-finite, its generic fiber is zero-dimensional, so
+\([L:K]<\infty\).  The morphism remains \'etale at the generic point;
+hence the finite extension \(L/K\) is separable.
+\end{proof}
+
+Fix an algebraic closure \(\overline K\supseteq L\), and let
+\[
+  \begin{aligned}
+  N
+    &:=
+      K\bigl(\sigma(L):
+        \sigma\in\Hom_K(L,\overline K)\bigr),
+    &K&\subseteq L\subseteq N\subseteq\overline K,\\
+  \overline A
+    &:=
+      \{a\in L:a\text{ is integral over }B\},
+  &
+  A_N
+    &:=
+      \{a\in N:a\text{ is integral over }B\},\\
+  \overline X&:=\Spec\overline A,
+  &
+  Z&:=\Spec A_N.
+  \end{aligned}
+\]
+Thus \(N/K\) is the normal closure of \(L/K\).
+
+\begin{proposition}[Planar finite-cover diagram]
+\label{prop:planar-normalization-diagram}
+\[
+  Z\xrightarrow[\mathrm{finite}]{\pi}
+  \overline X\xrightarrow[\mathrm{finite}]{\bar\nu}Y,
+  \qquad
+  \nu=\bar\nu\circ\pi,
+\]
+and
+\[
+  X\xhookrightarrow[\mathrm{open}]{j}\overline X,
+  \qquad
+  \bar\nu\circ j=f_F.
+\]
+\end{proposition}
+
+\begin{proof}
+Since \(B\cong\C[u,v]\) is a finitely generated normal
+\(\C\)-algebra, its integral closures in the finite extensions \(L/K\) and
+\(N/K\) are finite over \(B\).  The inclusion \(L\subseteq N\) gives
+\(\overline A\subseteq A_N\), so
+\[
+  B\subseteq\overline A\subseteq A_N.
+\]
+The morphism \(\bar\nu\) is finite because \(\overline A\) is a finite
+\(B\)-module.  If \(a_1,\dots,a_r\) generate \(A_N\) over \(B\), then
+they also generate \(A_N\) over \(\overline A\), since
+\(B\subseteq\overline A\).  Hence \(\pi\) is finite.
+
+For \(a\in\overline A\), integrality over \(B\subseteq A\) and the
+normality of \(A=\C[x_1,x_2]\) give \(a\in A\).  Thus
+\[
+  B\subseteq\overline A\subseteq A,
+  \qquad
+  \Frac(\overline A)=\Frac(A)=L,
+\]
+induces a dominant birational morphism
+\(j\colon X\to\overline X\).  It is quasi-finite and separated by
+Proposition~\ref{prop:planar-keller-local-geometry}.  Since
+\(\overline X\) is normal, Zariski's Main Theorem makes \(j\) an open
+immersion.
+\end{proof}
+
+Let
+\[
+  \begin{gathered}
+    \mathcal D_F=
+    \left(
+      Z\xrightarrow{\pi}\overline X\xrightarrow{\bar\nu}Y,\,
+      j\colon X\hookrightarrow\overline X
+    \right),
+    \qquad
+    \partial X=\overline X\setminus j(X),\\
+    G=\Gal(N/K),
+    \qquad
+    H=\Gal(N/L).
+  \end{gathered}
+\]
+
+For \(E\in\Ram^{(1)}(Z/Y)\) and
+\(\omega\in\mathcal Q_E\), Proposition
+\ref{prop:intermediate-ramification-index} gives
+\[
+  e\bigl(\operatorname{cent}(E,\omega)/\nu(E)\bigr)=i_E(\omega).
+\]
+Since \(X\to Y\) is \'etale by
+Proposition~\ref{prop:planar-keller-local-geometry},
+Proposition~\ref{prop:visibility-to-boundary} gives
+\[
+  i_E(\omega)>1
   \quad\Longrightarrow\quad
-  c(E,q)\ \text{lies in the deleted boundary}.
+  \operatorname{cent}(E,\omega)\in\partial X.
+\]
+Thus Definition~\ref{def:no-hidden-inertia} specializes to
+\[
+  \mathcal H(\mathcal D_F)
+  =
+  \left\{
+  E\in\Ram^{(1)}(Z/Y):
+  \begin{array}{l}
+    \exists\omega\in\mathcal Q_E,\ i_E(\omega)>1,\\
+    \forall\omega\in\mathcal Q_E,\quad
+      i_E(\omega)>1
+      \Longrightarrow
+      \operatorname{cent}(E,\omega)\in\partial X
+  \end{array}
+  \right\}.
 \]
 
-\subsection{The planar no-hidden-inertia input}
+\subsection{Hidden inertia and divisorial ramification}
 \label{sec:planar-no-hidden-inertia}
 
-The additional planar condition is that this diagram satisfies the
-general No-Hidden-Inertia condition of
-Definition~\ref{def:no-hidden-inertia}.  We call this specialization
-\emph{Planar No-Hidden-Inertia}.
-
-\begin{corollary}[Planar codimension-one unramifiedness]
+\begin{corollary}[Planar divisorial ramification criterion]
 \label{cor:planar-codimension-one-unramified}
-If the diagram satisfies Planar No-Hidden-Inertia, then the finite
-normalization \(Z\to Y\) is unramified at every height-one point.
-Equivalently, there are no ramified height-one points.
+\[
+  \mathcal H(\mathcal D_F)=\varnothing
+  \quad\Longleftrightarrow\quad
+  \Ram^{(1)}(Z/Y)=\varnothing.
+\]
 \end{corollary}
 
 \begin{proof}
-Suppose \(E\) is a ramified height-one point.  The normalization diagram
-records nontrivial inertia at \(E\).  Faithfulness of the action on the
-conjugate sheets, equivalently \(\core_G(H)=1\), and
-Proposition~\ref{prop:core-free-sheet-action} supply a sheet \(q\) with
-\(i_E(q)>1\).  The Keller collision model and its supplied ramification
-realization place every center with nontrivial relative index in the
-deleted boundary.  This is precisely the hidden-inertia orbit excluded by
-Planar No-Hidden-Inertia.
+The reverse implication follows from
+\(\mathcal H(\mathcal D_F)\subseteq\Ram^{(1)}(Z/Y)\).  Conversely,
+suppose that \(\mathcal H(\mathcal D_F)=\varnothing\) and let
+\(E\in\Ram^{(1)}(Z/Y)\).  Then \(I_E\neq1\).
+Since \(N\) is the normal closure of \(L/K\),
+\(\core_G(H)=1\), and
+Proposition~\ref{prop:core-free-sheet-action} gives
+\[
+  \exists\omega\in\mathcal Q_E,
+  \qquad
+  i_E(\omega)>1.
+\]
+For every \(\omega'\in\mathcal Q_E\), Proposition
+\ref{prop:visibility-to-boundary} gives
+\[
+  i_E(\omega')>1
+  \quad\Longrightarrow\quad
+  \operatorname{cent}(E,\omega')\in\partial X.
+\]
+Hence \(E\in\mathcal H(\mathcal D_F)\), a contradiction.
 \end{proof}
 
 \subsection{Collapse of the normal closure}
 
 \begin{theorem}[Purity of the branch locus, specialized]
 \label{thm:branch-purity}
-Let \(Z\to\A^2_{\C}\) be a finite dominant morphism with \(Z\) normal.
-If it is generically separable and unramified at every height-one point,
-then it is \'etale.
+Let \(Z\to\A^2_{\C}\) be a finite dominant generically separable
+morphism with \(Z\) integral and normal.  If
+\(\Ram^{(1)}(Z/\A^2_{\C})=\varnothing\), then the morphism is \'etale
+\cite{StacksPurity}.
 \end{theorem}
-
-\begin{proof}
-This is the Zariski--Nagata purity theorem in the finite normal-cover
-setting; see \cite{StacksPurity}.
-\end{proof}
-
-For the normalization \(Z\to Y\) above, generic separability is automatic:
-its function-field extension is the supplied finite Galois extension
-\(N/K\).
 
 \begin{theorem}[Finite-\'etale rigidity of the affine plane]
 \label{thm:a2-etale-rigidity}
-Every connected finite \'etale cover of \(\A^2_{\C}\) is trivial.
+Every connected finite \'etale cover of \(\A^2_{\C}\) is trivial
+\cite[Expos\'e XII]{SGA1}.
 \end{theorem}
-
-\begin{proof}
-By the Riemann existence theorem for finite \'etale covers
-\cite[Expos\'e XII]{SGA1}, analytification gives a finite topological
-cover of \(\C^2\).  Since \(\C^2\) is simply connected, a connected such
-cover has degree one.
-\end{proof}
 
 \begin{corollary}[Triviality of the planar normal closure]
 \label{cor:planar-normal-closure-trivial}
-If the normalization diagram satisfies Planar No-Hidden-Inertia, then
+If
+\[
+  \Ram^{(1)}(Z/Y)=\varnothing,
+\]
+then
 \[
   N=K
   \qquad\text{and hence}\qquad
@@ -787,275 +1514,571 @@ If the normalization diagram satisfies Planar No-Hidden-Inertia, then
 \end{corollary}
 
 \begin{proof}
-Corollary~\ref{cor:planar-codimension-one-unramified} gives
-unramifiedness at every height-one point.  Since \(N/K\) is finite
-Galois, \(Z\to Y\) is generically separable; hence
-Theorem~\ref{thm:branch-purity} makes it finite \'etale.  The scheme
-\(Z\) is connected because its coordinate ring is a domain inside \(N\),
-so Theorem~\ref{thm:a2-etale-rigidity} gives \(Z\simeq Y\), hence
+By Proposition~\ref{prop:planar-keller-local-geometry},
+\(Y\cong\A^2_{\C}\).  Since \(N/K\) is finite Galois,
+\(\nu\colon Z\to Y\) is generically separable; hence
+Theorem~\ref{thm:branch-purity} makes it finite \'etale.  The inclusion
+\[
+  A_N\subset N\text{ is a domain},
+  \qquad\text{so}\qquad
+  Z=\Spec A_N\text{ is connected}.
+\]
+Theorem~\ref{thm:a2-etale-rigidity} therefore makes
+\(\nu\colon Z\to Y\) an isomorphism.  Taking function fields gives
 \(N=K\).  Finally,
 \(K\subseteq L\subseteq N\) implies \(L=K\).
 \end{proof}
 
 \subsection{Vanishing of the off-diagonal factor}
 
-By the general generic-collision and flat-descent results,
-\[
-  \left.
-  \begin{gathered}
-    L=K,\\
-    A\text{ is flat over }B
-  \end{gathered}
-  \right\}
-  \quad\Longrightarrow\quad
-  \Obs(F)=0
-  \quad\Longleftrightarrow\quad
-  q_F=0
-  \quad\Longleftrightarrow\quad
-  C_F^\circ=0.
-\]
-Indeed, Theorem~\ref{thm:generic-collision-base-change} gives
-\[
-  K\otimes_BC_F
-  \cong L\otimes_KL
-  \cong K,
-\]
-so there is no generic off-diagonal factor.  For descent we apply flatness
-to the collision algebra \(C_F=A\otimes_BA\).  Flatness of \(A\) over
-\(B\) makes \(C_F\)
-flat over \(B\), so the map
-\[
-  C_F\longrightarrow K\otimes_BC_F
-\]
-is injective.  Injectivity of the generic diagonal therefore descends to
-\(\bar\mu_F\), forcing \(\Obs(F)=0\).
-
 \begin{theorem}[Planar Vanishing]
 \label{thm:planar-vanishing}
-Let
+For every polynomial map
+\(F=(P,Q)\colon\A^2_{\C}\to\A^2_{\C}\) satisfying
+\(\det JF=c\in\C^\times\),
 \[
-  F=(P,Q)\colon\A^2_{\C}\longrightarrow\A^2_{\C}
-\]
-satisfy \(\det JF=c\) for some \(c\in\C^\times\).  If the
-normalization-model data above are supplied and the diagram satisfies
-Planar No-Hidden-Inertia, then
-\[
-  I_R(F)=I_\Delta.
-\]
-Equivalently,
-\[
-  \Obs(F)=0,\qquad q_F=0,\qquad R_F^\circ=\varnothing.
+  \mathcal H(\mathcal D_F)=\varnothing
+  \quad\Longrightarrow\quad
+  \begin{gathered}
+    I_R=I_\Delta,
+    \qquad
+    \Obs(F)=0,\\
+    q_F=0,
+    \qquad
+    R_F^\circ=\varnothing.
+  \end{gathered}
 \]
 \end{theorem}
 
 \begin{proof}
-The dependency chain is
+Corollary~\ref{cor:planar-codimension-one-unramified} gives
+\(\Ram^{(1)}(Z/Y)=\varnothing\), and
+Corollary~\ref{cor:planar-normal-closure-trivial} gives \(L=K\).
+Proposition~\ref{prop:planar-keller-local-geometry} gives that \(A\) is
+flat over \(B\).  Corollary~\ref{cor:generic-degree-one-descent} states
 \[
-\begin{aligned}
-  \text{Planar No-Hidden-Inertia}
-  &\Longrightarrow Z\to Y\text{ is unramified at every height-one point}
-  \Longrightarrow N=K,\\
-  N=K
-  &\Longrightarrow L=K
-  \xRightarrow{\ A/B\ \mathrm{flat}\ } q_F=0
-  \Longrightarrow I_R(F)=I_\Delta.
-\end{aligned}
+  L=K,
+  \qquad
+  A\text{ flat over }B
+  \quad\Longrightarrow\quad
+  \Obs(F)=0,
 \]
-The first two implications are Corollaries
-\ref{cor:planar-codimension-one-unramified} and
-\ref{cor:planar-normal-closure-trivial}; the final implications are the
-generic off-diagonal descent and
-Corollary~\ref{cor:off-diagonal-empty-criterion}.
+so \(\Obs(F)=0\).
+
+Corollary~\ref{cor:off-diagonal-empty-criterion} and
+Theorem~\ref{thm:abstract-off-diagonal-projector} state
+\[
+  \begin{gathered}
+    R_F^\circ=\varnothing
+    \quad\Longleftrightarrow\quad
+    C_F^\circ=0
+    \quad\Longleftrightarrow\quad
+    \Obs(F)=0
+    \quad\Longleftrightarrow\quad
+    I_R=I_\Delta,\\
+    \Obs(F)=0
+    \quad\Longleftrightarrow\quad
+    q_F=0.
+  \end{gathered}
+\]
+All four conclusions follow.
 \end{proof}
 
-By the dimension-independent criterion,
-Theorem~\ref{thm:automorphism-criterion}, Planar Vanishing also yields
-polynomial automorphy under the same conditions.
+\begin{corollary}[Conditional Jacobian conjecture in dimension two]
+\label{cor:conditional-jc2}
+If \(\mathcal H(\mathcal D_F)=\varnothing\) for every planar Keller map
+\(F\), then every planar Keller map is a polynomial automorphism.
+Equivalently, the two-dimensional Jacobian conjecture holds.
+\end{corollary}
+
+\begin{proof}
+The automorphism criterion, Theorem~\ref{thm:automorphism-criterion},
+states that every polynomial self-map of \(\A^2_{\C}\) satisfies
+\[
+  I_R=I_\Delta
+  \quad\Longleftrightarrow\quad
+  F\text{ is a polynomial automorphism}.
+\]
+Planar Vanishing supplies the left-hand side for every planar Keller
+map under the stated condition.
+\end{proof}
+
+\paragraph{External inputs to the formalization.}
+The Lean development takes the following established results as
+explicit inputs:
+\begin{enumerate}[
+  label=\textup{(E\arabic*)},
+  leftmargin=*,
+  itemsep=2pt,
+  topsep=3pt
+]
+  \item The planar Ax--Grothendieck theorem: every injective polynomial
+    self-map of \(\A^2_{\C}\) is a polynomial automorphism
+    \cite{Ax1969}.
+  \item Purity of the branch locus in the specialized form of
+    Theorem~\ref{thm:branch-purity} \cite{StacksPurity}.
+  \item Every connected finite \'etale cover of \(\A^2_{\C}\) is
+    trivial, as in Theorem~\ref{thm:a2-etale-rigidity}
+    \cite[Expos\'e XII]{SGA1}.
+\end{enumerate}
+The condition \(\mathcal H(\mathcal D_F)=\varnothing\) is not included
+among these inputs; it remains the explicit premise of
+Theorem~\ref{thm:planar-vanishing}.
 
 \begin{leanfiles}
-\leanpath{CollisionIdeals/Planar/Secant.lean},
-\leanpath{CollisionIdeals/Planar/ExternalAssumptions.lean},
-\leanpath{CollisionIdeals/Planar/ConditionalVanishing.lean}, and
-\leanpath{CollisionIdeals/Planar/Conclusion.lean}.
+The conditional planar chain is collected in
+\leanpath{CollisionIdeals/Planar.lean}.  The three inputs above are
+isolated in
+\leanpath{CollisionIdeals/Planar/ExternalAssumptions.lean}.
 \end{leanfiles}
 
 \section{\texorpdfstring{The cubic \(S_3\) obstruction in dimension three}
   {The cubic S3 obstruction in dimension three}}
 \label{sec:cubic-s3-obstruction}
 
+Let \(S_3=\operatorname{Perm}(\{1,2,3\})\) be the symmetric group on
+three letters.
+
+\begin{proposition}[Dimension-three counterexample criterion]
+\label{prop:dimension-three-counterexample-criterion}
+For a polynomial map
+\[
+  F\colon\A^3_{\C}\longrightarrow\A^3_{\C},
+\]
+consider the following statements:
+\begin{enumerate}[label=\textup{(\arabic*)}]
+  \item \(\det JF\in\C^\times\);
+  \item \(F\) is not a polynomial automorphism;
+  \item \(R_F^\circ\neq\varnothing\).
+\end{enumerate}
+Under \textup{(1)}, statements \textup{(2)} and \textup{(3)} are
+equivalent.
+\end{proposition}
+
+\begin{proof}
+By Corollary~\ref{cor:off-diagonal-empty-criterion} and
+Theorem~\ref{thm:automorphism-criterion},
+\[
+  R_F^\circ=\varnothing
+  \quad\Longleftrightarrow\quad
+  I_R=I_\Delta
+  \quad\Longleftrightarrow\quad
+  F\in\Aut_{\mathrm{poly}}(\A^3_{\C}).
+\]
+Negating this equivalence proves
+\textup{(2)}\(\Longleftrightarrow\)\textup{(3)}.
+\end{proof}
+
 \subsection{The cubic extension and its normal closure}
+\label{sec:cubic-extension}
 
 Let
 \[
-  F\colon\A^3_{\C}\longrightarrow\A^3_{\C}
+  F=(F_1,F_2,F_3)\colon\A^3_{\C}\longrightarrow\A^3_{\C}
 \]
-be a polynomial map, and retain the general notation \(A,B,K,L\) of
-Section~\ref{sec:generic-galois-bridge}.  Work under the general
-conditions of Theorems~\ref{thm:generic-collision-base-change} and
-\ref{thm:marked-root-tensor-decomposition}, and specialize the chosen
-power basis to degree three:
+be dominant and generically finite.  Let
+\[
+  A=\C[x_1,x_2,x_3],
+  \qquad
+  B=\C[F_1,F_2,F_3]\subseteq A,
+  \qquad
+  K=\Frac(B),
+  \qquad
+  L=\Frac(A),
+\]
+and let
+\[
+  \theta\colon K\otimes_BA\longrightarrow L,
+  \qquad
+  \lambda\otimes a\longmapsto\lambda a,
+\]
+be the isomorphism of
+Theorem~\ref{thm:generic-collision-base-change}.  Suppose that \(L/K\)
+is separable and nonnormal, and
+choose a power basis with generator \(\alpha\) and degree three:
 \[
   L=K(\alpha),
   \qquad
   [L:K]=3.
 \]
-Remove the marked linear factor
-\(T-\alpha\) from the minimal polynomial of \(\alpha\), and identify the
-resulting residual quadratic \(L\)-algebra with a field \(N\).
-Equip this same field with the finite marked-normal-closure data of
-Section~\ref{sec:normalized-covers-inertia}, with the marked embedding
-\(L\hookrightarrow N\) equal to the \(L\)-algebra structure of the
-residual factor.  Write
+If \(m_\alpha\in K[T]\) is the minimal polynomial of \(\alpha\), let
+\(h_\alpha\in L[T]\) be determined by
+\[
+  m_\alpha(T)=(T-\alpha)h_\alpha(T)
+  \qquad\text{in }L[T].
+\]
+Let \(N/K\) be the normal closure of \(L/K\), containing \(L\) through
+the marked inclusion.  Let
 \[
   G=\Gal(N/K),
   \qquad
-  H=\Gal(N/L),
+  H=\Gal(N/L).
+\]
+Recall from Section~\ref{sec:normalized-covers-inertia} that
+\[
+  G/H\xrightarrow{\sim}\Hom_K(L,N),
+  \qquad
+  gH\longmapsto g|_L,
+  \qquad
+  \core_G(H)=1.
+\]
+The final equality follows because \(N\) is the normal closure of
+\(L/K\); equivalently, the action of \(G\) on the conjugate embeddings
+of \(L\) is faithful.
+
+For \(Y=\Spec B\), the finite-normalization construction of
+Section~\ref{sec:normalized-covers-inertia} gives
+\[
+  Z=\Norm_N(Y)\longrightarrow
+  \overline X=\Norm_L(Y)\longrightarrow Y.
+\]
+If \(E\in Z^{(1)}\), with decomposition group \(D_E\) and inertia group
+\(I_E\), then its conjugate centers are indexed by
+\(\mathcal Q_E=D_E\backslash G/H\).  For
+\(\omega=D_EgH\), Proposition~\ref{prop:intermediate-ramification-index}
+states
+\[
+  e\bigl(\operatorname{cent}(E,\omega)/\nu(E)\bigr)
+  =
+  i_E(\omega)
+  =
+  [I_E:I_E\cap gHg^{-1}].
 \]
 
-\begin{corollary}[Cubic residual-factor identification]
-\label{cor:cubic-tensor-decomposition}
-For the cubic power-basis data above,
+The following proposition is the standard residual-factor description
+of a separable nonnormal cubic extension.  We include its short proof
+to fix the marked identification with \(N\).
+
+\begin{proposition}[Cubic residual-factor identification]
+\label{prop:cubic-tensor-decomposition}
+The polynomial \(h_\alpha\) is irreducible over \(L\), and there is an
+\(L\)-algebra isomorphism
 \[
-  L\otimes_KL\cong L\times N
+  \varphi\colon L[T]/(h_\alpha)\xrightarrow{\sim}_L N.
 \]
-as \(L\)-algebras, and the first projection is tensor multiplication
+Consequently,
 \[
-  L\otimes_KL\longrightarrow L.
+  \Psi\colon L\otimes_KL\xrightarrow{\sim}_L L\times N,
+  \qquad
+  \operatorname{pr}_1\circ\Psi=\mu_L.
 \]
-\end{corollary}
+\end{proposition}
 
 \begin{proof}
-Apply Theorem~\ref{thm:marked-root-tensor-decomposition}, then transport
-the residual factor \(L[T]/(q_\alpha)\) across its chosen
-\(L\)-algebra equivalence with \(N\).
+Write
+\[
+  m_\alpha(T)=T^3+a_2T^2+a_1T+a_0.
+\]
+If the quadratic \(h_\alpha\) were reducible over \(L\), it would have a
+root \(\beta\in L\).  Separability gives \(\beta\neq\alpha\), and the
+third root would be
+\[
+  \gamma=-a_2-\alpha-\beta\in L.
+\]
+Thus \(m_\alpha\) would split over \(L\).  Since
+\(L=K(\alpha)\), the extension \(L/K\) would then be the splitting
+field of the separable polynomial \(m_\alpha\), hence normal.  This
+contradicts the assumed nonnormality, so \(h_\alpha\) is irreducible.
+
+Let \(\beta\) denote the image of \(T\) in \(L[T]/(h_\alpha)\).  This
+field contains the three roots
+\[
+  \alpha,\qquad \beta,\qquad -a_2-\alpha-\beta
+\]
+of \(m_\alpha\), and is generated over \(L\) by \(\beta\).  It is
+therefore the splitting field of \(m_\alpha\), which is the normal
+closure \(N\) of \(L/K\).  Choose the resulting \(L\)-algebra
+isomorphism
+\[
+  \varphi\colon L[T]/(h_\alpha)\xrightarrow{\sim}_L N.
+\]
+
+Let
+\[
+  \Phi_\alpha\colon
+  L\otimes_KL
+  \xrightarrow{\sim}_L
+  L\times L[T]/(h_\alpha)
+\]
+be the marked-root decomposition of
+Theorem~\ref{thm:marked-root-tensor-decomposition}.  It satisfies
+\[
+  \operatorname{pr}_1\circ\Phi_\alpha=\mu_L.
+\]
+Composing its second factor with \(\varphi\), let
+\[
+  \Psi=(\id_L\times\varphi)\circ\Phi_\alpha.
+\]
+Since \(\id_L\times\varphi\) leaves the first factor unchanged,
+\(\operatorname{pr}_1\circ\Psi=\mu_L\).
 \end{proof}
 
-\begin{theorem}[The nonnormal \(S_3\) symmetry]
+\begin{theorem}[Galois group of a nonnormal cubic extension]
 \label{thm:index-three-core-free-s3}
-For the marked normal closure above, with \(H\neq1\),
 \[
   \Gal(N/K)\cong S_3.
 \]
 \end{theorem}
 
 \begin{proof}
-The shared normal-closure datum makes \(H\) core-free.  The subgroup
-\(H=\Gal(N/L)\) has index
-\([L:K]=3\).  The action on \(G/H\) gives a homomorphism
+Proposition~\ref{prop:cubic-tensor-decomposition} identifies \(N\) with
+the degree-two extension \(L[T]/(h_\alpha)\) of \(L\).  Hence
 \[
-  G\longrightarrow\operatorname{Perm}(G/H)\cong S_3.
+  |H|=[N:L]=2.
 \]
-Core-freeness makes this homomorphism injective, so \(|G|\leq6\).
-On the other hand \(|G|=3|H|\), and \(H\neq1\), so \(|G|\geq6\).
-Hence \(|G|=6\) and the injection is an isomorphism.
+The normal-closure identities recalled above give
+\[
+  \core_G(H)=1,
+  \qquad
+  [G:H]=[L:K]=3.
+\]
+Hence the action of \(G\) on the three cosets of \(H\) gives
+\[
+  \rho\colon G\longrightarrow\operatorname{Perm}(G/H)\cong S_3,
+  \qquad
+  \ker\rho=\core_G(H)=1.
+\]
+Core-freeness therefore makes \(\rho\) injective, so
+\[
+  |G|\leq |S_3|=6.
+\]
+The index formula gives
+\[
+  |G|=[G:H]|H|=3\cdot2=6.
+\]
+Thus \(|G|=6\), and the injective homomorphism \(\rho\) is an
+isomorphism \(G\cong S_3\).
 \end{proof}
 
-\subsection{The cubic off-diagonal sheet}
+\subsection{The cubic off-diagonal factor}
 
-\begin{theorem}[Generic cubic \(S_3\) collision]
-\label{thm:cubic-s3-collision}
-Under the cubic residual-field and marked-normal-closure data above,
-assume \(H\neq1\) and that \(F\) is Keller.  Then
+Retain the cubic data of Section~\ref{sec:cubic-extension}, and suppose
+in addition that \(F\) is Keller.  Thus
 \[
-  K\otimes_BC_F\cong L\times N,
+  B=\C[F_1,F_2,F_3]\subseteq A=\C[x_1,x_2,x_3],
+  \qquad
+  K=\Frac(B)\subseteq L=\Frac(A)=K(\alpha)\subseteq N,
 \]
-compatibly with the diagonal map and the first projection.  Moreover,
+where \(L/K\) is separable, nonnormal, and of degree three, and \(N/K\)
+is its normal closure.  Let
+\[
+  \theta\colon K\otimes_BA\xrightarrow{\sim}L,
+  \qquad
+  \lambda\otimes a\longmapsto\lambda a.
+\]
+
+\begin{corollary}[Generic cubic \(S_3\) collision]
+\label{cor:cubic-s3-collision}
+There is a \(K\)-algebra isomorphism
+\[
+  \Psi_F\colon
+  K\otimes_BC_F\xrightarrow{\sim}_K L\times N,
+  \qquad
+  \operatorname{pr}_1\circ\Psi_F
+  =
+  \theta\circ(1\otimes\bar\mu_F).
+\]
+It satisfies
+\[
+  \Psi_F\!\left(
+    \ker\bigl(\theta\circ(1\otimes\bar\mu_F)\bigr)
+  \right)
+  =
+  0\times N,
+  \qquad
+  \Gal(N/K)\cong S_3.
+\]
+Consequently,
 \[
   \Obs(F)\neq0,
   \qquad
-  I_R(F)\subsetneq I_\Delta,
+  I_R\subsetneq I_\Delta,
   \qquad
-  R_F^\circ\neq\varnothing.
+  R_F^\circ\neq\varnothing,
+  \qquad
+  F\notin\Aut_{\mathrm{poly}}(\A^3_{\C}).
 \]
-The same field \(N\) is the generic off-diagonal collision factor and has
-\(\Gal(N/K)\cong S_3\).  In particular, \(F\) is not a polynomial
-automorphism.
-\end{theorem}
-
-\begin{proof}
-Theorem~\ref{thm:generic-collision-base-change} and
-Corollary~\ref{cor:cubic-tensor-decomposition} give
-\[
-  K\otimes_BC_F
-  \cong
-  L\otimes_KL
-  \cong
-  L\times N.
-\]
-Under this equivalence, the base-changed diagonal is projection onto
-\(L\).  Its kernel contains \(0\times N\), and is therefore nonzero.
-
-Suppose that the affine diagonal map \(\bar\mu_F\colon C_F\to A\) were
-injective.  Since \(K\) is a flat \(B\)-algebra, its base change would
-remain injective, contradicting the preceding product decomposition.
-Thus
-\[
-  \ker(\bar\mu_F)=\Obs(F)\neq0.
-\]
-Propositions~\ref{prop:collision-contained-in-diagonal} and
-\ref{prop:obstruction-kernel} give
-\(I_R(F)\subsetneq I_\Delta\), while
-Corollary~\ref{cor:off-diagonal-empty-criterion} gives
-\(R_F^\circ\neq\varnothing\).  Theorem
-\ref{thm:automorphism-criterion} rules out polynomial automorphy.
-The \(S_3\) identification is
-Theorem~\ref{thm:index-three-core-free-s3}.
-\end{proof}
-
-\begin{corollary}[Hidden inertia in the \(S_3\)-normalization]
-\label{cor:cubic-hidden-inertia}
-Under the hypotheses of Theorem~\ref{thm:cubic-s3-collision}, assume in
-addition that the same field \(N\) occurs in a supplied Keller
-collision-normalization model, and let \(E\) be a ramified height-one
-point of \(Z=\Norm_N(Y)\).  Then \(E\) determines a hidden-inertia orbit
-in that model.
 \end{corollary}
 
 \begin{proof}
-The full normal-closure Galois group is \(S_3\) by
-Theorem~\ref{thm:index-three-core-free-s3}.  The inertia subgroup at
-\(E\) is nontrivial.  Core-freeness and
-Proposition~\ref{prop:core-free-sheet-action} therefore give a conjugate
-sheet with relative inertia index greater than one.  The Keller
-\'etaleness bridge and Proposition~\ref{prop:visibility-to-boundary}
-place every center with nontrivial relative index in the deleted
-boundary.  These two statements are exactly a hidden-inertia orbit.
+Theorem~\ref{thm:generic-collision-base-change} gives a \(K\)-algebra
+isomorphism
+\[
+  \Phi_F\colon K\otimes_BC_F\xrightarrow{\sim}_K L\otimes_KL
+\]
+such that
+\[
+  \mu_L\circ\Phi_F
+  =
+  \theta\circ(1\otimes\bar\mu_F).
+\]
+Proposition~\ref{prop:cubic-tensor-decomposition} gives
+\[
+  \Psi\colon L\otimes_KL\xrightarrow{\sim}_L L\times N,
+  \qquad
+  \operatorname{pr}_1\circ\Psi=\mu_L.
+\]
+After restricting \(\Psi\) from \(L\) to \(K\), let
+\[
+  \Psi_F=\Psi\circ\Phi_F.
+\]
+It follows that
+\[
+  \operatorname{pr}_1\circ\Psi_F
+  =
+  \theta\circ(1\otimes\bar\mu_F),
+  \qquad
+  \Psi_F\!\left(
+    \ker\bigl(\theta\circ(1\otimes\bar\mu_F)\bigr)
+  \right)
+  =
+  0\times N\neq0.
+\]
+
+Suppose that the diagonal-evaluation homomorphism
+\(\bar\mu_F\colon C_F\to A\) were injective.  Since \(K\) is a
+localization of \(B\), it is flat over
+\(B\), so \(1\otimes\bar\mu_F\) would also be injective.
+Theorem~\ref{thm:generic-collision-base-change} shows that \(\theta\)
+is an isomorphism.  Therefore
+\(\theta\circ(1\otimes\bar\mu_F)\) would be injective, contradicting
+the nonzero kernel \(0\times N\) above.  Hence
+\(\ker(\bar\mu_F)\neq0\), and
+Proposition~\ref{prop:obstruction-kernel} gives
+\(\Obs(F)\neq0\).  Proposition
+\ref{prop:collision-contained-in-diagonal} shows that
+\(I_R\subseteq I_\Delta\) strict, and
+Corollary~\ref{cor:off-diagonal-empty-criterion} gives
+\(R_F^\circ\neq\varnothing\).
+
+Finally, Theorem~\ref{thm:index-three-core-free-s3} identifies
+\(\Gal(N/K)\) with \(S_3\).  If \(F\) were a polynomial automorphism,
+Theorem~\ref{thm:automorphism-criterion} would give
+\(\Obs(F)=0\), contrary to \(\Obs(F)\neq0\).  Since \(F\) is Keller, it is
+a dimension-three Jacobian-conjecture counterexample.
+\end{proof}
+
+For the same cubic map and field tower, let
+\[
+  X=\Spec A,
+  \qquad
+  Y=\Spec B,
+  \qquad
+  G=\Gal(N/K),
+  \qquad
+  H=\Gal(N/L).
+\]
+Suppose there is a diagram over \(Y\)
+\[
+  \mathcal D=
+  \left(
+    Z=\Norm_N(Y)\xrightarrow{\pi}
+    \overline X=\Norm_L(Y)\xrightarrow{\bar\nu}Y,\,
+    j\colon X\hookrightarrow\overline X
+  \right)
+\]
+in which \(\pi\) and \(\bar\nu\) are finite, \(j\) is an open immersion,
+\(\bar\nu\circ j=f_F\), and \(f_F\colon X\to Y\) is \'etale.  Let
+\[
+  \partial X=\overline X\setminus j(X),
+  \qquad
+  G\cong S_3
+\]
+by Theorem~\ref{thm:index-three-core-free-s3}.
+
+\begin{corollary}[Hidden inertia in the \(S_3\)-normalization]
+\label{cor:cubic-hidden-inertia}
+\[
+  \Ram^{(1)}(Z/Y)\subseteq\mathcal H(\mathcal D).
+\]
+\end{corollary}
+
+\begin{proof}
+Fix
+\[
+  E\in\Ram^{(1)}(Z/Y).
+\]
+By the characteristic-zero description of divisorial ramification,
+\(I_E\neq1\).  Because \(N\) is the normal closure of \(L/K\),
+\(\core_G(H)=1\).  Proposition~\ref{prop:core-free-sheet-action}
+states in this case that
+\[
+  \exists\omega\in\mathcal Q_E,
+  \qquad
+  i_E(\omega)>1.
+\]
+Moreover, Proposition~\ref{prop:visibility-to-boundary}, applied to the
+\'etale map \(f_F\), states that for every
+\(\omega'\in\mathcal Q_E\),
+\[
+  i_E(\omega')>1
+  \quad\Longrightarrow\quad
+  \operatorname{cent}(E,\omega')\in\partial X.
+\]
+These are exactly the existence and boundary conditions in
+Definition~\ref{def:no-hidden-inertia}; hence
+\(E\in\mathcal H(\mathcal D)\).  Since \(E\) was arbitrary, the stated
+inclusion follows.
 \end{proof}
 
 \begin{remark}[Ordered roots]
-A generic point of the degree-three sheet marks one root of the cubic.
-An off-diagonal ordered pair marks two distinct roots; these determine the
-third.  This explains why the residual factor already carries the full
-ordered-root normal closure and its \(S_3\)-symmetry.
+Let
+\[
+  m_\alpha(T)=T^3+a_2T^2+a_1T+a_0
+\]
+have roots \(\alpha_1,\alpha_2,\alpha_3\) in \(N\).  For distinct
+\(i,j,k\),
+\[
+  \alpha_k=-a_2-\alpha_i-\alpha_j,
+  \qquad
+  K(\alpha_i,\alpha_j)
+  =
+  K(\alpha_1,\alpha_2,\alpha_3)
+  =
+  N.
+\]
+Thus the off-diagonal factor, which marks two distinct roots, is already
+the ordered-root normal closure.
 \end{remark}
 
 \begin{leanfiles}
 \leanpath{CollisionIdeals/ComplexThree/CubicGaloisGroup.lean},
-\leanpath{CollisionIdeals/ComplexThree/S3Collision.lean}, and
-\leanpath{CollisionIdeals/ComplexThree/CubicS3.lean}.
+\leanpath{CollisionIdeals/ComplexThree/S3Collision.lean},
+\leanpath{CollisionIdeals/ComplexThree/OffDiagonal.lean},
+\leanpath{CollisionIdeals/ComplexThree/CubicS3.lean}, and
+\leanpath{CollisionIdeals/ComplexThree/JacobianConjecture.lean}.  The
+Lean cubic witness takes the residual-field isomorphism and
+\(H\neq1\) as explicit inputs; Proposition~\ref{prop:cubic-tensor-decomposition}
+derives them here from nonnormality.  Hidden inertia is formalized
+pointwise at a supplied ramified divisor.
 \end{leanfiles}
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-The quotient \(\Obs(F)\) gives one dimension-independent measure of the
-gap between equality of images and equality of points.  The planar
-specialization conditionally kills this obstruction, whereas the cubic
-specialization identifies its nonzero generic factor with the marked
-\(S_3\) normal closure.  Both conclusions are therefore applications of
-the same collision, off-diagonal, and conjugate-sheet constructions.
+The quotient \(\Obs(F)\) vanishes exactly when equality of images agrees
+scheme-theoretically with equality of points.  In dimension two,
+\(\mathcal H(\mathcal D_F)=\varnothing\) implies \(\Obs(F)=0\); in the
+cubic dimension-three class, its nonzero generic factor is the
+ordered-root \(S_3\)-normal closure.  Both statements arise from the same
+collision, off-diagonal, and conjugate-sheet constructions.
 
 Under the respective conditions of Sections~\ref{sec:planar-vanishing}
-and \ref{sec:cubic-s3-obstruction}, with a ramified height-one point
-supplied for Corollary~\ref{cor:cubic-hidden-inertia}, the contrast is
+and~\ref{sec:cubic-s3-obstruction}, and with
+\(\Ram^{(1)}(Z/Y)\neq\varnothing\) in the cubic normalization, the
+contrast is
 \[
-  \begin{array}{c@{\qquad\qquad}c}
+  \begin{array}{c@{\qquad}|@{\qquad}c}
+    \hline
     \text{\rm dimension two}
-      & \text{\rm dimension three (cubic class)}\\ \hline
+      & \text{\rm dimension three}\\ \hline
     \text{\rm hidden inertia excluded}
-      & \text{\rm hidden inertia in the \(S_3\)-normalization realized}\\
-    q_F=0 & q_F\neq0\\
-    I_R(F)=I_\Delta & I_R(F)\subsetneq I_\Delta.
+      & \text{\rm hidden inertia in the \(S_3\)-cover realized}\\
+    \Obs(F)=0 & \Obs(F)\neq0\\
+    I_R=I_\Delta & I_R\subsetneq I_\Delta\\
+    F\text{\rm\ is a polynomial automorphism}
+      & F\text{\rm\ is not a polynomial automorphism}.\\
+    \hline
   \end{array}
 \]
 
