@@ -17,6 +17,8 @@
   {\normalfont\Large\bfseries}{\thesubsection}{1em}{}
 
 \hypersetup{
+  pdftitle={Collision Ideals and Off-Diagonal Sheets},
+  pdfauthor={Chloe van der Vlugt; Codex 5.6 Sol},
   colorlinks=true,
   linkcolor=blue!55!black,
   citecolor=green!40!black,
@@ -71,10 +73,10 @@ For a polynomial map
   \qquad
   I_\Delta=(x_i-y_i)_{i=1}^n.
 \]
-The inclusion \(I_R\subseteq I_\Delta\) defines the obstruction module
-\(I_\Delta/I_R\), and
+The inclusion \(I_R\subseteq I_\Delta\) defines the obstruction ideal
+\(\Obs(F):=I_\Delta/I_R\subseteq C_F:=S/I_R\), and
 \[
-  I_\Delta/I_R=0
+  \Obs(F)=0
   \quad\Longleftrightarrow\quad
   I_R=I_\Delta
   \quad\Longleftrightarrow\quad
@@ -141,6 +143,8 @@ Define
   \qquad
   \Obs(F):=I_\Delta/I_R(F).
 \]
+The quotient \(\Obs(F)\) is naturally an ideal of the collision ring
+\(C_F:=S/I_R(F)\); we call it the obstruction ideal.
 For a fixed map \(F\), we abbreviate \(I_R(F)\) to \(I_R\).
 
 \begin{proposition}[Canonical containment]
@@ -158,8 +162,7 @@ telescoping each monomial one coordinate at a time.  Apply the statement
 to each coordinate \(F_i\).
 \end{proof}
 
-Let \(C_F:=S/I_R\) and
-\(A:=\C[x_1,\dots,x_n]\).  Diagonal evaluation induces a surjective ring
+Let \(A:=\C[x_1,\dots,x_n]\).  Diagonal evaluation induces a surjective ring
 map
 \[
   \bar\mu_F\colon C_F\longrightarrow A,
@@ -444,10 +447,12 @@ Let \(U=B\setminus\{0\}\).  Since \(K=U^{-1}B\), localization gives
   \qquad
   \frac{b}{u}\otimes a\longmapsto\frac{ba}{u}.
 \]
-Because \(B\subseteq A\) and \(A\) is a domain,
+Since \(A=\C[x_1,\dots,x_n]\) is a domain and \(B\subseteq A\),
 \[
-  U=B\setminus\{0\}\subseteq A\setminus\{0\},
-  \qquad
+  B\setminus\{0\}\subseteq A\setminus\{0\}.
+\]
+Hence
+\[
   U^{-1}A\hookrightarrow\Frac(A)=L,
   \qquad
   \frac{a}{u}\longmapsto\frac{a}{u}.
@@ -460,13 +465,10 @@ image of \(U^{-1}A\) in \(L\) is
 \[
   K[x_1,\dots,x_n].
 \]
-Each \(x_i\in L\) is algebraic over \(K\), so this is a
-finite-dimensional \(K\)-algebra.  As a finite-dimensional
-\(K\)-domain, it is a field: multiplication by a nonzero element is an
-injective endomorphism of a finite-dimensional \(K\)-vector space and
-therefore is surjective.
-Because it contains \(A\), it contains \(\Frac(A)=L\); the reverse
-inclusion is already given by the embedding above.  Therefore
+Since each \(x_i\) is algebraic over \(K\), this \(K\)-domain is
+finite-dimensional over \(K\), hence is a field.  Since it contains
+\(A\), it contains \(\Frac(A)=L\); the reverse inclusion is already
+given by its embedding into \(L\).  Therefore
 \[
   U^{-1}A=L,
 \]
@@ -1020,6 +1022,10 @@ finiteness.
 \section{Planar vanishing}
 \label{sec:planar-vanishing}
 
+We now specialize the dimension-independent collision, normalization,
+and inertia constructions of Section~\ref{sec:general-construction} to
+dimension two.
+
 Let
 \[
   F=(P,Q)\colon\A^2_{\C}\longrightarrow\A^2_{\C}
@@ -1390,14 +1396,20 @@ they also generate \(A_N\) over \(\overline A\), since
 
 For \(a\in\overline A\), integrality over \(B\subseteq A\) and the
 normality of \(A=\C[x_1,x_2]\) give \(a\in A\).  Thus
-\[
+  \[
   B\subseteq\overline A\subseteq A,
-  \qquad
-  \Frac(\overline A)=\Frac(A)=L,
-\]
-induces a dominant birational morphism
-\(j\colon X\to\overline X\).  It is quasi-finite and separated by
-Proposition~\ref{prop:planar-keller-local-geometry}.  Since
+  \]
+and \(\Frac(\overline A)=L\): clearing denominators in an algebraic
+equation over \(K=\Frac(B)\) shows that for every \(\ell\in L\), some
+nonzero \(b\in B\) makes \(b\ell\) integral over \(B\).  Thus
+\(\ell=(b\ell)/b\in\Frac(\overline A)\).
+The inclusion \(\overline A\subseteq A\) therefore induces a dominant
+birational morphism \(j\colon X\to\overline X\).
+
+The morphism \(j\) is quasi-finite: because
+\(\bar\nu\circ j=f_F\), each fiber of \(j\) is contained in a fiber of
+the quasi-finite morphism \(f_F\).  It is separated because it is a
+morphism between affine schemes.  Since
 \(\overline X\) is normal, Zariski's Main Theorem makes \(j\) an open
 immersion.
 \end{proof}
@@ -1489,9 +1501,17 @@ Hence \(E\in\mathcal H(\mathcal D_F)\), a contradiction.
 \label{thm:branch-purity}
 Let \(Z\to\A^2_{\C}\) be a finite dominant generically separable
 morphism with \(Z\) integral and normal.  If
-\(\Ram^{(1)}(Z/\A^2_{\C})=\varnothing\), then the morphism is \'etale
-\cite{StacksPurity}.
+\(\Ram^{(1)}(Z/\A^2_{\C})=\varnothing\), then the morphism is \'etale.
 \end{theorem}
+
+\begin{proof}
+At every height-one point of \(Z\), the absence of divisorial
+ramification gives ramification index one.  The corresponding residue
+field extension is finite and, in characteristic zero, separable.
+Hence the morphism is unramified at every height-one point.  Purity of
+the branch locus now implies that it is \'etale everywhere
+\cite{StacksPurity}.
+\end{proof}
 
 \begin{theorem}[Finite-\'etale rigidity of the affine plane]
 \label{thm:a2-etale-rigidity}
@@ -1636,6 +1656,10 @@ isolated in
   {The cubic S3 obstruction in dimension three}}
 \label{sec:cubic-s3-obstruction}
 
+We now specialize the dimension-independent constructions of
+Section~\ref{sec:general-construction} to dimension three and isolate the
+separable nonnormal cubic case.
+
 Let \(S_3=\operatorname{Perm}(\{1,2,3\})\) be the symmetric group on
 three letters.
 
@@ -1651,8 +1675,9 @@ consider the following statements:
   \item \(F\) is not a polynomial automorphism;
   \item \(R_F^\circ\neq\varnothing\).
 \end{enumerate}
-Under \textup{(1)}, statements \textup{(2)} and \textup{(3)} are
-equivalent.
+Statements \textup{(2)} and \textup{(3)} are equivalent.  Consequently,
+\(F\) is a dimension-three Jacobian-conjecture counterexample exactly
+when \textup{(1)} and \textup{(3)} hold.
 \end{proposition}
 
 \begin{proof}
@@ -1666,7 +1691,8 @@ Theorem~\ref{thm:automorphism-criterion},
   F\in\Aut_{\mathrm{poly}}(\A^3_{\C}).
 \]
 Negating this equivalence proves
-\textup{(2)}\(\Longleftrightarrow\)\textup{(3)}.
+\textup{(2)}\(\Longleftrightarrow\)\textup{(3)}.  Combining this with
+\textup{(1)} gives the final assertion.
 \end{proof}
 
 \subsection{The cubic extension and its normal closure}
@@ -2056,8 +2082,9 @@ pointwise at a supplied ramified divisor.
 \section{Conclusion}
 \label{sec:conclusion}
 
-The quotient \(\Obs(F)\) vanishes exactly when equality of images agrees
-scheme-theoretically with equality of points.  In dimension two,
+The obstruction ideal \(\Obs(F)\) vanishes exactly when the
+scheme-theoretic collision relation \(X\times_YX\) equals the diagonal.
+In dimension two,
 \(\mathcal H(\mathcal D_F)=\varnothing\) implies \(\Obs(F)=0\); in the
 cubic dimension-three class, its nonzero generic factor is the
 ordered-root \(S_3\)-normal closure.  Both statements arise from the same
@@ -2084,9 +2111,10 @@ contrast is
 
 \paragraph{Motivating example.}
 The explicit three-dimensional polynomial counterexample announced by
-Levent Alpöge and independently formalized in Isabelle/HOL by Ramos,
-Hulak, and de Queiroz \cite{AFPJacobianCounterexample} motivated the
-cubic \(S_3\) comparison.  The formal verification establishes a
+Levent Alpöge \cite{Alpoge2026} and independently formalized in
+Isabelle/HOL by Ramos, Hulak, and de Queiroz
+\cite{AFPJacobianCounterexample} motivated the cubic \(S_3\) comparison.
+The formal verification establishes a
 constant nonzero Jacobian determinant and distinct rational points with
 the same image.  That particular map is not used in the arguments above:
 the dimension-three result is the structural implication from the
