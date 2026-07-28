@@ -1,0 +1,15 @@
+name = "«collision-ideals»"
+version = "0.1.0"
+defaultTargets = ["CollisionIdeals"]
+
+[leanOptions]
+autoImplicit = false
+relaxedAutoImplicit = false
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "f897ebcf72cd16f89ab4577d0c826cd14afaafc7"
+
+[[lean_lib]]
+name = "CollisionIdeals"
