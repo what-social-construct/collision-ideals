@@ -21,3 +21,11 @@ jobs:
       - uses: leanprover-community/docgen-action@main
         with:
           references: paper/references.bib
+          use-github-cache: false
+          deploy: false
+      - uses: actions/upload-pages-artifact@v5
+        if: github.event_name == 'push'
+        with:
+          path: docs/
+      - uses: actions/deploy-pages@v5
+        if: github.event_name == 'push'
