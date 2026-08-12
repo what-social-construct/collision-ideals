@@ -193,6 +193,56 @@ noncomputable def polynomialNormalClosureEmbeddingOverBase
           (algebraMap (PolynomialImageAlgebra F)
             (PolynomialMapBaseFunctionField F) b) }
 
+/--
+A Galois conjugate of the marked embedding, regarded as an algebra
+homomorphism over the polynomial image algebra.
+
+Using the same abstract source field for every conjugating element
+identifies the normalization in a conjugate field with a conjugate copy of
+the marked intermediate normalization.
+-/
+noncomputable def polynomialConjugateNormalClosureEmbeddingOverBase
+    (D : PolynomialNormalClosureData F N)
+    (g : D.galoisGroup) :
+    letI : Algebra (PolynomialImageAlgebra F) N :=
+      polynomialNormalExtensionBaseAlgebra (F := F) (N := N)
+    PolynomialMapSourceFunctionField F →ₐ[PolynomialImageAlgebra F] N := by
+  letI : Algebra (PolynomialImageAlgebra F) N :=
+    polynomialNormalExtensionBaseAlgebra (F := F) (N := N)
+  let gOverImage : N ≃ₐ[PolynomialImageAlgebra F] N :=
+    { g.toRingEquiv with
+      commutes' := fun b => by
+        change
+          g (algebraMap (PolynomialMapBaseFunctionField F) N
+            (algebraMap (PolynomialImageAlgebra F)
+              (PolynomialMapBaseFunctionField F) b)) =
+            algebraMap (PolynomialMapBaseFunctionField F) N
+              (algebraMap (PolynomialImageAlgebra F)
+                (PolynomialMapBaseFunctionField F) b)
+        exact g.commutes _ }
+  exact
+    gOverImage.toAlgHom.comp
+      (polynomialNormalClosureEmbeddingOverBase D)
+
+/-- Right multiplication by the fixing subgroup does not change a conjugate embedding. -/
+theorem polynomialConjugateNormalClosureEmbeddingOverBase_right_mul
+    (D : PolynomialNormalClosureData F N)
+    (g : D.galoisGroup)
+    (h : D.intermediateFixingSubgroup) :
+    polynomialConjugateNormalClosureEmbeddingOverBase D
+        (g * (h : D.galoisGroup)) =
+      polynomialConjugateNormalClosureEmbeddingOverBase D g := by
+  letI : Algebra (PolynomialImageAlgebra F) N :=
+    polynomialNormalExtensionBaseAlgebra (F := F) (N := N)
+  apply AlgHom.ext
+  intro x
+  change g ((h : D.galoisGroup) (D.embedding x)) = g (D.embedding x)
+  congr 1
+  exact
+    (IntermediateField.mem_fixingSubgroup_iff
+      D.intermediateField (h : D.galoisGroup)).mp h.property
+      (D.embedding x) ⟨x, rfl⟩
+
 /-- The integral closure of the coordinate-image algebra in `N`. -/
 abbrev PolynomialNormalizationInExtensionRing :=
   @normalizedCoordinateRing
@@ -225,6 +275,18 @@ def polynomialNormalizationRingMap
     normalizationMap N
       (polynomialNormalClosureEmbeddingOverBase D)
 
+/-- The normalization-ring map for the conjugate sheet represented by a Galois element. -/
+def polynomialConjugateNormalizationRingMap
+    (D : PolynomialNormalClosureData F N)
+    (g : D.galoisGroup) :
+    PolynomialIntermediateNormalizationRing F →ₐ[PolynomialImageAlgebra F]
+      PolynomialNormalizationInExtensionRing (F := F) (N := N) := by
+  letI : Algebra (PolynomialImageAlgebra F) N :=
+    polynomialNormalExtensionBaseAlgebra (F := F) (N := N)
+  exact
+    normalizationMap N
+      (polynomialConjugateNormalClosureEmbeddingOverBase D g)
+
 /--
 The normal-extension model dominates the marked intermediate
 normalization: `Z ⟶ X̄`.
@@ -238,6 +300,31 @@ def polynomialNormalClosureModelToIntermediateNormalization
   normalizationDomination N
     (polynomialNormalClosureEmbeddingOverBase D)
 
+/--
+The conjugate normal-closure leg, with the conjugate target identified
+abstractly with the marked intermediate normalization.
+-/
+def polynomialConjugateNormalClosureModelToIntermediateNormalization
+    (D : PolynomialNormalClosureData F N)
+    (g : D.galoisGroup) :
+    polynomialNormalizationInExtension (F := F) (N := N) ⟶
+      polynomialIntermediateNormalization F :=
+  letI : Algebra (PolynomialImageAlgebra F) N :=
+    polynomialNormalExtensionBaseAlgebra (F := F) (N := N)
+  normalizationDomination N
+    (polynomialConjugateNormalClosureEmbeddingOverBase D g)
+
+/-- The conjugate normalization leg depends only on the right coset modulo the fixing subgroup. -/
+theorem polynomialConjugateNormalClosureModelToIntermediateNormalization_right_mul
+    (D : PolynomialNormalClosureData F N)
+    (g : D.galoisGroup)
+    (h : D.intermediateFixingSubgroup) :
+    polynomialConjugateNormalClosureModelToIntermediateNormalization D
+        (g * (h : D.galoisGroup)) =
+      polynomialConjugateNormalClosureModelToIntermediateNormalization D g := by
+  unfold polynomialConjugateNormalClosureModelToIntermediateNormalization
+  rw [polynomialConjugateNormalClosureEmbeddingOverBase_right_mul D g h]
+
 /-- The domination triangle `Z ⟶ X̄ ⟶ Y` commutes. -/
 theorem polynomialNormalClosureModelToIntermediateNormalization_comp_toBase
     (D : PolynomialNormalClosureData F N) :
@@ -249,6 +336,19 @@ theorem polynomialNormalClosureModelToIntermediateNormalization_comp_toBase
   exact
     normalizationDomination_comp_toBase N
       (polynomialNormalClosureEmbeddingOverBase D)
+
+/-- Every conjugate normalization leg lies over the same affine base. -/
+theorem polynomialConjugateNormalClosureModelToIntermediateNormalization_comp_toBase
+    (D : PolynomialNormalClosureData F N)
+    (g : D.galoisGroup) :
+    polynomialConjugateNormalClosureModelToIntermediateNormalization D g ≫
+        polynomialIntermediateNormalizationToBase F =
+      polynomialNormalizationInExtensionToBase (F := F) (N := N) := by
+  letI : Algebra (PolynomialImageAlgebra F) N :=
+    polynomialNormalExtensionBaseAlgebra (F := F) (N := N)
+  exact
+    normalizationDomination_comp_toBase N
+      (polynomialConjugateNormalClosureEmbeddingOverBase D g)
 
 /-- Finiteness of the integral closure in the normal extension. -/
 def IsPolynomialFiniteNormalizationInExtension : Prop :=

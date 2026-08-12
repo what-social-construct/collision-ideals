@@ -15,13 +15,26 @@ The status distinction in the paper is intentional:
   Ax–Grothendieck are standard literature theorems represented by explicit
   interfaces in Lean;
 - a supplied `PolynomialKellerCollisionModel`, specialized as
-  `PlanarKellerCollisionModel`, contains the normalization diagram,
-  Keller bridges, and `ConjugateRamificationRealization`; constructing
-  that model and proving Planar No-Hidden-Inertia remain separate planar
-  inputs;
-- the planar conclusion proved in Lean is first local unramifiedness at
-  every height-one point, not a separately formalized equality of all
-  inertia groups;
+  `PlanarKellerCollisionModel`, contains the normalization diagram, Keller
+  bridges, and `ConjugateRamificationRealization`; from these data Lean
+  canonically constructs the pulled-back conjugate boundary ideals and
+  proves their valuation-theoretic containment at ramified divisors;
+- `PlanarBoundaryCoherence` and `PlanarRamificationRigidity` are global and
+  divisorial formulations of the same fixed-map endpoint.  Their universal
+  validity is not proved; the formal interfaces use the explicit
+  `BoundaryCoherenceBridge` and `RamificationRigidityBridge`, while
+  moving-sheet coverage and boundary separation are alternative explicit
+  codimension-one hypotheses;
+- the manuscript proves the classical normal/Galois case by boundary-divisor
+  rigidity and consequently excludes generic degree two; this argument is
+  not yet part of the Lean development;
+- branch purity is applied only after every height-one point has been shown
+  unramified; finite-étale rigidity then gives $N=K$, and collision descent
+  gives $q_F=0$ and $I_R=I_\Delta$;
+- the principal-parts, codifferent-bound, conjugate-secant, and logarithmic
+  inertia constructions are retained as prospective mechanisms under the
+  opt-in `CollisionIdeals.Planar.Research` umbrella; they are not steps in
+  the stable divisorial endgame;
 - the dimension-three theorem is an abstract implication from explicit
   cubic residual-field and marked-normal-closure data.  It concludes
   `IsComplexThreeJacobianCounterexample F`, but does not instantiate those

@@ -2,8 +2,9 @@ import CollisionIdeals.AutomorphismCriterion
 import CollisionIdeals.GenericDegreeOne
 import CollisionIdeals.KellerCollisionModel
 import CollisionIdeals.NormalClosure
+import CollisionIdeals.Planar.BoundarySeparation
 import CollisionIdeals.Planar.ExternalAssumptions
-import CollisionIdeals.Planar.NormalizationDiagram
+import CollisionIdeals.Planar.RigidityTargets
 
 set_option autoImplicit false
 
@@ -12,8 +13,9 @@ namespace CollisionIdeals.Planar
 noncomputable section
 
 /--
-The shared Keller collision-normalization model, specialized to
-`𝔸²_ℂ`.  Planar no-hidden-inertia remains a separate hypothesis.
+The shared Keller collision-normalization model, specialized to the
+complex affine plane.  PlanarHiddenInertia names the positive
+boundary-supported orbit obstruction; its negation remains separate.
 -/
 abbrev PlanarKellerCollisionModel
     (F : PlanarPolynomialMap) :=
@@ -23,10 +25,22 @@ namespace PlanarKellerCollisionModel
 
 variable {F : PlanarPolynomialMap}
 
+/-- The canonical pulled-back boundary package carried by a Keller model. -/
+def boundaryIdealData (M : PlanarKellerCollisionModel F) :
+    letI : Field M.N := M.fieldN
+    letI : Algebra (PlanarBaseFunctionField F) M.N := M.algebraN
+    BoundaryIdealData M.diagram := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N := M.algebraN
+  exact
+    { ramificationRealization := M.ramificationRealization
+      sourceEtale := M.kellerEtale M.keller }
+
 /--
 The two external algebraic-geometry inputs first trivialize the supplied
 normal closure over the planar base field.  This is the type-correct
-formal counterpart of `N = K`.
+formal counterpart of `N = K`.  The hNoHidden argument excludes exactly
+the positive PlanarHiddenInertia boundary obstruction.
 -/
 theorem normalClosureExtensionTrivial
     (hPurity : BranchPurityA2)
@@ -85,11 +99,113 @@ theorem functionFieldExtensionTrivial
 end PlanarKellerCollisionModel
 
 /--
+Once height-one ramification has been eliminated, purity and finite-étale
+rigidity give the complete planar collision-vanishing endgame.
+-/
+theorem planarVanishing_of_noCodimensionOneRamification
+    {F : PlanarPolynomialMap}
+    (hPurity : BranchPurityA2)
+    (hFiniteEtaleRigidity : AffinePlaneFiniteEtaleRigidity)
+    (M : PlanarKellerCollisionModel F)
+    (hNoRamification :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N := M.algebraN
+      NoCodimensionOneRamification (F := F) (N := M.N)) :
+    obstructionIdeal F = ⊥ := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N := M.algebraN
+  have hNormalizationEtale :
+      AlgebraicGeometry.IsEtale
+        (planarNormalizationInExtensionToBase
+          (F := F) (N := M.N)) :=
+    hPurity M.diagram.cover hNoRamification
+  have hExtensionTrivial :
+      M.diagram.cover.normalClosure.ExtensionTrivial :=
+    hFiniteEtaleRigidity M.diagram.cover hNormalizationEtale
+  have hFunctionFieldTrivial :
+      PlanarFunctionFieldExtensionTrivial F :=
+    PolynomialNormalClosureData.functionFieldExtensionTrivial_of_extensionTrivial
+      M.diagram.cover.normalClosure hExtensionTrivial
+  exact
+    obstructionIdeal_eq_bot_of_functionFieldExtensionTrivial
+      F (M.kellerFlat M.keller) hFunctionFieldTrivial
+
+/--
+The strong boundary-coherence route.  Once the explicit local-cohomology
+bridge removes the intermediate-normalization boundary, moving-sheet
+coverage is automatic; the common codimension-one endgame then applies.
+-/
+theorem planarVanishing_of_boundaryCoherence
+    {F : PlanarPolynomialMap}
+    (hBridge : BoundaryCoherenceBridge)
+    (M : PlanarKellerCollisionModel F)
+    (hCoherence : PlanarBoundaryCoherence F) :
+    obstructionIdeal F = ⊥ := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N := M.algebraN
+  apply planarVanishing_of_noCodimensionOneRamification
+    ExternalAssumptions.branchPurityA2
+    ExternalAssumptions.affinePlaneFiniteEtaleRigidity M
+  apply M.boundaryIdealData.noCodimensionOneRamification_of_movingSheetCoverage
+  intro E
+  obtain ⟨q, hqIndex⟩ := M.diagram.exists_one_lt_inertiaIndex E
+  let g : NormalizationGaloisGroup M.diagram := q.out
+  have hq :
+      DoubleCoset.mk
+          (decompositionGroupAt (PlanarBaseFunctionField F)
+            (M.diagram.valuationAt E).valuationRing)
+          M.diagram.cover.normalClosure.intermediateFixingSubgroup g = q :=
+    DoubleCoset.out_eq' _ _ q
+  refine ⟨g, ?_, ?_⟩
+  · intro hgFixed
+    have hIndexOne :
+        M.diagram.inertiaIndex E
+            (DoubleCoset.mk
+              (decompositionGroupAt (PlanarBaseFunctionField F)
+                (M.diagram.valuationAt E).valuationRing)
+              M.diagram.cover.normalClosure.intermediateFixingSubgroup g) = 1 :=
+      (inertiaQuotientIndex_eq_one_iff _ _).mpr hgFixed
+    exact (Nat.ne_of_gt (hq ▸ hqIndex)) hIndexOne
+  · change
+      (conjugateToIntermediate M.diagram g).base E.1 ∈
+        Set.range (polynomialSourceToIntermediateNormalization F).base
+    rw [← Set.notMem_compl_iff]
+    change
+      (conjugateToIntermediate M.diagram g).base E.1 ∉
+        polynomialIntermediateNormalizationBoundary F
+    rw [hBridge F hCoherence]
+    exact Set.notMem_empty _
+
+/--
+The weak module-theoretic route: finite-length Kähler differentials first
+eliminate height-one ramification through the explicit support bridge, after
+which purity and finite-étale rigidity complete the planar endgame.
+-/
+theorem planarVanishing_of_ramificationRigidity
+    {F : PlanarPolynomialMap}
+    (hBridge : RamificationRigidityBridge)
+    (hPurity : BranchPurityA2)
+    (hFiniteEtaleRigidity : AffinePlaneFiniteEtaleRigidity)
+    (M : PlanarKellerCollisionModel F)
+    (hRigidity :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N := M.algebraN
+      PlanarRamificationRigidity (F := F) (N := M.N)) :
+    obstructionIdeal F = ⊥ := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N := M.algebraN
+  exact
+    planarVanishing_of_noCodimensionOneRamification
+      hPurity hFiniteEtaleRigidity M
+      (hBridge M.diagram.cover hRigidity)
+
+/--
 The conditional planar vanishing spine.
 
-All concrete normalization and collision data is carried by `M`.
-The planar no-hidden-inertia statement and the two external
-algebraic-geometry inputs remain explicit arguments.
+All concrete normalization and collision data is carried by M.
+The planar no-hidden-inertia statement—the negation of the positive
+boundary-supported orbit predicate—and the two external algebraic-geometry
+inputs remain explicit arguments.
 -/
 theorem planarVanishing_of
     {F : PlanarPolynomialMap}
@@ -127,6 +243,95 @@ theorem planarVanishing_assuming_standardGeometry
     M hNoHidden
 
 /--
+The explicit conjugate-coverage route through the conditional planar spine.
+Coverage supplies an inertia-moving affine center for every ramified
+divisor; such a center contradicts the boundary conclusion from étaleness,
+so no hidden inertia remains.
+-/
+theorem planarVanishing_of_conjugateCoverage
+    {F : PlanarPolynomialMap}
+    (M : PlanarKellerCollisionModel F)
+    (hCoverage :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      PlanarConjugateCoverage M.diagram) :
+    obstructionIdeal F = ⊥ := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N :=
+    M.algebraN
+  exact
+    planarVanishing_assuming_standardGeometry M
+      (noHiddenInertia_of_conjugateCoverage M.diagram hCoverage)
+
+/--
+The canonical pulled-back-open form of moving-sheet coverage yields planar
+collision vanishing.  The boundary ideals are constructed from `M.diagram`;
+only the exact pointwise coverage statement remains a hypothesis.
+-/
+theorem planarVanishing_of_movingSheetCoverage
+    {F : PlanarPolynomialMap}
+    (M : PlanarKellerCollisionModel F)
+    (hCoverage :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      PlanarMovingSheetCoverage M.diagram) :
+    obstructionIdeal F = ⊥ := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N :=
+    M.algebraN
+  exact
+    planarVanishing_of_noCodimensionOneRamification
+      ExternalAssumptions.branchPurityA2
+      ExternalAssumptions.affinePlaneFiniteEtaleRigidity M
+      (M.boundaryIdealData.noCodimensionOneRamification_of_movingSheetCoverage
+        hCoverage)
+
+/--
+The finite-group, ideal-theoretic route through the conditional planar
+spine.  Boundary separation says that no height-one prime can contain both
+the fixed-locus ideal of a nontrivial subgroup and all boundaries of the
+sheets moved by that subgroup.
+-/
+theorem planarVanishing_of_boundarySeparation
+    {F : PlanarPolynomialMap}
+    (M : PlanarKellerCollisionModel F)
+    (B :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      BoundaryIdealData M.diagram)
+    (hSeparation :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      B.PlanarBoundarySeparation) :
+    obstructionIdeal F = ⊥ := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N :=
+    M.algebraN
+  exact
+    planarVanishing_assuming_standardGeometry M
+      (B.noHiddenInertia hSeparation)
+
+/-- The canonical boundary package version of the separation criterion. -/
+theorem planarVanishing_of_canonicalBoundarySeparation
+    {F : PlanarPolynomialMap}
+    (M : PlanarKellerCollisionModel F)
+    (hSeparation :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      M.boundaryIdealData.PlanarBoundarySeparation) :
+    obstructionIdeal F = ⊥ := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N :=
+    M.algebraN
+  exact
+    planarVanishing_of_boundarySeparation M M.boundaryIdealData hSeparation
+
+/--
 Using the third external literature theorem, Ax--Grothendieck, the
 conditional ideal-vanishing result yields a polynomial automorphism.
 -/
@@ -144,6 +349,44 @@ theorem planarAutomorphism_assuming_externalLiterature
     pointMap_injective_of_collisionIdeal_eq_diagonalIdeal F
       ((obstructionIdeal_eq_bot_iff F).1
         (planarVanishing_assuming_standardGeometry M hNoHidden))
+
+/-- The strong boundary-coherence route reaches the automorphism endpoint. -/
+theorem planarAutomorphism_of_boundaryCoherence
+    {F : PlanarPolynomialMap}
+    (hBridge : BoundaryCoherenceBridge)
+    (M : PlanarKellerCollisionModel F)
+    (hCoherence : PlanarBoundaryCoherence F) :
+    IsPolynomialAutomorphism F := by
+  apply ExternalAssumptions.axGrothendieckA2 F
+  exact
+    pointMap_injective_of_collisionIdeal_eq_diagonalIdeal F
+      ((obstructionIdeal_eq_bot_iff F).1
+        (planarVanishing_of_boundaryCoherence hBridge M hCoherence))
+
+/--
+Planar boundary separation, together with the isolated standard geometric
+inputs, yields the polynomial-automorphism conclusion.
+-/
+theorem planarAutomorphism_of_boundarySeparation
+    {F : PlanarPolynomialMap}
+    (M : PlanarKellerCollisionModel F)
+    (B :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      BoundaryIdealData M.diagram)
+    (hSeparation :
+      letI : Field M.N := M.fieldN
+      letI : Algebra (PlanarBaseFunctionField F) M.N :=
+        M.algebraN
+      B.PlanarBoundarySeparation) :
+    IsPolynomialAutomorphism F := by
+  letI : Field M.N := M.fieldN
+  letI : Algebra (PlanarBaseFunctionField F) M.N :=
+    M.algebraN
+  exact
+    planarAutomorphism_assuming_externalLiterature M
+      (B.noHiddenInertia hSeparation)
 
 end
 

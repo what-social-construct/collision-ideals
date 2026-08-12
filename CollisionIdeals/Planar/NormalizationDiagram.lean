@@ -29,15 +29,51 @@ abbrev NormalizationDiagram :=
   PolynomialNormalizationDiagram (F := F) (N := N)
 
 /--
-The specifically planar theorem target: a complete orbit of nontrivial
-inertia cannot be hidden in the deleted affine-plane boundaries.
+The positive planar boundary obstruction: some nontrivial inertia orbit is
+supported entirely in the deleted normalization boundary on every sheet on
+which it has nontrivial relative index.
+-/
+abbrev PlanarHiddenInertia
+    (D : NormalizationDiagram (F := F) (N := N)) : Prop :=
+  PolynomialNormalizationDiagram.HasHiddenInertiaOrbit D
 
-The underlying predicate is dimension-independent; only its proof is
-expected to use planar geometry.
+/--
+Planar conjugate coverage: every ramified divisor has an inertia-moving
+conjugate center which remains in the affine polynomial sheet.
+
+This is the explicit center-theoretic form of the planar boundary question.
+-/
+def PlanarConjugateCoverage
+    (D : NormalizationDiagram (F := F) (N := N)) : Prop :=
+  ∀ E, ∃ q : D.sheetClasses E,
+    1 < D.inertiaIndex E q ∧ D.ConjugateCenterVisible E q
+
+/--
+The planar boundary-exclusion premise: no complete orbit of nontrivial
+inertia is hidden in the deleted affine-plane boundary.
+
+This is deliberately a separate input, not a consequence of the
+normalization package.
 -/
 abbrev PlanarNoHiddenInertia
     (D : NormalizationDiagram (F := F) (N := N)) : Prop :=
   PolynomialNormalizationDiagram.NoHiddenInertia D
+
+/-- The negative and positive planar boundary predicates are exact negations. -/
+theorem planarNoHiddenInertia_iff_not_planarHiddenInertia
+    (D : NormalizationDiagram (F := F) (N := N)) :
+    PlanarNoHiddenInertia D ↔ ¬ PlanarHiddenInertia D :=
+  Iff.rfl
+
+/-- An inertia-moving affine conjugate center rules out a hidden orbit. -/
+theorem noHiddenInertia_of_conjugateCoverage
+    (D : NormalizationDiagram (F := F) (N := N))
+    (hCoverage : PlanarConjugateCoverage D) :
+    PlanarNoHiddenInertia D := by
+  intro hHidden
+  obtain ⟨E, _, hBoundary⟩ := hHidden
+  obtain ⟨q, hq, hVisible⟩ := hCoverage E
+  exact (hBoundary q (Nat.ne_of_gt hq)) hVisible
 
 end
 

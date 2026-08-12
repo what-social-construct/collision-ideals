@@ -8,6 +8,8 @@
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
 \usepackage{titlesec}
 \usepackage{hyperref}
 
@@ -65,6 +67,10 @@
 \maketitle
 
 \begin{abstract}
+We study the scheme-theoretic collision relation of a polynomial self-map,
+namely its fiber product over the target, and describe the geometry away
+from the diagonal through boundary-supported inertia and Galois-closure
+sheets.
 For a polynomial map
 \(F=(F_1,\dots,F_n)\colon\A^n_{\C}\to\A^n_{\C}\), define in
 \(S=\C[x_1,\dots,x_n,y_1,\dots,y_n]\) the collision and diagonal ideals
@@ -73,23 +79,37 @@ For a polynomial map
   \qquad
   I_\Delta=(x_i-y_i)_{i=1}^n.
 \]
-The inclusion \(I_R\subseteq I_\Delta\) defines the obstruction ideal
-\(\Obs(F):=I_\Delta/I_R\subseteq C_F:=S/I_R\), and
+The image of \(I_\Delta\) in the collision algebra \(C_F:=S/I_R\) is the
+obstruction ideal
+\(\Obs(F):=I_\Delta/I_R\); it records the failure of the collision scheme
+\(\Spec C_F\) to coincide with the diagonal.  Its vanishing characterizes
+polynomial automorphisms:
 \[
   \Obs(F)=0
   \quad\Longleftrightarrow\quad
-  I_R=I_\Delta
-  \quad\Longleftrightarrow\quad
   F\text{ is a polynomial automorphism}.
 \]
-In dimension two, let \(\mathcal D_F\) be the finite-cover diagram of a
-map with constant nonzero Jacobian determinant, and let
-\(\mathcal H(\mathcal D_F)\) be its hidden-inertia locus.  Then
-\[
-  \mathcal H(\mathcal D_F)=\varnothing
-  \quad\Longrightarrow\quad
-  I_R=I_\Delta.
-\]
+In dimension two we give two module-theoretic formulations of the same
+fixed-map conclusion.  Planar boundary coherence asks that the boundary
+local cohomology
+\(H^1_{\partial X}(\overline X,\mathcal O_{\overline X})\) be a finite
+\(\overline A\)-module; it forces \(\partial X=\varnothing\), hence makes
+the Keller map finite \'etale and therefore an automorphism.  Planar
+ramification rigidity is the divisorial criterion that
+\(\Omega_{A_N/B}\) have no height-one support, equivalently that it have
+finite length.  On the common Galois normalization \(Z=\Spec A_N\), we
+construct the pulled-back
+affine opens \(U_g\), their canonical boundary ideals
+\(\mathfrak j_g=I_{A_N}(Z\setminus U_g)\), and the fixed-locus ideals
+\(\mathfrak a_C\).  The height-one dictionary identifies moving-sheet
+coverage and finite-group boundary separation as exact criteria for
+ramification rigidity, after which purity and finite-\'etale rigidity give
+\(N=L=K\) and collision vanishing.  Although \(\overline A\) and \(A_N\)
+are already finite over \(B\), neither of these additional finiteness
+criteria follows formally.  Universal validity of either criterion is
+equivalent to the two-dimensional Jacobian conjecture and is not proved
+here.  The boundary divisor-class argument does, however, prove the
+normal/Galois case and therefore excludes generic degree two.
 For the separable nonnormal cubic class in dimension three, let
 \[
   K=\C(F_1,F_2,F_3),
@@ -102,10 +122,13 @@ and let \(N\) be the normal closure of \(L/K\).  Then
   \qquad
   \Gal(N/K)\simeq S_3.
 \]
-The off-diagonal factor \(N\) is the ordered-root Galois-closure sheet.
-Consequently, \(I_\Delta/I_R\neq0\).  These constructions and
-implications are formalized in Lean~4, with the external inputs isolated
-explicitly.
+The generic off-diagonal factor \(N\) is the ordered-root Galois-closure sheet.
+Consequently, \(\Obs(F)\neq0\).  The algebraic construction, the
+pulled-back boundary dictionary, and the implications from supplied
+coverage or separation hypotheses are formalized in Lean~4.  The
+boundary-coherence and finite-length support arguments remain explicit
+Lean interfaces whose manuscript proofs have not yet been formalized, as
+do the standard external geometric statements.
 \end{abstract}
 
 \begin{center}
@@ -116,8 +139,116 @@ explicitly.
 
 \tableofcontents
 
+\section{Introduction}
+\label{sec:introduction}
+
+The Jacobian conjecture asks whether a polynomial self-map of affine space
+with constant nonzero Jacobian determinant must be a polynomial
+automorphism.  Dimension two remains open.  Rather than treating
+injectivity as an external property of the map, this paper studies the
+scheme-theoretic fiber product of the map with itself and asks when its
+off-diagonal part disappears.
+
+There is one divisorial endgame, expressed in several exact languages.  The
+paper does not prove the Jacobian conjecture.  It organizes the remaining
+problem around the following two module-theoretic formulations:
+\[
+  \begin{aligned}
+  \operatorname{PBC}(F)
+    &:\Longleftrightarrow
+      H^1_{\partial X}(\overline X,\mathcal O_{\overline X})
+      \text{ is a finite }\overline A\text{-module},\\
+  \operatorname{PRR}(F)
+    &:\Longleftrightarrow
+      \Omega_{A_N/B}\text{ has no height-one support}\notag\\[-2pt]
+    &\hspace{4.7em}\Longleftrightarrow
+      \Omega_{A_N/B}\text{ has finite length over }A_N.
+  \end{aligned}
+\]
+Planar boundary coherence \(\operatorname{PBC}(F)\) is the corresponding
+global properness formulation:
+\[
+  \operatorname{PBC}(F)
+  \Longrightarrow \partial X=\varnothing
+  \Longrightarrow f_F\text{ finite \'etale}
+  \Longrightarrow F\text{ an automorphism}.
+\]
+Planar ramification rigidity \(\operatorname{PRR}(F)\) is the
+differential-module formulation of the codimension-one premise:
+\[
+  \operatorname{PRR}(F)
+  \Longrightarrow Z/Y\text{ finite \'etale}
+  \Longrightarrow N=K
+  \Longrightarrow L=K
+  \Longrightarrow q_F=0
+  \Longrightarrow I_R=I_\Delta.
+\]
+
+The divisorial endgame is controlled by an exact codimension-one obstruction on
+the Galois normalization.  A ramified divisor \(E\) is eliminated as soon
+as one conjugate sheet moved by \(I_E\) still contains its generic point.
+In coordinates this is the conjugate-integrality condition
+\[
+  I_E\neq1
+  \Longrightarrow
+  \exists g\in G,\quad
+  I_E\nsubseteq gHg^{-1},\qquad
+  w_E(g(x_1)),w_E(g(x_2))\geq0.
+\]
+We call this planar moving-sheet coverage.  Its ideal-theoretic form says
+that the fixed locus of a prime-order subgroup and the boundaries of all
+the sheets it moves have no common height-one component.  Establishing
+this universally---equivalently, establishing planar ramification rigidity
+universally---is equivalent to \(JC(2)\), so the reformulation locates the
+missing theorem without assuming it.
+
+Only after all height-one points have been shown unramified do purity and
+finite-\'etale rigidity enter: they make the normal closure trivial and
+collapse the collision relation to the diagonal.  This order is essential
+to the argument.  The paper also develops boundary divisor-class and
+principal-parts criteria that may imply coverage under additional
+hypotheses; these are prospective mechanisms, not additional endgames or
+proofs of universal coverage.
+The divisor-class mechanism does prove unconditionally that a normal---hence
+Galois---marked extension \(L/K\) is trivial.  In particular, a hypothetical
+planar counterexample must have \(L/K\) nonnormal and generic degree at least
+three.
+
+The normalization rings \(\overline A\) and \(A_N\) are finite
+\(B\)-modules from the outset.  This makes \(\overline X\) and \(Z\)
+affine varieties: they are integral affine schemes of finite type over
+\(\C\).  It does not make \(A\) finite over \(B\), make boundary local
+cohomology finite, or make \(\Omega_{A_N/B}\) finite length.  Likewise,
+the vanishing of ordinary higher quasi-coherent cohomology on an affine
+scheme does not imply the vanishing or finiteness of local cohomology with
+support in its deleted boundary.
+
+In the separable nonnormal cubic class in dimension three, the opposite
+phenomenon is visible generically: the off-diagonal factor is the
+ordered-root \(S_3\)-normal-closure sheet.  This gives a structural
+comparison with the planar criteria while keeping its assumptions explicit.
+
+Section~\ref{sec:general-construction} develops collision ideals and the
+dimension-independent normalization diagram.
+Section~\ref{sec:planar-vanishing} constructs the planar pulled-back
+boundaries, proves the valuation dictionary, and states the equivalent
+coverage and separation criteria before applying the endgame.
+Section~\ref{sec:cubic-s3-obstruction} treats the cubic \(S_3\) class.
+
 \section{General construction}
 \label{sec:general-construction}
+
+The organizing question is how the failure of a polynomial self-map to be
+one-to-one is encoded by the part of its fiber square lying off the diagonal.
+The collision ideal first isolates that part scheme-theoretically; the
+normalization diagram then describes it through conjugate sheets and inertia.
+These constructions are dimension-independent.  Section
+\ref{sec:planar-vanishing} specializes them to planar Keller maps and locates
+the obstruction at the deleted normalization boundary, while Section
+\ref{sec:cubic-s3-obstruction} identifies the generic off-diagonal sheet in
+the separable nonnormal cubic class with an \(S_3\)-normal closure.  The two
+specializations respectively describe when the collision scheme collapses to
+the diagonal and what its surviving generic sheet looks like when it does not.
 
 \subsection{The two ideals and their obstruction}
 \label{sec:collision-ideals}
@@ -883,6 +1014,37 @@ is visible on a conjugate sheet but every visible center belongs to the
 deleted boundary.
 \end{definition}
 
+\begin{proposition}[Divisorial ramification is hidden from the \'etale sheet]
+\label{prop:etale-sheet-hidden-inertia}
+Suppose that \(N/K\) is the normal closure of \(L/K\), the residue
+characteristic is zero, and \(X\to Y\) is \'etale.  Then
+\[
+  \mathcal H(\mathcal D)=\Ram^{(1)}(Z/Y).
+\]
+Equivalently, every divisorial ramification orbit has a conjugate sheet on
+which its inertia acts nontrivially, but every such center lies in the
+deleted boundary.
+\end{proposition}
+
+\begin{proof}
+The inclusion
+\(\mathcal H(\mathcal D)\subseteq\Ram^{(1)}(Z/Y)\) is part of the
+definition.  Conversely, let \(E\in\Ram^{(1)}(Z/Y)\).  In residue
+characteristic zero, \(I_E\neq1\).  Since \(N\) is the normal closure of
+\(L/K\), Proposition~\ref{prop:conjugate-embedding-action} gives
+\(\core_G(H)=1\), and Proposition~\ref{prop:core-free-sheet-action}
+supplies an \(\omega\in\mathcal Q_E\) with \(i_E(\omega)>1\).
+For every \(\omega'\in\mathcal Q_E\), Proposition
+\ref{prop:visibility-to-boundary} gives
+\[
+  i_E(\omega')>1
+  \quad\Longrightarrow\quad
+  \operatorname{cent}(E,\omega')\in\partial X.
+\]
+These are exactly the two conditions defining
+\(E\in\mathcal H(\mathcal D)\).
+\end{proof}
+
 \subsection{Automorphism detection}
 \label{sec:automorphism-detection}
 
@@ -1024,7 +1186,11 @@ finiteness.
 
 We now specialize the dimension-independent collision, normalization,
 and inertia constructions of Section~\ref{sec:general-construction} to
-dimension two.
+dimension two.  The purpose of this section is to identify a concrete
+boundary obstruction, not to assume it away implicitly: the secant
+calculation separates the diagonal from the off-diagonal collision sheet,
+while the normalization calculation shows exactly how nontrivial inertia
+would have to escape every relevant conjugate affine sheet.
 
 Let
 \[
@@ -1032,6 +1198,94 @@ Let
 \]
 be a polynomial map satisfying
 \(\det JF=c\in\C^\times\).
+
+Set, from this point onward,
+\[
+  A=\C[x_1,x_2],
+  \qquad
+  B=\C[P,Q]\subseteq A,
+  \qquad
+  K=\C(P,Q),
+  \qquad
+  L=\C(x_1,x_2),
+\]
+and let \(X=\Spec A\), \(Y=\Spec B\).
+
+\begin{proposition}[Planar Keller geometry]
+\label{prop:planar-keller-local-geometry}
+\[
+  \C[u,v]\xrightarrow{\sim}B,
+  \qquad
+  u\longmapsto P,\quad v\longmapsto Q.
+\]
+Moreover,
+\[
+  X\xrightarrow{\ f_F\ }Y\ \text{is \'etale},
+  \qquad
+  A\ \text{is flat over }B,
+  \qquad
+  [L:K]<\infty
+  \ \text{and }L/K\text{ is separable}.
+\]
+\end{proposition}
+
+\begin{proof}
+The identity
+\[
+  dP\wedge dQ
+  =
+  \left(
+    \frac{\partial P}{\partial x_1}
+    \frac{\partial Q}{\partial x_2}
+    -
+    \frac{\partial P}{\partial x_2}
+    \frac{\partial Q}{\partial x_1}
+  \right)dx_1\wedge dx_2
+  =
+  c\,dx_1\wedge dx_2
+  \neq0
+\]
+shows that \(P,Q\) are algebraically independent.  Thus
+\(B\cong\C[u,v]\) and \(Y\cong\A^2_{\C}\).  Moreover,
+\[
+  A
+  \cong
+  \C[u,v,U,V]\big/\bigl(P(U,V)-u,\ Q(U,V)-v\bigr)
+\]
+as a \(\C[u,v]\)-algebra, and its relative Jacobian determinant is
+\(c\in A^\times\).  The
+Jacobian criterion therefore makes \(B\to A\) \'etale.  In particular
+it is flat and quasi-finite.  Since \(f_F\) is dominant and
+quasi-finite, its generic fiber is zero-dimensional, so
+\([L:K]<\infty\).  The morphism remains \'etale at the generic point;
+hence the finite extension \(L/K\) is separable.
+\end{proof}
+
+\begin{proposition}[Finite planar Keller rigidity]
+\label{prop:finite-planar-keller-rigidity}
+If the planar Keller morphism
+\(f_F\colon\A^2_{\C}\to\A^2_{\C}\) is finite, then \(F\) is a
+polynomial automorphism.
+\end{proposition}
+
+\begin{proof}
+Proposition~\ref{prop:planar-keller-local-geometry} makes \(f_F\) \'etale.
+Thus a finite \(f_F\) is a connected finite \'etale cover of
+\(\A^2_{\C}\).  Finite-\'etale rigidity of the affine plane,
+Theorem~\ref{thm:a2-etale-rigidity}, makes it an isomorphism.  Its inverse
+is a morphism of affine schemes and hence is given by polynomials.
+\end{proof}
+
+\begin{definition}[Planar generic degree]
+\label{def:planar-generic-degree}
+The generic degree of \(F\) is
+\[
+  d_F:=\deg_{\mathrm{gen}}(F):=[L:K].
+\]
+Because \(L/K\) is finite and separable, \(d_F\) is also the number of
+\(K\)-embeddings \(L\hookrightarrow\overline K\), equivalently the number
+of geometric points in the generic fiber of \(f_F\).
+\end{definition}
 
 \subsection{The planar secant projector}
 
@@ -1279,69 +1533,7 @@ In particular, the secant determinant cuts out the off-diagonal factor:
   \Spec\!\bigl(S/(I_R+(\delta_F))\bigr).
 \]
 
-\subsection{Boundary exclusion and inertia}
-
-Let
-\[
-  A=\C[x_1,x_2],
-  \qquad
-  B=\C[P,Q]\subseteq A,
-  K=\C(P,Q),
-  \qquad
-  L=\C(x_1,x_2),
-\]
-and let \(X=\Spec A\) and \(Y=\Spec B\).
-
-\begin{proposition}[Keller local geometry]
-\label{prop:planar-keller-local-geometry}
-\[
-  \C[u,v]\xrightarrow{\sim}B,
-  \qquad
-  u\longmapsto P,\quad v\longmapsto Q.
-\]
-Moreover,
-\[
-  X\xrightarrow{\ f_F\ }Y\ \text{is \'etale},
-  \qquad
-  A\ \text{is flat over }B,
-  \qquad
-  [L:K]<\infty
-  \ \text{and }L/K\text{ is separable}.
-\]
-\end{proposition}
-
-\begin{proof}
-The identity
-\[
-  dP\wedge dQ
-  =
-  \left(
-    \frac{\partial P}{\partial x_1}
-    \frac{\partial Q}{\partial x_2}
-    -
-    \frac{\partial P}{\partial x_2}
-    \frac{\partial Q}{\partial x_1}
-  \right)dx_1\wedge dx_2
-  =
-  \det(JF)\,dx_1\wedge dx_2
-  =
-  c\,dx_1\wedge dx_2
-  \neq0
-\]
-shows that \(P,Q\) are algebraically independent.  Thus
-\(B\cong\C[u,v]\) and \(Y\cong\A^2_{\C}\).  Moreover,
-\[
-  A
-  \cong
-  B[U,V]\big/\bigl(P(U,V)-u,\ Q(U,V)-v\bigr),
-\]
-whose relative Jacobian determinant is \(c\in A^\times\).  The
-Jacobian criterion therefore makes \(B\to A\) \'etale.  In particular
-it is flat and quasi-finite.  Since \(f_F\) is dominant and
-quasi-finite, its generic fiber is zero-dimensional, so
-\([L:K]<\infty\).  The morphism remains \'etale at the generic point;
-hence the finite extension \(L/K\) is separable.
-\end{proof}
+\subsection{Galois specialization and conjugate coordinates}
 
 Fix an algebraic closure \(\overline K\supseteq L\), and let
 \[
@@ -1414,6 +1606,381 @@ morphism between affine schemes.  Since
 immersion.
 \end{proof}
 
+One consequence of this finiteness is useful bookkeeping, but should not be
+confused with a vanishing theorem.  If \(E=V(\mathfrak p_E)\subset Z\) is a
+prime divisor and \(D=V(\mathfrak p_E\cap B)\subset Y\) is its image, then
+
+\[
+  A_N/\mathfrak p_E
+  \quad\text{is finite over}\quad
+  B/(\mathfrak p_E\cap B).
+\]
+
+Thus \(E\to D\) is a finite map of affine curves.  Neither coordinate ring
+is thereby finite-dimensional over \(\C\), and this curvewise finiteness does
+not bound poles in the direction transverse to \(E\).  More precisely, if
+\(e(E/D)\) is the DVR ramification index and
+\(f(E/D)=[\kappa(E):\kappa(D)]\) is the degree of the induced curve map,
+then
+\[
+  \sum_{E\mid D}e(E/D)f(E/D)=[N:K].
+\]
+Riemann--Hurwitz or equal-genus arguments for compactifications of
+\(E\to D\) constrain \(f(E/D)\); the inertia calculation in this paper
+requires control of the distinct transverse index \(e(E/D)\).  This is why
+curvewise finiteness alone does not eliminate a ramified divisor.
+
+\subsection{Global and divisorial formulations}
+\label{sec:two-planar-finiteness-targets}
+
+Let \(\mathfrak b\subseteq\overline A\) be the radical ideal defining
+\(\partial X=\overline X\setminus j(X)\).  Because \(\overline X\) is
+affine, local cohomology with support in the boundary is
+\[
+  H^1_{\partial X}(\overline X,\mathcal O_{\overline X})
+  =H^1_{\mathfrak b}(\overline A).
+\]
+
+\begin{definition}[Global and divisorial finiteness formulations]
+\label{def:two-planar-finiteness-targets}
+For a planar Keller map \(F\), define:
+\begin{enumerate}
+  \item The \emph{global boundary formulation}, PlanarBoundaryCoherence,
+  denoted
+  \(\operatorname{PBC}(F)\), is the assertion that
+  \[
+    H^1_{\mathfrak b}(\overline A)
+    \quad\text{is a finite (equivalently, finitely generated)
+    \(\overline A\)-module}.
+  \]
+  \item The \emph{divisorial differential formulation},
+  PlanarRamificationRigidity, denoted
+  \(\operatorname{PRR}(F)\), is the assertion that
+  \[
+    \Omega_{A_N/B}
+    \quad\text{has finite length as an \(A_N\)-module}.
+  \]
+\end{enumerate}
+\end{definition}
+
+Here finiteness does not repeat the finiteness already proved in
+Proposition~\ref{prop:planar-normalization-diagram}.  The rings
+\(\overline A\) and \(A_N\) are finite \(B\)-modules because they are
+integral closures in finite field extensions.  Consequently
+\(\overline X\) and \(Z\) are reduced, irreducible affine schemes of finite
+type over the algebraically closed field \(\C\), hence affine varieties in
+the usual sense.  Ordinary higher cohomology of quasi-coherent sheaves on
+these affine schemes vanishes (the affine-cohomology theorem, or the
+vanishing half of Serre's affineness criterion)
+\cite{StacksAffineCohomology}.  Neither fact implies that
+the boundary local cohomology \(H^1_{\mathfrak b}(\overline A)\) is finite:
+local cohomology measures sections with poles along the omitted closed set.
+Similarly, \(\Omega_{A_N/B}\) is automatically a finite \(A_N\)-module,
+because \(A_N\) is a finite-type \(B\)-algebra, but requiring it to have
+finite \emph{length} is the stronger assertion that its support has
+dimension zero.
+
+\begin{proposition}[The boundary-coherence implication]
+\label{prop:planar-boundary-coherence-route}
+Planar boundary coherence gives the implication chain
+\[
+  \operatorname{PBC}(F)
+  \Longrightarrow
+  \partial X=\varnothing
+  \Longrightarrow
+  f_F\text{ is finite \'{e}tale}
+  \Longrightarrow
+  F\text{ is a polynomial automorphism}.
+\]
+\end{proposition}
+
+\begin{proof}
+Because \(\overline A\) is a domain and \(j(X)\) contains its generic point,
+\(H^0_{\mathfrak b}(\overline A)=0\).  The local-cohomology sequence for
+\(j(X)\subseteq\overline X\), together with affineness of \(\overline X\),
+therefore gives
+\[
+  0\longrightarrow\overline A
+  \longrightarrow A
+  \longrightarrow H^1_{\mathfrak b}(\overline A)
+  \longrightarrow0.
+\]
+Here \(\Gamma(X,\mathcal O_X)=A\); this is the standard affine
+open-complement local-cohomology sequence
+\cite{StacksLocalCohomologySequence}.
+If the last term is a finite \(\overline A\)-module, then so is \(A\).
+Thus the open immersion \(j\) is finite.  Its image is both open and closed;
+since \(\overline X\) is integral and \(X\neq\varnothing\), it is all of
+\(\overline X\).  Hence \(\partial X=\varnothing\), so
+\(f_F=\bar\nu\) is finite.  It is already \'{e}tale by
+Proposition~\ref{prop:planar-keller-local-geometry}, and
+Proposition~\ref{prop:finite-planar-keller-rigidity} finishes the proof.
+\end{proof}
+
+In particular, \(\operatorname{PBC}(F)\) implies
+\(\operatorname{PRR}(F)\): after \(F\) is an automorphism one has
+\(A_N=B\), so \(\Omega_{A_N/B}=0\).  The converse does not follow by a
+direct module-theoretic comparison.  The ramification-rigidity endgame below
+nevertheless shows that, for a planar Keller map, \(\operatorname{PRR}(F)\)
+also implies automorphy and hence \(\operatorname{PBC}(F)\).  The two
+criteria record different mechanisms: ramification rigidity first eliminates
+divisorial ramification, whereas boundary coherence eliminates the entire
+deleted boundary at once.
+
+Let \(S_F\subseteq Y\) denote the nonproperness set: the complement of
+the largest open subset \(U\subseteq Y\) over which
+\(f_F^{-1}(U)\to U\) is proper.
+
+\begin{proposition}[The deleted boundary and properness]
+\label{prop:planar-boundary-properness}
+Set-theoretically,
+\[
+  S_F=\bar\nu(\partial X).
+\]
+Consequently, the following are equivalent:
+\[
+  f_F\text{ is proper},
+  \qquad
+  S_F=\varnothing,
+  \qquad
+  \partial X=\varnothing.
+\]
+Under any of these conditions, \(F\) is a polynomial automorphism.
+\end{proposition}
+
+\begin{proof}
+The set \(\bar\nu(\partial X)\) is closed because \(\bar\nu\) is finite.
+Over
+\[
+  U=Y\setminus\bar\nu(\partial X),
+\]
+the open immersion identifies \(f_F^{-1}(U)\) with
+\(\bar\nu^{-1}(U)\); hence the restriction of \(f_F\) is finite and
+therefore proper.  Thus \(S_F\subseteq\bar\nu(\partial X)\).
+
+Conversely, suppose that \(y\in\bar\nu(\partial X)\) and that \(f_F\)
+were proper over a neighborhood of \(y\).  Since \(f_F\) is quasi-finite,
+it would be finite after shrinking to an affine neighborhood \(V\) of
+\(y\).  The normal finite \(V\)-scheme \(f_F^{-1}(V)\), with function
+field \(L\), would then be the normalization of \(V\) in \(L\).  By
+uniqueness of normalization it would equal \(\bar\nu^{-1}(V)\), contrary
+to the existence of a boundary point above \(y\).  Therefore
+\(\bar\nu(\partial X)\subseteq S_F\), proving the equality and the three
+equivalences.
+
+If they hold, \(f_F=\bar\nu\) is finite and \'etale.  Since
+\(Y\cong\A^2_{\C}\), Theorem~\ref{thm:a2-etale-rigidity} makes this
+connected cover trivial, so \(F\) is a polynomial automorphism.
+\end{proof}
+
+Thus the deleted normalization boundary is not auxiliary: it is precisely
+the geometric source of nonproperness.  For a nonsingular polynomial map of
+the complex plane, a nonempty \(S_F\) is known to be a curve with one point
+at infinity \cite{ChauNonproperValueSet}.  The inertia calculations below
+identify which divisorial part of this nonproperness can support the normal
+closure.
+
+Here dimension two materially sharpens the normalization problem.  Both
+\(\overline X\) and \(Z\) are normal Noetherian surfaces finite over the
+regular surface \(Y\).  A normal Noetherian scheme of dimension at most two
+is Cohen--Macaulay \cite{StacksNormalSurfaceCM}; since the finite maps have
+zero-dimensional fibers, miracle flatness makes them finite flat
+\cite{StacksMiracleFlatness}.  Their coordinate rings are therefore finite
+locally free \(B\)-modules, so the trace, different, and ramification divisor
+belong to the finite-flat surface setting.
+
+Moreover, \(j(X)\) is a dense affine open in the separated Noetherian surface
+\(\overline X\).  Every irreducible component of
+\(\partial X=\overline X\setminus j(X)\) consequently has codimension one
+\cite{StacksAffineComplement}: a nonempty deleted boundary is a union of
+curves.  Purity of the branch locus rules out ramification supported only in
+codimension two.  Thus the remaining planar question is the following
+concrete one: can a nonzero ramification divisor on \(Z\) have every
+inertia-moving conjugate center on the deleted boundary curves?  The
+coordinate criterion below gives an exact valuation formulation of this
+question.
+
+Characteristic zero also makes the ramification divisor of the intermediate
+normalization explicit.  Write
+\[
+  R_{\bar\nu}
+  =
+  \sum_{C\in\overline X^{(1)}}
+    \bigl(e(C/\bar\nu(C))-1\bigr)C.
+\]
+The different exponent is \(e-1\) at each divisorial valuation, and the
+\'etaleness of \(f_F\) gives
+\[
+  \operatorname{Supp}(R_{\bar\nu})\subseteq\partial X.
+\]
+In canonical-divisor language, \(R_{\bar\nu}\) is the relative canonical
+divisor of the finite map.  Its vanishing is therefore the finite-cover
+analogue of crepancy; this is a ramification statement, not a consequence
+of resolving the isolated singularities of the normal surface
+\(\overline X\).
+
+\begin{proposition}[Boundary divisor-class rigidity]
+\label{prop:boundary-divisor-class-rigidity}
+Let \(D\) be an effective Weil divisor on \(\overline X\) supported on
+\(\partial X\).  If \([D]\) is torsion in
+\(\operatorname{Cl}(\overline X)\), then \(D=0\).
+\end{proposition}
+
+\begin{proof}
+Choose \(m>0\) and \(h\in L^\times\) with
+\[
+  \operatorname{div}_{\overline X}(h)=mD.
+\]
+The divisor on the right is effective.  Since \(\overline X\) is normal,
+the height-one valuation criterion for regularity gives
+\(h\in\Gamma(\overline X,\mathcal O_{\overline X})=\overline A\).
+Because \(D\) is supported on the deleted boundary,
+\(\operatorname{div}_{X}(h|_X)=0\).  Since
+\(A=\C[x_1,x_2]\) is a unique factorization domain, this gives
+\[
+  h|_X\in A^\times
+  =\C[x_1,x_2]^\times
+  =\C^\times.
+\]
+The inclusion \(\overline A\subseteq A\) is injective, so \(h\) itself is
+constant.  Therefore \(mD=0\), and hence \(D=0\).
+\end{proof}
+
+\begin{corollary}[Different-class criterion for planar rigidity]
+\label{cor:different-class-planar-rigidity}
+If \([R_{\bar\nu}]\) is torsion in
+\(\operatorname{Cl}(\overline X)\), then \(F\) is a polynomial
+automorphism.  In particular, this holds if the different is principal or
+if \(\operatorname{Cl}(\overline X)\) is torsion.
+\end{corollary}
+
+\begin{proof}
+Proposition~\ref{prop:boundary-divisor-class-rigidity} gives
+\(R_{\bar\nu}=0\).  Purity of the branch locus then makes the finite map
+\(\bar\nu\) \'etale, and finite-\'etale rigidity of \(\A^2_{\C}\) makes it
+an isomorphism.  Thus \(L=K\).  Proposition
+\ref{prop:planar-keller-local-geometry} gives that \(A\) is flat over
+\(B\), so Corollary~\ref{cor:generic-degree-one-descent} gives
+\(\Obs(F)=0\).  Theorem~\ref{thm:automorphism-criterion} finishes the
+proof.
+\end{proof}
+
+The following specialization recovers the classical Galois case of the
+Jacobian conjecture \cite{Campbell1973,Razar1979,Wright1981} in the boundary
+language of this section.
+
+\begin{theorem}[Boundary-theoretic Galois rigidity]
+\label{thm:planar-galois-rigidity}
+If the marked function-field extension \(L/K\) is normal, equivalently
+Galois, then
+\[
+  L=K
+  \qquad\text{and}\qquad
+  F\in\Aut_{\mathrm{poly}}(\A^2_{\C}).
+\]
+\end{theorem}
+
+\begin{proof}
+Proposition~\ref{prop:planar-keller-local-geometry} shows that \(L/K\) is
+finite and separable, so normality is equivalent to the Galois condition.
+Let \(B_1,\dots,B_r\) be the prime divisors of \(Y\) that are images of
+components of \(R_{\bar\nu}\).  Since \(B=\C[P,Q]\) is a unique
+factorization domain, choose an irreducible \(b_i\in B\) such that
+\[
+  B_i=\operatorname{div}_Y(b_i).
+\]
+
+The Galois group preserves the integral closure \(\overline X\) and acts
+transitively on the prime divisors above a fixed \(B_i\), so their
+ramification indices have a common value \(e_i\)
+\cite{StacksGaloisIntegralClosure}.  Put
+\[
+  D_i=
+  \sum_{\substack{C\in\overline X^{(1)}\\ \bar\nu(C)=B_i}} C.
+\]
+For every \(C\mid B_i\), the valuation formula for pullback gives
+\[
+  \operatorname{ord}_C(b_i)
+  =e(C/B_i)\operatorname{ord}_{B_i}(b_i)=e_i.
+\]
+There are no other height-one zeros of \(b_i\) on \(\overline X\), and
+hence
+\[
+  \operatorname{div}_{\overline X}(b_i)
+  =\bar\nu^*B_i=e_iD_i.
+\]
+These are the standard Galois valuation and divisor-pullback formulas
+\cite{StacksDVRExtensions,StacksRamificationTheory}.
+
+The residue characteristic is zero, so the divisorial extensions are tame
+and the different exponent at every \(C\mid B_i\) is \(e_i-1\)
+\cite{StacksRiemannHurwitzTame}.  Grouping
+the components of the ramification divisor by their images therefore gives
+\[
+  R_{\bar\nu}=\sum_{i=1}^r(e_i-1)D_i.
+\]
+Set \(m=\prod_{i=1}^r e_i\), with the empty product understood as \(1\),
+and define
+\[
+  h=\prod_{i=1}^r b_i^{\,m(e_i-1)/e_i}\in K^\times\subseteq L^\times.
+\]
+Every exponent is a nonnegative integer, and the preceding pullback formula
+yields
+\[
+  \operatorname{div}_{\overline X}(h)
+  =\sum_{i=1}^r\frac{m(e_i-1)}{e_i}\,e_iD_i
+  =mR_{\bar\nu}.
+\]
+Thus \([R_{\bar\nu}]\) is torsion in
+\(\operatorname{Cl}(\overline X)\), and Corollary
+\ref{cor:different-class-planar-rigidity} gives the result.
+\end{proof}
+
+\begin{corollary}[Quadratic planar rigidity]
+\label{cor:quadratic-planar-rigidity}
+No planar Keller map has generic degree \(d_F=2\).  Consequently,
+\[
+  d_F\leq2
+  \quad\Longrightarrow\quad
+  d_F=1
+  \quad\Longrightarrow\quad
+  F\in\Aut_{\mathrm{poly}}(\A^2_{\C}).
+\]
+In particular, every nonautomorphic planar Keller map would have
+\[
+  d_F\geq3
+  \qquad\text{and}\qquad
+  L/K\text{ nonnormal}.
+\]
+\end{corollary}
+
+\begin{proof}
+If \(d_F=2\), then the separable quadratic extension \(L/K\) is Galois.
+Theorem~\ref{thm:planar-galois-rigidity} would give \(L=K\), contradicting
+\([L:K]=2\).  Hence \(d_F\leq2\) forces \(d_F=1\); Corollary
+\ref{cor:generic-degree-one-descent} and Theorem
+\ref{thm:automorphism-criterion} give automorphy.  Finally, Theorem
+\ref{thm:planar-galois-rigidity} rules out normality in every
+nonautomorphic case.
+\end{proof}
+
+Outside this normal/Galois specialization, the divisor-theoretic problem is
+to determine whether the finite-flat trace and different, together with
+\(\overline A\subseteq\C[x_1,x_2]\), force
+\([R_{\bar\nu}]\) to be torsion.  The different-class criterion proves the
+consequence of such torsion; it does not assert it for a general nonnormal
+extension.  Corollary~\ref{cor:quadratic-planar-rigidity} shows that only
+nonnormal extensions of generic degree at least three remain.
+
+It is important that this argument cannot simply be rerun for the always
+Galois extension \(N/K\).  Boundary divisor-class rigidity applies on
+\(\overline X\) because it contains the marked affine plane
+\(X\simeq\A^2_{\C}\) as a dense open.  If \(L/K\) is nonnormal, the Galois
+normalization \(Z\) instead maps finitely to every conjugate intermediate
+model and need not contain a marked affine-plane open whose deleted boundary
+supports all of \(R_{Z/Y}\).  This is precisely why the pulled-back
+conjugate boundaries and moving-sheet condition are needed.
+
 Let
 \[
   \begin{gathered}
@@ -1429,6 +1996,102 @@ Let
     H=\Gal(N/L).
   \end{gathered}
 \]
+
+The abstract conjugate centers now admit a direct two-coordinate test.
+For a representative \(g\in G\) of
+\(\omega=D_EgH\), the conjugate affine sheet is generated inside \(N\) by
+\[
+  A_g=\C[g(x_1),g(x_2)].
+\]
+
+\begin{proposition}[Planar coordinate test for a conjugate center]
+\label{prop:planar-conjugate-coordinate-test}
+For \(E\in Z^{(1)}\) and \(\omega=D_EgH\in\mathcal Q_E\),
+\[
+  \operatorname{cent}(E,\omega)\in j(X)
+  \quad\Longleftrightarrow\quad
+  w_E(g(x_1))\geq0
+  \ \text{and}\
+  w_E(g(x_2))\geq0.
+\]
+Consequently,
+\[
+  \operatorname{cent}(E,\omega)\in\partial X
+  \quad\Longleftrightarrow\quad
+  \min\{w_E(g(x_1)),w_E(g(x_2))\}<0.
+\]
+\end{proposition}
+
+\begin{proof}
+By definition,
+\(u_\omega=(g^{-1}w_E)|_L\), so
+\[
+  u_\omega(x_i)=w_E(g(x_i))
+  \qquad(i=1,2).
+\]
+The center of \(u_\omega\) lies on the affine open
+\(X=\Spec\C[x_1,x_2]\) exactly when its valuation ring contains
+\(A\).  Since \(A\) is generated by \(x_1,x_2\), this is equivalent to
+the two displayed nonnegativity conditions.  Negating them gives the
+boundary criterion.
+\end{proof}
+
+The early secant estimate has a precise interpretation on these conjugate
+generic sheets.  For \(g\in G\), let
+\[
+  \delta_{F,g}
+  :=
+  \delta_F\bigl(x_1,x_2,g(x_1),g(x_2)\bigr)\in N,
+  \qquad
+  q_{F,g}:=1-c^{-1}\delta_{F,g}.
+\]
+
+\begin{proposition}[Secant evaluation on conjugate sheets]
+\label{prop:secant-conjugate-evaluation}
+For every \(g\in G\),
+\[
+  \delta_{F,g}\bigl(x_i-g(x_i)\bigr)=0
+  \qquad(i=1,2).
+\]
+Consequently,
+\[
+  \delta_{F,g}
+  =
+  \begin{cases}
+    c,&g\in H,\\
+    0,&g\notin H,
+  \end{cases}
+  \qquad
+  q_{F,g}
+  =
+  \begin{cases}
+    0,&g\in H,\\
+    1,&g\notin H.
+  \end{cases}
+\]
+Thus the planar secant projector is exactly the characteristic function of
+the nonmarked generic conjugate sheets.
+\end{proposition}
+
+\begin{proof}
+The marked embedding \(L\hookrightarrow N\) and its \(g\)-conjugate agree
+on \(K\), so together they define an evaluation map from the generic
+collision algebra \(L\otimes_KL\) to \(N\).  Evaluating
+Proposition~\ref{prop:secant-annihilator} under this map gives the first
+display.  If \(g\in H=\Gal(N/L)\), then \(g(x_i)=x_i\) for both coordinates,
+and diagonal evaluation gives \(\delta_{F,g}=c\).  If \(g\notin H\), then
+some \(x_i\) is moved, since \(L=\C(x_1,x_2)\).  The corresponding factor
+\(x_i-g(x_i)\) is nonzero in the field \(N\), so the first display forces
+\(\delta_{F,g}=0\).  The formulas for \(q_{F,g}\) follow.
+\end{proof}
+
+This follows the exponent-one secant bound completely into the normal
+closure, but also locates its limit.  On a nonmarked sheet
+\(\delta_{F,g}\) is the zero function; it is therefore a generic-sheet
+projector, not a nonzero boundary parameter whose fixed power bounds pole
+order.  Any use of the secant matrix for uniform boundary control therefore
+needs a further transport statement, using more than the determinant alone.
+That possible mechanism is isolated after the completed endgame.
 
 For \(E\in\Ram^{(1)}(Z/Y)\) and
 \(\omega\in\mathcal Q_E\), Proposition
@@ -1460,42 +2123,324 @@ Thus Definition~\ref{def:no-hidden-inertia} specializes to
   \right\}.
 \]
 
-\subsection{Hidden inertia and divisorial ramification}
+Proposition~\ref{prop:planar-conjugate-coordinate-test} makes this locus
+fully explicit:
+\[
+  \mathcal H(\mathcal D_F)
+  =
+  \left\{
+  E\in\Ram^{(1)}(Z/Y):
+  \begin{array}{l}
+    \forall g\in G,\\[-2pt]
+    [I_E:I_E\cap gHg^{-1}]>1
+    \Longrightarrow
+    \min\{w_E(g(x_1)),w_E(g(x_2))\}<0
+  \end{array}
+  \right\}.
+\]
+The existence of at least one \(g\) with nontrivial relative index is
+automatic from \(I_E\neq1\) and \(\core_G(H)=1\).  Thus hidden inertia is
+not an additional abstract object in the planar proof: it is precisely the
+possibility that every inertia-moving conjugate coordinate pair acquires a
+pole at the deleted boundary.
+
+\begin{definition}[Planar conjugate coverage]
+\label{def:planar-conjugate-coverage}
+Write \(\operatorname{Cov}_2(F)\) for the following condition: every
+\(E\in\Ram^{(1)}(Z/Y)\) admits a \(g\in G\) such that
+\[
+  [I_E:I_E\cap gHg^{-1}]>1,
+  \qquad
+  w_E(g(x_1))\geq0,
+  \qquad
+  w_E(g(x_2))\geq0.
+\]
+Thus some conjugate sheet moved by inertia still has an affine center.
+\end{definition}
+
+We now construct the canonical boundaries directly on the common Galois
+normalization.  For \(g\in G\), set
+\[
+  \overline A_g=g(\overline A),
+  \qquad
+  \overline X_g=\Spec\overline A_g,
+  \qquad
+  X_g=\Spec A_g.
+\]
+The conjugate of \(j\) is an open immersion
+\(X_g\hookrightarrow\overline X_g\), and the inclusion
+\(\overline A_g\subseteq A_N\) gives a finite map
+\(\pi_g\colon Z\to\overline X_g\).  Let
+\[
+  U_g:=\pi_g^{-1}(X_g)\subseteq Z,
+  \qquad
+  D_g:=Z\setminus U_g,
+  \qquad
+  \mathfrak j_g:=
+    I_{A_N}(D_g)
+    =
+    \bigcap_{\mathfrak p\in D_g}\mathfrak p.
+\]
+Thus \(\mathfrak j_g\) is canonically the radical vanishing ideal of the
+pulled-back deleted boundary and \(D_g=V(\mathfrak j_g)\).  The
+construction depends only on \(gH\), since right multiplication by \(H\)
+does not change the conjugate embedding of \(L\).
+
+\begin{proposition}[Pulled-back boundary dictionary]
+\label{prop:pulled-back-boundary-dictionary}
+For every height-one point \(E\) of \(Z\) and every \(g\in G\),
+\[
+  \eta_E\in U_g
+  \quad\Longleftrightarrow\quad
+  \mathfrak j_g\nsubseteq\mathfrak p_E
+  \quad\Longleftrightarrow\quad
+  w_E(g(x_1))\geq0
+  \quad\text{and}\quad
+  w_E(g(x_2))\geq0.
+\]
+Equivalently,
+\[
+  \mathfrak j_g\subseteq\mathfrak p_E
+  \quad\Longleftrightarrow\quad
+  \eta_E\in D_g
+  \quad\Longleftrightarrow\quad
+  \min\{w_E(g(x_1)),w_E(g(x_2))\}<0.
+\]
+\end{proposition}
+
+\begin{proof}
+Because \(D_g=V(\mathfrak j_g)\), membership
+\(\eta_E\in D_g\) is exactly the containment
+\(\mathfrak j_g\subseteq\mathfrak p_E\).  The point
+\(\eta_E\) belongs to \(U_g\) precisely when its image under
+\(\pi_g\) is centered on \(X_g=\Spec\C[g(x_1),g(x_2)]\).  The valuation
+criterion for a center on an affine model says exactly that both conjugate
+coordinates have nonnegative valuation.  Taking complements gives the
+second display.
+\end{proof}
+
+\begin{proposition}[Moving-sheet coverage dictionary]
+\label{prop:moving-sheet-coverage-dictionary}
+For \(E\in\Ram^{(1)}(Z/Y)\), put
+\[
+  \mathfrak j_E^{\mathrm{mov}}
+  :=
+  \sum_{\substack{g\in G\\I_E\nsubseteq gHg^{-1}}}\mathfrak j_g.
+\]
+Then
+\[
+  \exists g\in G,\quad
+  I_E\nsubseteq gHg^{-1},\quad \eta_E\in U_g
+  \quad\Longleftrightarrow\quad
+  \mathfrak j_E^{\mathrm{mov}}\nsubseteq\mathfrak p_E.
+\]
+Thus eliminating \(E\) is exactly the failure of its moving-boundary
+ideal to be contained in its height-one prime.
+\end{proposition}
+
+\begin{proof}
+A prime contains a sum of ideals exactly when it contains every summand.
+Apply Proposition~\ref{prop:pulled-back-boundary-dictionary} to each
+inertia-moving \(g\).
+\end{proof}
+
+For a nontrivial subgroup \(I\leq G\), define its moving-boundary ideal by
+\[
+  \mathfrak j_I^{\mathrm{mov}}
+  :=
+  \sum_{\substack{g\in G\\I\nsubseteq gHg^{-1}}}\mathfrak j_g.
+\]
+The sum is taken in the common Galois-normalization ring \(A_N\); this is
+why the Galois closure enters only at this final specialization.
+
+The same common ring gives a finite-group formulation which does not first
+choose a ramified divisor.  For a subgroup \(C\leq G\), let
+\[
+  \mathfrak a_C
+  :=
+  \bigl(\sigma(t)-t:\sigma\in C,\ t\in A_N\bigr)
+  \subseteq A_N.
+\]
+This is the scheme-theoretic fixed-locus ideal for the action of \(C\) on
+\(Z\).  If \(\mathfrak p_E\in\Spec A_N\), then
+\[
+  \mathfrak a_C\subseteq\mathfrak p_E
+  \quad\Longleftrightarrow\quad
+  C\leq I_E.
+\]
+Indeed, the containment says that every element of \(C\) stabilizes
+\(\mathfrak p_E\) and acts trivially on its residue field, which is the
+definition of inertia at \(E\).
+
+\begin{definition}[Planar boundary separation]
+\label{def:planar-boundary-separation}
+Write \(\operatorname{Sep}_2(F)\) for the following condition: for every
+prime-order subgroup \(C\leq G\),
+\[
+  \Spec^{(1)}(A_N)
+  \cap
+  V\!\left(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\right)
+  =\varnothing.
+\]
+Equivalently,
+\[
+  \forall\mathfrak p\in\Spec^{(1)}(A_N),\qquad
+  \mathfrak a_C\subseteq\mathfrak p
+  \quad\Longrightarrow\quad
+  \mathfrak j_C^{\mathrm{mov}}\nsubseteq\mathfrak p.
+\]
+In codimension language, every fixed--moving boundary locus
+\(V(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}})\) has codimension at least
+two in the normal surface \(Z\).  No assertion is made about isolated
+fixed boundary points.
+\end{definition}
+
+\begin{proposition}[Boundary separation is the divisorial criterion]
+\label{prop:boundary-separation-divisorial-criterion}
+For a planar Keller map,
+\[
+  \operatorname{Sep}_2(F)
+  \quad\Longleftrightarrow\quad
+  \Ram^{(1)}(Z/Y)=\varnothing.
+\]
+\end{proposition}
+
+\begin{proof}
+Assume boundary separation and suppose that
+\(E\in\Ram^{(1)}(Z/Y)\).  Choose a subgroup
+\(C\leq I_E\) of prime order; such a subgroup exists by Cauchy's theorem
+for the nontrivial finite group \(I_E\).  Then
+\(\mathfrak a_C\subseteq\mathfrak p_E\).  If
+\(C\nsubseteq gHg^{-1}\), then
+\(I_E\nsubseteq gHg^{-1}\), so the relative inertia index on the sheet
+represented by \(gH\) is nontrivial.  Proposition
+\ref{prop:visibility-to-boundary} places its center in the deleted boundary,
+and hence \(\mathfrak j_g\subseteq\mathfrak p_E\).  This holds for every
+sheet moved by \(C\), so
+\[
+  \mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}
+  \subseteq\mathfrak p_E,
+\]
+contrary to boundary separation.
+
+Conversely, if boundary separation fails, there are a prime-order
+\(C\leq G\) and a height-one prime \(\mathfrak p_E\) containing
+\(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\).  The fixed-locus
+containment gives \(C\leq I_E\).  Since \(C\neq1\), the point \(E\) is
+ramified, contradicting
+\(\Ram^{(1)}(Z/Y)=\varnothing\).
+\end{proof}
+
+\begin{proposition}[Coverage eliminates a ramified divisor]
+\label{prop:coverage-eliminates-ramified-divisor}
+Let \(E\in\Ram^{(1)}(Z/Y)\).  If there is a \(g\in G\) such that
+\[
+  I_E\nsubseteq gHg^{-1}
+  \qquad\text{and}\qquad
+  \eta_E\in U_g,
+\]
+then a contradiction follows.  Consequently,
+\[
+  \operatorname{Cov}_2(F)
+  \quad\Longrightarrow\quad
+  \Ram^{(1)}(Z/Y)=\varnothing.
+\]
+\end{proposition}
+
+\begin{proof}
+The subgroup condition gives
+\[
+  i_E(gH)=[I_E:I_E\cap gHg^{-1}]>1.
+\]
+On the other hand, \(\eta_E\in U_g\) places the conjugate center on the
+affine sheet \(X_g\).  The map \(X_g\to Y\) is the Galois conjugate of
+the planar Keller map and is therefore \'etale.  Its local ramification
+index at that center is one.  Hence \(1<i_E(gH)=1\), a contradiction.
+\end{proof}
+
+This is the point at which a height-one divisor is eliminated.  Purity is
+not used in Proposition~\ref{prop:coverage-eliminates-ramified-divisor};
+it enters only after the proposition has been applied to every ramified
+height-one point.
+
+\subsection{Moving-sheet criteria for planar ramification rigidity}
 \label{sec:planar-no-hidden-inertia}
 
-\begin{corollary}[Planar divisorial ramification criterion]
+\begin{corollary}[Planar hidden-inertia identification]
 \label{cor:planar-codimension-one-unramified}
+\[
+  \mathcal H(\mathcal D_F)=\Ram^{(1)}(Z/Y).
+\]
+In particular,
 \[
   \mathcal H(\mathcal D_F)=\varnothing
   \quad\Longleftrightarrow\quad
   \Ram^{(1)}(Z/Y)=\varnothing.
 \]
+These conditions are also equivalent to planar conjugate coverage.
 \end{corollary}
 
 \begin{proof}
-The reverse implication follows from
-\(\mathcal H(\mathcal D_F)\subseteq\Ram^{(1)}(Z/Y)\).  Conversely,
-suppose that \(\mathcal H(\mathcal D_F)=\varnothing\) and let
-\(E\in\Ram^{(1)}(Z/Y)\).  Then \(I_E\neq1\).
-Since \(N\) is the normal closure of \(L/K\),
-\(\core_G(H)=1\), and
-Proposition~\ref{prop:core-free-sheet-action} gives
-\[
-  \exists\omega\in\mathcal Q_E,
-  \qquad
-  i_E(\omega)>1.
-\]
-For every \(\omega'\in\mathcal Q_E\), Proposition
-\ref{prop:visibility-to-boundary} gives
-\[
-  i_E(\omega')>1
-  \quad\Longrightarrow\quad
-  \operatorname{cent}(E,\omega')\in\partial X.
-\]
-Hence \(E\in\mathcal H(\mathcal D_F)\), a contradiction.
+The equality is Proposition~\ref{prop:etale-sheet-hidden-inertia}, applied
+to the planar finite-cover diagram.  Conjugate coverage
+implies an empty ramification locus by Proposition
+\ref{prop:coverage-eliminates-ramified-divisor}, and hence an empty
+hidden-inertia locus by the displayed equality.  Conversely, if the
+ramification locus is empty, conjugate coverage holds vacuously.
 \end{proof}
 
-\subsection{Collapse of the normal closure}
+\begin{proposition}[The ramification-rigidity dictionary]
+\label{prop:planar-ramification-rigidity-dictionary}
+For a planar Keller map,
+\[
+  \operatorname{PRR}(F)
+  \quad\Longleftrightarrow\quad
+  \Ram^{(1)}(Z/Y)=\varnothing
+  \quad\Longleftrightarrow\quad
+  \operatorname{Cov}_2(F)
+  \quad\Longleftrightarrow\quad
+  \operatorname{Sep}_2(F).
+\]
+Thus moving-sheet coverage and boundary separation are two exact criteria
+for PlanarRamificationRigidity, not additional global hypotheses.
+\end{proposition}
+
+\begin{proof}
+The \(A_N\)-module \(\Omega_{A_N/B}\) is finite, and its generic
+localization vanishes because \(N/K\) is separable.  Since \(A_N\) is a
+two-dimensional affine \(\C\)-domain, every positive-dimensional closed
+subset has a height-one generic point.  Thus this finite module has finite
+length exactly when it has no height-one point in its support.  At a height-one
+point \(E\), localizing \(B\) first at the image of \(E\) and then at
+\(\mathfrak p_E\) gives the relevant finite local extension; the source
+local ring is a discrete valuation ring.  In characteristic zero its
+residue extension is separable, so
+\[
+  \Omega_{(A_N)_{\mathfrak p_E}/B_{\mathfrak p_E\cap B}}=0
+  \quad\Longleftrightarrow\quad
+  I_E=1.
+\]
+Indeed, vanishing of the localized differential module is the
+finite-type unramifiedness criterion, and for a finite extension of
+discrete valuation rings in characteristic zero unramifiedness is
+equivalent to trivial inertia
+\cite{StacksKaehlerDifferent,StacksDVRExtensions,StacksRamificationTheory}.
+Consequently finite length is equivalent to the absence of divisorial
+ramification.  Proposition~\ref{prop:coverage-eliminates-ramified-divisor}
+and vacuity in the unramified case give the equivalence with coverage; the
+equivalence with separation is
+Proposition~\ref{prop:boundary-separation-divisorial-criterion}.
+\end{proof}
+
+Equivalently, the premise
+\(\mathcal H(\mathcal D_F)=\varnothing\) says that if a ramified divisor
+existed, some inertia-moving conjugate pair \(g(x_1),g(x_2)\) would have
+to remain integral and hence centered on an affine sheet.  Planar
+\'etaleness says that the same pair must lie at the boundary.  This is the
+boundary contradiction used below; the premise supplies its exclusion,
+while the preceding results identify exactly what is being excluded.
+
+\subsection{The divisorial endgame}
 
 \begin{theorem}[Purity of the branch locus, specialized]
 \label{thm:branch-purity}
@@ -1531,6 +2476,10 @@ then
   \qquad\text{and hence}\qquad
   L=K.
 \]
+Numerically,
+\[
+  [L:K]=[N:L]=[N:K]=1.
+\]
 \end{corollary}
 
 \begin{proof}
@@ -1549,41 +2498,131 @@ Theorem~\ref{thm:a2-etale-rigidity} therefore makes
 \(K\subseteq L\subseteq N\) implies \(L=K\).
 \end{proof}
 
+\begin{corollary}[The divisorial endgame]
+\label{cor:planar-ramification-rigidity-route}
+The absence of divisorial ramification gives the implication chain
+\[
+  \Ram^{(1)}(Z/Y)=\varnothing
+  \Longrightarrow
+  Z\longrightarrow Y\text{ is finite \'{e}tale}
+  \Longrightarrow
+  N=K
+  \Longrightarrow
+  L=K
+  \Longrightarrow
+  q_F=0
+  \Longrightarrow
+  I_R=I_\Delta.
+\]
+\end{corollary}
+
+\begin{proof}
+Purity, Theorem~\ref{thm:branch-purity}, makes \(Z\to Y\) finite \'{e}tale,
+and
+Corollary~\ref{cor:planar-normal-closure-trivial} gives \(N=K\) and
+\(L=K\).  Thus \(d_F=1\).  Flatness of \(A\) over \(B\) and
+Corollary~\ref{cor:generic-degree-one-descent} give \(\Obs(F)=0\).
+The abstract off-diagonal projector and collision criteria then give
+\(q_F=0\) and \(I_R=I_\Delta\).
+\end{proof}
+
+By Proposition~\ref{prop:planar-ramification-rigidity-dictionary}, any of
+\(\operatorname{PRR}(F)\), \(\operatorname{Sep}_2(F)\), or
+\(\operatorname{Cov}_2(F)\) supplies the first condition in this single
+endgame.  They are respectively differential, ideal-theoretic, and
+valuation-theoretic descriptions of its codimension-one premise, rather
+than three additional routes.
+
 \subsection{Vanishing of the off-diagonal factor}
 
-\begin{theorem}[Planar Vanishing]
+The main argument can now be read as a single spine:
+\[
+  \begin{gathered}
+    \operatorname{Sep}_2(F)
+    \Longleftrightarrow
+    \operatorname{Cov}_2(F)
+    \Longleftrightarrow
+    \Ram^{(1)}(Z/Y)=\varnothing,\\
+    \Ram^{(1)}(Z/Y)=\varnothing
+    \Longrightarrow
+    Z/Y\text{ finite \'etale}
+    \Longrightarrow
+    N=L=K,\\
+    N=L=K
+    \Longrightarrow
+    F\in\Aut_{\mathrm{poly}}(\A^2_{\C})
+    \Longleftrightarrow
+    I_R=I_\Delta.
+  \end{gathered}
+\]
+The next theorem records the remaining named objects as equivalent
+translations of this spine.
+
+\begin{theorem}[Equivalent boundary criteria for planar vanishing]
 \label{thm:planar-vanishing}
 For every polynomial map
 \(F=(P,Q)\colon\A^2_{\C}\to\A^2_{\C}\) satisfying
-\(\det JF=c\in\C^\times\),
+\(\det JF=c\in\C^\times\), the following conditions are equivalent:
 \[
-  \mathcal H(\mathcal D_F)=\varnothing
-  \quad\Longrightarrow\quad
+  \begin{aligned}
+    \operatorname{PBC}(F)
+    &\quad\Longleftrightarrow\quad \operatorname{PRR}(F)
+     \quad\Longleftrightarrow\quad \operatorname{Sep}_2(F)
+     \quad\Longleftrightarrow\quad \operatorname{Cov}_2(F)\\
+    &\quad\Longleftrightarrow\quad \mathcal H(\mathcal D_F)=\varnothing
+     \quad\Longleftrightarrow\quad \Ram^{(1)}(Z/Y)=\varnothing,
+  \end{aligned}
+\]
+and
+\[
   \begin{gathered}
-    I_R=I_\Delta,
-    \qquad
+    \Ram^{(1)}(Z/Y)=\varnothing
+    \quad\Longleftrightarrow\quad
+    d_F=1
+    \quad\Longleftrightarrow\quad
     \Obs(F)=0,\\
-    q_F=0,
-    \qquad
-    R_F^\circ=\varnothing.
+    \Obs(F)=0
+    \quad\Longleftrightarrow\quad
+    q_F=0
+    \quad\Longleftrightarrow\quad
+    R_F^\circ=\varnothing
+    \quad\Longleftrightarrow\quad
+    I_R=I_\Delta.
   \end{gathered}
 \]
 \end{theorem}
 
 \begin{proof}
-Corollary~\ref{cor:planar-codimension-one-unramified} gives
-\(\Ram^{(1)}(Z/Y)=\varnothing\), and
-Corollary~\ref{cor:planar-normal-closure-trivial} gives \(L=K\).
-Proposition~\ref{prop:planar-keller-local-geometry} gives that \(A\) is
-flat over \(B\).  Corollary~\ref{cor:generic-degree-one-descent} states
-\[
-  L=K,
-  \qquad
-  A\text{ flat over }B
-  \quad\Longrightarrow\quad
-  \Obs(F)=0,
-\]
-so \(\Obs(F)=0\).
+Proposition~\ref{prop:planar-boundary-coherence-route} shows that
+\(\operatorname{PBC}(F)\) implies that \(F\) is an automorphism.  Then
+\(B=A\), \(K=L=N\), \(\partial X=\varnothing\), and
+\(\Omega_{A_N/B}=0\), so \(\operatorname{PRR}(F)\) holds.  Conversely,
+the argument below shows that \(\operatorname{PRR}(F)\) implies
+automorphy; for an automorphism \(\partial X=\varnothing\), and hence
+\(H^1_{\partial X}(\overline X,\mathcal O_{\overline X})=0\).  Thus
+\(\operatorname{PBC}(F)\) holds as well.
+
+Proposition~\ref{prop:planar-ramification-rigidity-dictionary} identifies
+\(\operatorname{PRR}(F)\) and \(\operatorname{Sep}_2(F)\) with the absence
+of divisorial ramification.
+Proposition~\ref{prop:coverage-eliminates-ramified-divisor} shows directly
+that \(\operatorname{Cov}_2(F)\) implies
+\(\Ram^{(1)}(Z/Y)=\varnothing\); conversely, if the ramification locus is
+empty, coverage holds vacuously.  Corollary
+\ref{cor:planar-codimension-one-unramified} identifies these conditions with
+\(\mathcal H(\mathcal D_F)=\varnothing\).
+
+Under these conditions, Corollary
+\ref{cor:planar-normal-closure-trivial} gives \(N=L=K\), hence \(d_F=1\),
+while Proposition
+\ref{prop:planar-keller-local-geometry} makes \(A\) flat over \(B\).
+Corollary~\ref{cor:generic-degree-one-descent} therefore gives
+\(\Obs(F)=0\).  Conversely, if \(d_F=1\), then \(L=K\); flatness and
+Corollary~\ref{cor:generic-degree-one-descent} again give \(\Obs(F)=0\).
+If \(\Obs(F)=0\), then \(I_R=I_\Delta\), so
+Theorem~\ref{thm:automorphism-criterion} makes \(F\) a polynomial
+automorphism.  Hence \(B=A\), \(K=L=N\), and
+\(\Ram^{(1)}(Z/Y)=\varnothing\).
 
 Corollary~\ref{cor:off-diagonal-empty-criterion} and
 Theorem~\ref{thm:abstract-off-diagonal-projector} state
@@ -1601,38 +2640,396 @@ Theorem~\ref{thm:abstract-off-diagonal-projector} state
     q_F=0.
   \end{gathered}
 \]
-All four conclusions follow.
+This proves the remaining equivalences.
 \end{proof}
 
-\begin{corollary}[Conditional Jacobian conjecture in dimension two]
-\label{cor:conditional-jc2}
-If \(\mathcal H(\mathcal D_F)=\varnothing\) for every planar Keller map
-\(F\), then every planar Keller map is a polynomial automorphism.
-Equivalently, the two-dimensional Jacobian conjecture holds.
+\begin{corollary}[Boundary witness for failure of coverage]
+\label{cor:planar-boundary-witness}
+The equivalent conditions of Theorem
+\ref{thm:planar-vanishing} fail if and only if there is an
+\(E\in\Ram^{(1)}(Z/Y)\) such that
+\[
+  \forall g\in G,\qquad
+  [I_E:I_E\cap gHg^{-1}]>1
+  \quad\Longrightarrow\quad
+  \min\{w_E(g(x_1)),w_E(g(x_2))\}<0.
+\]
+For such an \(E\), at least one inertia-moving \(g\) exists.  Thus failure of
+planar collision vanishing is witnessed by a ramified divisor whose
+inertia-moving conjugate centers all lie on the deleted boundary.  By
+Theorem~\ref{thm:planar-galois-rigidity} and Corollary
+\ref{cor:quadratic-planar-rigidity}, its marked extension \(L/K\) is
+nonnormal and its generic degree satisfies \(d_F\geq3\).
 \end{corollary}
 
 \begin{proof}
-The automorphism criterion, Theorem~\ref{thm:automorphism-criterion},
-states that every polynomial self-map of \(\A^2_{\C}\) satisfies
-\[
-  I_R=I_\Delta
-  \quad\Longleftrightarrow\quad
-  F\text{ is a polynomial automorphism}.
-\]
-Planar Vanishing supplies the left-hand side for every planar Keller
-map under the stated condition.
+If the equivalent conditions fail, then conjugate coverage fails.  Negating
+Definition~\ref{def:planar-conjugate-coverage} supplies an
+\(E\in\Ram^{(1)}(Z/Y)\) for which every \(g\) of nontrivial relative index
+fails at least one valuation inequality, giving the displayed condition.
+Conversely, the displayed condition is incompatible with a coverage witness
+for \(E\), so conjugate coverage fails.  Core-freeness guarantees the
+existence of at least one \(g\) of nontrivial relative index.
 \end{proof}
 
+\begin{corollary}[Exact boundary forms of the planar Jacobian conjecture]
+\label{cor:planar-jc2-boundary-forms}
+The following universal statements are equivalent:
+\begin{enumerate}
+  \item The classical complex two-dimensional Jacobian conjecture holds:
+  every polynomial self-map of \(\A^2_{\C}\) with constant nonzero
+  Jacobian determinant is a polynomial automorphism.
+  \item Every planar Keller map satisfies \(\operatorname{PBC}(F)\).
+  \item Every planar Keller map satisfies \(\operatorname{PRR}(F)\).
+  \item Every planar Keller map satisfies \(\operatorname{Sep}_2(F)\).
+  \item Every planar Keller map satisfies \(\operatorname{Cov}_2(F)\).
+\end{enumerate}
+Equivalently, condition \textup{(4)} says that for every planar Keller map
+and every prime-order subgroup \(C\leq\operatorname{Gal}(N/K)\),
+  \[
+    \operatorname{codim}_Z
+    V\!\left(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\right)
+    \geq2.
+  \]
+\end{corollary}
+
+\begin{proof}
+If \(JC(2)\) holds, every planar Keller map is an automorphism.  Then
+\(B=A\), \(K=L=N\), \(\overline X=X\), and \(\partial X=\varnothing\),
+so both \(H^1_{\partial X}(\overline X,\mathcal O_{\overline X})\) and
+\(\Omega_{A_N/B}\) vanish.  Thus \textup{(1)} implies
+\textup{(2)} and \textup{(3)}.  Conversely, Proposition
+\ref{prop:planar-boundary-coherence-route} shows that \textup{(2)} implies
+\textup{(1)}.  Theorem~\ref{thm:planar-vanishing} identifies, for every
+planar Keller map,
+\[
+  \operatorname{PRR}(F)
+  \Longleftrightarrow
+  \operatorname{Sep}_2(F)
+  \Longleftrightarrow
+  \operatorname{Cov}_2(F)
+  \Longleftrightarrow
+  \Obs(F)=0.
+\]
+Corollary~\ref{cor:jacobian-conjecture-as-vanishing} identifies universal
+obstruction vanishing with classical \(JC(2)\), proving the remaining
+equivalences.  The prime-order ideal formulation is
+Proposition~\ref{prop:boundary-separation-divisorial-criterion}.
+\end{proof}
+
+The planar section therefore gives an exact codimension-one reformulation.
+Here ``divisorially coprime'' means that
+\(\mathfrak a_C\) and \(\mathfrak j_C^{\mathrm{mov}}\) are contained in no
+common height-one prime; it does not mean that their sum is the unit ideal.
+Because \(Z\) is an integral surface, the relevant locus has only two
+possibilities: it has a codimension-one component, which is precisely the
+bad ramified-divisor case, or it has codimension at least two, in which case
+only isolated closed points may remain (or the locus is empty).  There is no
+nonempty codimension-three case on \(Z\), and purity is why these possible
+codimension-two points need not be eliminated separately.
+
+In the good case, conjugate coverage excludes complete boundary-supported
+inertia orbits and the collision relation collapses to the diagonal.  In
+the bad case, Corollary~\ref{cor:planar-boundary-witness} produces exactly
+such a divisorial boundary witness.  PlanarBoundaryCoherence records the
+equivalent global-boundary formulation that removes the entire normalization
+boundary at once.
+
+\subsection{Research mechanisms and status}
+
+The preceding equivalence theorem is the completed logical dictionary.  The
+following mechanisms ask how its divisorial premise might be established
+from the special polynomial-plane data; they are not additional steps in the
+endgame.
+
+For a normal Noetherian surface \(W=\Spec R\) with dense open
+\(U=W\setminus V(\mathfrak j)\), define its boundary principal-parts module
+by
+\[
+  \mathcal P_{\mathfrak j}(R):=H^1_{\mathfrak j}(R).
+\]
+The open-complement sequence identifies it with rational functions regular
+on \(U\) modulo those extending to \(W\).  At a height-one prime,
+\[
+  \mathcal P_{\mathfrak j}(R)_{\mathfrak p}
+  \cong
+  \begin{cases}
+    0,&\mathfrak j\nsubseteq\mathfrak p,\\[2pt]
+    \Frac(R_{\mathfrak p})/R_{\mathfrak p},
+      &\mathfrak j\subseteq\mathfrak p.
+  \end{cases}
+\]
+Indeed, localization reduces to the one-element \v{C}ech complex of the DVR
+\(R_{\mathfrak p}\).  For a nontrivial \(I\leq G\), put
+\[
+  \mathcal P_I^{\mathrm{mov}}
+  :=H^1_{\mathfrak j_I^{\mathrm{mov}}}(A_N),
+  \qquad
+  \mathcal P_I^{\mathrm{ram}}
+  :=H^0_{\mathfrak d_N}(\mathcal P_I^{\mathrm{mov}}),
+  \qquad
+  \mathfrak d_N:=\mathfrak D_{A_N/B}.
+\]
+Successive supports give
+\[
+  \mathcal P_I^{\mathrm{ram}}
+  \cong
+  H^1_{\mathfrak d_N+\mathfrak j_I^{\mathrm{mov}}}(A_N).
+\]
+If \(E\) is a hidden ramified divisor with \(I=I_E\), then the pulled-back
+boundary dictionary and the DVR calculation give
+\[
+  (\mathcal P_I^{\mathrm{ram}})_{\mathfrak p_E}
+  \cong
+  \Frac((A_N)_{\mathfrak p_E})/(A_N)_{\mathfrak p_E},
+\]
+whose pole orders are unbounded; hence
+\(\mathcal P_I^{\mathrm{ram}}\) is not finite.  This is the nonfiniteness
+half of a prospective contradiction.
+
+There is nevertheless a canonical finite bounded-pole lattice.  Write
+\[
+  T^\dagger
+  :=\{z\in N:\operatorname{Tr}_{N/K}(zT)\subseteq B\}
+  \cong \operatorname{Hom}_B(T,B),
+  \qquad T:=A_N.
+\]
+Finite flatness makes \(T^\dagger\) a finite \(B\)-module, and integrality of
+traces gives \(T\subseteq T^\dagger\).  Consequently
+\[
+  Q_{\mathrm{tr}}:=T^\dagger/T
+\]
+is finite.  At a height-one tame DVR with uniformizer \(\pi_E\) and
+ramification index \(e_E\), it is the bounded codifferent stage
+\[
+  (Q_{\mathrm{tr}})_{\mathfrak p_E}
+  \cong
+  \pi_E^{-(e_E-1)}T_{\mathfrak p_E}/T_{\mathfrak p_E}.
+\]
+Here ``codifferent'' means the trace-dual lattice.  Its inverse agrees with
+the K\"ahler different after height-one localization; no global invertibility
+or global identification with \(\operatorname{Fitt}_0\Omega_{T/B}\) is used
+\cite{StacksDedekindDifferent,StacksFiniteFlatDifferent}.
+
+The natural inclusion runs from this bounded stage into principal parts,
+not in the reverse direction:
+\[
+  (Q_{\mathrm{tr}})_{\mathfrak p_E}
+  \lhook\joinrel\longrightarrow
+  \Frac(T_{\mathfrak p_E})/T_{\mathfrak p_E}.
+\]
+Indeed, every \(T_{\mathfrak p_E}\)-linear map from the divisible module
+\(\Frac(T_{\mathfrak p_E})/T_{\mathfrak p_E}\) to a finite
+\(T_{\mathfrak p_E}\)-module is zero.  Thus finite flatness does not supply
+an injection of the entire ramification-supported principal-parts module into
+\(Q_{\mathrm{tr}}\); such an injection would already exclude a hidden
+ramified divisor.
+
+This bounded stage nevertheless gives a canonical comparison construction.
+View \(Q_{\mathrm{tr}}\) as a submodule of the rational principal-parts
+module \(N/T\), and view \(\mathcal P_I^{\mathrm{ram}}\) inside \(N/T\) via
+the open-complement description.  Define the trace-comparison ideal
+\[
+  \mathfrak c_I^{\mathrm{tr}}
+  :=
+  \{s\in T:s\mathcal P_I^{\mathrm{ram}}\subseteq Q_{\mathrm{tr}}\}.
+\]
+It is important to impose this condition only on the
+ramification-supported classes.  Imposing it on the whole ring
+\(\Gamma(U_I^{\mathrm{mov}},\mathcal O_Z)\) would also detect unrelated
+unramified boundary divisors and can force the ideal to be zero for reasons
+stronger than the hidden-inertia problem.
+
+Multiplication defines a canonical map
+\[
+  \Phi_I:\mathcal P_I^{\mathrm{ram}}
+  \longrightarrow
+  \operatorname{Hom}_T
+    (\mathfrak c_I^{\mathrm{tr}},Q_{\mathrm{tr}}),
+  \qquad
+  \Phi_I(\xi)(s)=s\xi.
+\]
+The target is finite: \(T\) is Noetherian, so
+\(\mathfrak c_I^{\mathrm{tr}}\) is finite, and both
+\(Q_{\mathrm{tr}}\) and the displayed Hom module are finite.  If \(E\) is
+hidden with \(I_E=I\) and
+\(\mathfrak c_I^{\mathrm{tr}}\nsubseteq\mathfrak p_E\), then some comparison
+multiplier is a unit after localizing at \(E\), so
+\((\Phi_I)_{\mathfrak p_E}\) is injective.  This would inject
+\(\Frac(T_{\mathfrak p_E})/T_{\mathfrak p_E}\) into a finite module, a
+contradiction.  The remaining geometric problem is therefore the precise
+height-one detection assertion
+\[
+  E\text{ hidden with }I_E=I
+  \quad\Longrightarrow\quad
+  \mathfrak c_I^{\mathrm{tr}}\nsubseteq\mathfrak p_E.
+\]
+Equivalently, one may construct a finitely generated secant/frame ideal
+\(\mathfrak s_I^{\mathrm{sec}}\subseteq\mathfrak c_I^{\mathrm{tr}}\) that is
+not contained in any such \(\mathfrak p_E\).
+
+The fact that \(A_N\) or a boundary quotient is
+finite over its base does not give the opposite conclusion.  For example,
+let
+\[
+  B_0=\C[a,t]\subseteq R=\C[s,t],
+  \qquad a=s^e.
+\]
+Then \(R\) is finite free over \(B_0\), and the boundary curve
+\(R/(s)\cong B_0/(a)\) is finite over its image, whereas
+\[
+  H^1_{(s)}(R)=R_s/R=\bigcup_{m\geq1}s^{-m}R/R
+\]
+is not finitely generated.  What is missing is a uniform transverse pole
+bound.  The precise target is a Keller-specific theorem showing that the
+relevant boundary classes lie in one fixed codifferent stage
+\(\mathfrak d^{-m}/T\), or equivalently that they admit a uniform
+different-power annihilator; neither assertion follows from finite flatness
+and neither is constructed here.  More explicitly, if some power of
+\(\mathfrak d_N+\mathfrak j_I^{\mathrm{mov}}\) uniformly annihilated the
+displayed local-cohomology module for every relevant \(I\), local-cohomology
+finiteness and the DVR detector would force its vanishing and hence coverage
+\cite{StacksLocalCohomology,StacksLocalCohomologyFiniteness}.  Likewise, the
+secant determinant detects marked versus moving generic sheets, but it
+vanishes on a moving sheet and by itself gives no nonzero parameter that
+bounds boundary poles.
+
+The inverse-Jacobian frame supplies plausible input for this last detection
+problem.  Writing \(c=\det JF\), the polynomial derivations
+\[
+  \partial_P=c^{-1}
+    \left(Q_{x_2}\frac{\partial}{\partial x_1}
+          -Q_{x_1}\frac{\partial}{\partial x_2}\right),
+  \qquad
+  \partial_Q=c^{-1}
+    \left(-P_{x_2}\frac{\partial}{\partial x_1}
+          +P_{x_1}\frac{\partial}{\partial x_2}\right)
+\]
+restrict to the coordinate derivations on \(K=\C(P,Q)\).  Their unique
+extensions to the finite separable normal closure commute with \(G\), hence
+preserve every conjugate affine ring \(gA\).  In the tame height-one model
+\(u=t^e\), differentiating gives
+\(\partial t/\partial u=(e t^{e-1})^{-1}\), the expected
+inverse-different denominator.  A prospective secant--trace landing theorem would use
+the evaluated full secant matrix or its adjugate, together with this frame,
+to produce \(\mathfrak s_I^{\mathrm{sec}}\).  Neither trace landing nor
+height-one detection is asserted here.
+
+For clarity, the logical status of the constructions used above is:
+
+\begin{center}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{0.245\textwidth}
+  >{\raggedright\arraybackslash}p{0.285\textwidth}
+  >{\raggedright\arraybackslash}p{0.35\textwidth}}
+\toprule
+Construction & Role & Status \\
+\midrule
+\(\operatorname{Sep}_2\), \(\operatorname{Cov}_2\), and
+\(\operatorname{PRR}\) & Ideal, valuation, and differential descriptions
+of absence of divisorial ramification & Equivalent for each planar Keller
+map; universal validity is equivalent to \(JC(2)\) \\
+\(\operatorname{PBC}\) & Global boundary/properness description &
+Equivalent to automorphy for each map; not known universally \\
+Torsion of \([R_{\bar\nu}]\) & Sufficient divisor-class mechanism &
+Established for normal/Galois \(L/K\), hence for generic degree two \\
+Finiteness or uniform annihilation of \(\mathcal P_I^{\mathrm{ram}}\) &
+Sufficient principal-parts mechanism & Hidden inertia gives the opposite
+nonfiniteness; finite control is not derived from the Keller data \\
+Secant--trace/codifferent boundedness & Possible source of a fixed bounded
+pole stage & The trace dual supplies the stage; no secant/frame theorem forces
+the relevant classes into it \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Thus the purity argument is the unique endgame.  The divisor-class and
+principal-parts constructions are possible ways of establishing its
+height-one premise, not parallel conclusions that the reader must combine.
+
 \begin{leanfiles}
-The conditional planar chain is collected in
+The formal planar implication chains are collected in
 \leanpath{CollisionIdeals/Planar.lean}.  The development takes the
 following established results as explicit inputs: planar
 Ax--Grothendieck, branch purity, and finite-\'etale rigidity of
 \(\A^2_{\C}\).  It also takes a supplied
-\leanpath{PlanarKellerCollisionModel F} and the no-hidden-inertia
-hypothesis; constructing the model and proving that hypothesis remain
-separate formalization tasks.
+\leanpath{PlanarKellerCollisionModel F}.  The positive
+\leanpath{PlanarHiddenInertia} predicate and the implication from
+\leanpath{PlanarConjugateCoverage} to
+\leanpath{PlanarNoHiddenInertia} are formalized; constructing the model and
+proving coverage remain separate formalization tasks.  The fixed-locus
+ideal \leanpath{fixedLocusIdeal}, the moving-boundary sum
+\leanpath{movingBoundaryIdeal}, and the height-one condition
+\leanpath{BoundaryIdealData.PlanarBoundarySeparation} are formalized in
+\leanpath{CollisionIdeals/Planar/BoundarySeparation.lean}.  The Lean
+predicate quantifies over all nontrivial subgroups; the
+manuscript's prime-order formulation is its equivalent Cauchy reduction.
+The theorem
+\leanpath{BoundaryIdealData.ramifiedCodimensionOnePoint_isEmpty} connects
+that condition to the existing no-ramification endgame.  The pulled-back
+open \leanpath{pulledBackConjugateAffineOpen}, its closed complement
+\leanpath{pulledBackConjugateBoundary}, and its vanishing ideal
+\leanpath{pulledBackConjugateBoundaryIdeal} are constructed canonically;
+\leanpath{pulledBackConjugateBoundaryIdeal_le_ramifiedPrime} formalizes the
+valuation-theoretic containment at a ramified divisor.  The exact pointwise
+coverage assertion and the universal claims
+\(\operatorname{PBC}(F)\) or \(\operatorname{PRR}(F)\) remain hypotheses at
+the present Lean boundary, not conclusions of the formalization.  The local-cohomology
+target is connected to the downstream endgame by the
+explicit input \leanpath{BoundaryCoherenceBridge} and theorem
+\leanpath{planarVanishing_of_boundaryCoherence}; the bridge itself is not
+proved.  Likewise, \leanpath{RamificationRigidityBridge} isolates the
+unformalized finite-length support step in the divisorial route.  The stable
+local-cohomology object \leanpath{BoundaryPrincipalParts} is defined in
+\leanpath{CollisionIdeals/BoundaryPrincipalParts.lean}.  The
+ramification-supported objects
+\leanpath{RamificationSupportedBoundaryPrincipalParts} and
+\leanpath{HasUniformBoundaryAnnihilator} are kept in the prospective module
+\leanpath{CollisionIdeals/Planar/PrincipalPartsStrategy.lean}.  The abstract
+nonfiniteness mechanism for unbounded locally power-torsion principal parts
+is proved in
+\leanpath{CollisionIdeals/Planar/UnboundedPrincipalParts.lean}; finite
+comparison control and the resulting direct contradiction are formalized in
+\leanpath{CollisionIdeals/Planar/FinitePrincipalPartsControl.lean}.  The
+evaluation of the planar secant relation on an arbitrary pair of collision
+sheets, including its vanishing when a coordinate is moved, is formalized in
+\leanpath{CollisionIdeals/Planar/ConjugateSecantEvaluation.lean}.  The
+prospective modules are collected under the opt-in umbrella
+\leanpath{CollisionIdeals/Planar/Research.lean}, rather than the stable
+\leanpath{CollisionIdeals/Planar.lean} import spine.  The
+geometric comparison with sections on an open complement, the height-one DVR
+detector, the boundary-coherence implication, the finite-length
+differentials criterion, the trace-dual bounded stage, and the construction
+of a uniform codifferent bound from the planar Keller data remain separate
+formalization tasks.  The properness and
+divisor-class criteria above are likewise not presently part of the Lean
+development.
 \end{leanfiles}
+
+\begin{remark}[Exact remaining content of classical \(JC(2)\)]
+\label{rem:exact-remaining-jc2}
+The traditional complex conjecture \(JC(2)\) has no boundary, coverage, or
+module-finiteness condition in its definition: it asserts simply that every
+planar Keller map is a polynomial automorphism.  Corollary
+\ref{cor:planar-jc2-boundary-forms} proves that its universal content is
+equivalent to the boundary formulations above.  Theorem
+\ref{thm:planar-galois-rigidity} settles every normal marked extension, and
+Corollary~\ref{cor:quadratic-planar-rigidity} settles generic degree at most
+two.  Consequently, to prove \(JC(2)\) it remains to show that every planar
+Keller map with \(L/K\) nonnormal and \(d_F\geq3\) satisfies
+\[
+  \begin{gathered}
+    \operatorname{codim}_Z
+    V\!\left(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\right)\geq2
+    \quad\text{for every prime-order }C\leq\Gal(N/K).
+  \end{gathered}
+\]
+Equivalently, one must exclude a common height-one fixed--moving boundary
+component in the normal closure of every remaining nonnormal extension.
+This is an exact
+reformulation of the unresolved part of \(JC(2)\), not an additional
+hypothesis silently built into the classical conjecture.
+\end{remark}
 
 \section{\texorpdfstring{The cubic \(S_3\) obstruction in dimension three}
   {The cubic S3 obstruction in dimension three}}
@@ -1997,36 +3394,13 @@ by Theorem~\ref{thm:index-three-core-free-s3}.
 \begin{corollary}[Hidden inertia in the \(S_3\)-normalization]
 \label{cor:cubic-hidden-inertia}
 \[
-  \Ram^{(1)}(Z/Y)\subseteq\mathcal H(\mathcal D).
+  \mathcal H(\mathcal D)=\Ram^{(1)}(Z/Y).
 \]
 \end{corollary}
 
 \begin{proof}
-Fix
-\[
-  E\in\Ram^{(1)}(Z/Y).
-\]
-By the characteristic-zero description of divisorial ramification,
-\(I_E\neq1\).  Because \(N\) is the normal closure of \(L/K\),
-\(\core_G(H)=1\).  Proposition~\ref{prop:core-free-sheet-action}
-states in this case that
-\[
-  \exists\omega\in\mathcal Q_E,
-  \qquad
-  i_E(\omega)>1.
-\]
-Moreover, Proposition~\ref{prop:visibility-to-boundary}, applied to the
-\'etale map \(f_F\), states that for every
-\(\omega'\in\mathcal Q_E\),
-\[
-  i_E(\omega')>1
-  \quad\Longrightarrow\quad
-  \operatorname{cent}(E,\omega')\in\partial X.
-\]
-These are exactly the existence and boundary conditions in
-Definition~\ref{def:no-hidden-inertia}; hence
-\(E\in\mathcal H(\mathcal D)\).  Since \(E\) was arbitrary, the stated
-inclusion follows.
+Apply Proposition~\ref{prop:etale-sheet-hidden-inertia} to the displayed
+normalization diagram.
 \end{proof}
 
 \begin{remark}[Ordered roots]
@@ -2061,27 +3435,68 @@ derives them here from nonnormality.  Hidden inertia is formalized
 pointwise at a supplied ramified divisor.
 \end{leanfiles}
 
+\begin{remark}[Exact relation with classical complex \(JC(3)\)]
+\label{rem:exact-relation-jc3}
+The traditional complex three-dimensional Jacobian conjecture asserts that
+every polynomial map
+\[
+  F\colon\A^3_{\C}\longrightarrow\A^3_{\C},
+  \qquad
+  \det JF\in\C^\times,
+\]
+is a polynomial automorphism; equivalently, every such map satisfies
+\(\Obs(F)=0\).  Corollary~\ref{cor:cubic-s3-collision} proves the following
+implication under a prescribed function-field hypothesis:
+\[
+  \begin{gathered}
+    \det JF\in\C^\times,\qquad [L:K]=3,\qquad
+    L/K\text{ nonnormal}\\
+    \Longrightarrow\quad \Obs(F)\neq0
+    \quad\Longrightarrow\quad
+    F\text{ is a counterexample to }JC(3).
+  \end{gathered}
+\]
+Consequently, the existence of one such Keller map would disprove
+\(JC(3)\), while \(JC(3)\) implies that no such map exists.  This section
+does not construct such a map, and it does not assert that every possible
+counterexample to \(JC(3)\) has generic degree three.  It identifies the
+generic collision geometry of this cubic nonnormal subclass.
+\end{remark}
+
 \section{Conclusion}
 \label{sec:conclusion}
 
 The obstruction ideal \(\Obs(F)\) vanishes exactly when the
 scheme-theoretic collision relation \(X\times_YX\) equals the diagonal.
-In dimension two,
-\(\mathcal H(\mathcal D_F)=\varnothing\) implies \(\Obs(F)=0\); in the
-cubic dimension-three class, its nonzero generic factor is the
-ordered-root \(S_3\)-normal closure.  Both statements arise from the same
-collision, off-diagonal, and conjugate-sheet constructions.
+In dimension two there is one endgame with several exact formulations.
+PlanarBoundaryCoherence expresses it through disappearance of the whole
+deleted boundary.  PlanarRamificationRigidity, moving-sheet coverage, and
+boundary separation express its height-one premise in differential,
+valuation-theoretic, and finite-group language.  Only after that premise is
+established do purity
+and finite-\'etale rigidity make the normal closure trivial and force
+\(\Obs(F)=0\).  The image of the deleted boundary is exactly the
+nonproperness set, and the boundary divisor-class argument proves the
+normal/Galois case unconditionally.  Universal validity of the equivalent
+planar criteria is exactly \(JC(2)\), not a result asserted here.  In
+the cubic dimension-three class, by contrast, the nonzero generic factor is
+the ordered-root \(S_3\)-normal closure.
+Both statements arise from the same collision, off-diagonal, and
+conjugate-sheet constructions; their point is to locate the obstruction,
+respectively, at the normalization boundary and on the generic
+off-diagonal sheet.
 
-Under the respective conditions of Sections~\ref{sec:planar-vanishing}
-and~\ref{sec:cubic-s3-obstruction}, and with
+Under PlanarBoundaryCoherence or PlanarRamificationRigidity in dimension
+two, under the conditions of Section~\ref{sec:cubic-s3-obstruction} in
+dimension three, and with
 \(\Ram^{(1)}(Z/Y)\neq\varnothing\) in the cubic normalization, the
 contrast is
 \[
   \begin{array}{c@{\qquad}|@{\qquad}c}
     \hline
-    \text{\rm dimension two}
-      & \text{\rm dimension three}\\ \hline
-    \text{\rm hidden inertia excluded}
+    \text{\rm planar rigidity criteria}
+      & \text{\rm nonnormal cubic class in dimension three}\\ \hline
+    \operatorname{PBC}(F)\text{\rm\ or }\operatorname{PRR}(F)
       & \text{\rm hidden inertia in the \(S_3\)-cover realized}\\
     \Obs(F)=0 & \Obs(F)\neq0\\
     I_R=I_\Delta & I_R\subsetneq I_\Delta\\

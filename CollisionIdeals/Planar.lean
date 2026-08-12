@@ -1,2 +1,4 @@
+import CollisionIdeals.Planar.BoundarySeparation
+import CollisionIdeals.Planar.RigidityTargets
 import CollisionIdeals.Planar.Conclusion
 import CollisionIdeals.Planar.JacobianConjecture

@@ -127,7 +127,9 @@ Geometrically, if $A_F=S/I_R(F)$, then
 \mathbb A^n\times_{\mathbb A^n}\mathbb A^n
 ```
 
-parametrizes ordered pairs with the same image under $F$.  The closed
+represents the functor of ordered pairs of points over a test scheme with
+the same image under $F$; in particular, its complex points are the usual
+ordered pairs with equal image.  The closed
 subscheme cut out by $\mathrm{Obs}(F)$, regarded as an ideal of
 $A_F$, is the diagonal.  Thus $\mathrm{Obs}(F)=0$ says that the
 self-fiber product is scheme-theoretically only the diagonal.
@@ -158,8 +160,8 @@ Consequently there is a canonical equivalence
 S/I_R(F)\cong A\otimes_BA.
 ```
 
-This universal construction does not assert vanishing.  The planar target
-asks for the off-diagonal factor to vanish.  Under the explicit separable
+This universal construction does not assert vanishing.  The planar question
+asks whether the off-diagonal factor vanishes.  Under the explicit separable
 cubic normal-closure conditions formalized here, the generic collision
 algebra decomposes as $L\otimes_KL\simeq L\times N$, and the same residual
 field satisfies $\mathrm{Gal}(N/K)\simeq S_3$.  No concrete
@@ -173,14 +175,23 @@ At a glance, it includes:
 
 - the dimension-generic collision quotient, obstruction ideal, fiber-product
   interpretation, and automorphism criterion;
-- the planar secant and normalization constructions, together with the
-  conditional route from no hidden inertia to obstruction vanishing;
+- the planar secant and normalization constructions;
+- the canonical conjugate affine opens on the Galois normalization, their
+  pulled-back boundary ideals and moving-boundary sums, and the
+  valuation-theoretic containment of every inertia-moving boundary ideal in
+  the ramified height-one prime;
+- the formal implications from supplied moving-sheet coverage, boundary
+  separation, no hidden inertia, or `PlanarRamificationRigidity` together
+  with its explicit support bridge, to obstruction vanishing;
 - the off-diagonal decomposition and obstruction in the separable cubic
   $S_3$ case in dimension three.
 
-The planar conclusion remains conditional on `PlanarNoHiddenInertia`, and
-the cubic development does not assert a concrete three-dimensional Keller
-counterexample.
+Universal `PlanarBoundaryCoherence` and `PlanarRamificationRigidity` are not
+proved.  Their current Lean routes use the explicit
+`BoundaryCoherenceBridge` and `RamificationRigidityBridge`; moving-sheet
+coverage, boundary separation, and the older no-hidden-inertia interface are
+likewise explicit hypotheses.  The formal cubic theorem does not instantiate
+its hypotheses with a concrete three-dimensional Keller map.
 
 <details>
 <summary>Detailed theorem inventory</summary>
@@ -229,11 +240,20 @@ The current development is dimension-generic and proves:
 - a separate supplied realization identifying its group-theoretic index
   with the geometric ramification index
   $[I_E:I_E\cap gHg^{-1}]$;
+- the canonical pulled-back conjugate affine opens, closed boundaries,
+  vanishing ideals, and moving-boundary ideals on the common Galois
+  normalization, with right-$H$ invariance;
+- the valuation-theoretic containment of every inertia-moving pulled-back
+  boundary ideal in the ramified center prime, and direct implications from
+  `PlanarMovingSheetCoverage` or `PlanarBoundarySeparation` to no
+  codimension-one ramification;
 - from the supplied Keller-to-étale bridge and ramification realization,
   the theorem placing every positive-index conjugate center in the deleted
   boundary, kept separate from `PlanarNoHiddenInertia`;
-- the conditional composition from no hidden inertia through branch
-  purity and finite-étale rigidity to `PlanarVanishing`;
+- the conditional compositions from no codimension-one ramification---
+  including the explicit `PlanarRamificationRigidity`/
+  `RamificationRigidityBridge` route---through branch purity and
+  finite-étale rigidity to `PlanarVanishing`;
 - the dimension-generic function-field bridge
   $K\otimes_B(S/I_R)\simeq L\otimes_KL$, under the explicit
   generic-source surjectivity condition;
@@ -274,22 +294,17 @@ lake build
 
 ## Planar dependency spine
 
-The planar development has one preferred route.  Its map-specific package is
-
-```text
-PlanarKellerCollisionModel F
-```
-
-and its global geometric condition is supplied separately as
-
-```text
-PlanarNoHiddenInertia M.diagram
-```
-
-This separation is intentional.  Once the model supplies the
-Keller-to-étale bridge and the ramification realization, its Keller
-certificate forces ramified centers into the boundary.  It does not prove
-that the boundary cannot support such ramification.
+The paper has one divisorial endgame with several exact formulations.
+`PlanarRamificationRigidity`, moving-sheet coverage, and boundary separation
+are respectively differential, valuation-theoretic, and ideal-theoretic
+descriptions of its codimension-one premise.  After that premise is supplied,
+purity and finite-étale rigidity give $N=K$, followed by $L=K$, $q_F=0$,
+and $I_R(F)=I_\Delta$.  `PlanarBoundaryCoherence` is the equivalent global
+boundary/properness formulation.  In Lean, `RamificationRigidityBridge` and
+`BoundaryCoherenceBridge` still expose the corresponding unformalized
+geometric implications.  These additional finiteness conditions do not
+follow from the fact that the normalization rings are already finite over
+the polynomial image ring.
 
 The canonical modules are:
 
@@ -302,19 +317,28 @@ The canonical modules are:
 | planar notation | `Planar.Normalization` | thin $n=2,\ k=\mathbb C$ specialization |
 | inertia | `ValuationInertia` | dimension-independent divisorial valuations and inertia kernels |
 | conjugate sheets | `DecompositionSheets` | dimension-independent $D_E\backslash G/H$ classes and sheet index |
-| geometric centers | `PolynomialNormalizationDiagram`, `Planar.NormalizationDiagram` | shared centers/boundary predicates and the planar no-hidden-inertia target |
+| geometric centers | `PolynomialNormalizationDiagram`, `Planar.NormalizationDiagram` | shared centers and the legacy no-hidden-inertia interface |
 | ramification realization | `VisibleRamification` | dimension-independent identification of sheet and geometric ramification indices |
+| finiteness criteria | `BoundaryPrincipalParts`, `Planar.RigidityTargets` | global boundary coherence, divisorial ramification rigidity, and the explicit support bridge |
+| canonical boundary API | `Planar.BoundarySeparation` | pulled-back conjugate boundaries and ideals, valuation containment, moving-sheet coverage, and boundary separation |
 | Keller local geometry | `KellerGeometry` | dimension-generic Keller-to-étale and Keller-to-flat bridges |
 | Keller collision model | `KellerCollisionModel` | dimension-generic package of the supplied normalization and local-geometry data |
 | generic degree one | `GenericDegreeOne` | dimension-generic descent from $L=K$ and flatness to obstruction vanishing |
 | literature interfaces | `Planar.ExternalAssumptions` | branch purity, finite-étale rigidity, Ax–Grothendieck |
-| composition | `Planar.ConditionalVanishing` | the conditional planar vanishing and automorphism theorems |
+| composition | `Planar.ConditionalVanishing` | the hypothesis-parametrized divisorial endgame and automorphism theorems |
 | secant projector | `Planar.Secant` | planar construction of $q_F$ from the secant determinant |
 | endpoint API | `Planar.Conclusion` | packaged consequences |
 
 `Planar.Secant` is an independent algebraic entry point into the same
 off-diagonal factor.  It constructs the secant projector and proves the
 colon-ideal criterion described below.
+
+The prospective principal-parts, secant-transport, and logarithmic-inertia
+mechanisms are preserved behind the separate `CollisionIdeals.Planar.Research`
+umbrella.  They are not imported by the stable `CollisionIdeals.Planar` API.
+`BoundaryPrincipalParts` remains in the core because it defines PBC;
+ramification-supported principal parts and bounded-codifferent control live
+in `Planar.PrincipalPartsStrategy` and the research umbrella.
 
 ### The map-specific model
 
@@ -417,16 +441,21 @@ In Lean this is
 M.diagram.noCodimensionOneRamification.
 ```
 
-There is no separate planar visible-subset condition or parallel planar
-hidden-inertia model in the canonical route; the reusable generic
-visible-sheet API remains available.
+The canonical boundary API also exposes the sharper
+`PlanarMovingSheetCoverage` and
+`BoundaryIdealData.PlanarBoundarySeparation` conditions; either eliminates
+ramified height-one points directly.  `PlanarNoHiddenInertia` remains as the
+older compatible interface.
 
-### Downstream conditional theorem
+### Divisorial endgame
 
-Once height-one ramification is absent, the remaining arrows are:
+The single divisorial endgame and its downstream arrows are:
 
 ```math
 \begin{array}{c}
+\operatorname{PlanarRamificationRigidity}
++\operatorname{RamificationRigidityBridge}\\
+\downarrow\\
 \text{no codimension-one ramification}\\
 \downarrow\quad\text{branch purity}\\
 Z\to Y\text{ is finite étale}\\
@@ -455,13 +484,19 @@ affinePlaneFiniteEtaleRigidity
 axGrothendieckA2
 ```
 
-They are the only project axioms in this route.  The no-hidden-inertia
-statement is not hidden among them: it remains the explicit map-specific
-planar condition passed to the conditional theorem.
+They are the only project axioms here.  `BoundaryCoherenceBridge`,
+`RamificationRigidityBridge`, and the alternative coverage, separation, and
+no-hidden-inertia conditions remain explicit route-specific hypotheses.
 
 The principal exported statements are schematically:
 
 ```text
+planarVanishing_of_boundaryCoherence ...
+planarVanishing_of_noCodimensionOneRamification ...
+planarVanishing_of_ramificationRigidity ...
+planarVanishing_of_movingSheetCoverage ...
+planarVanishing_of_boundarySeparation ...
+
 planarVanishing_of
   branchPurity
   finiteEtaleRigidity
@@ -478,11 +513,13 @@ planarAutomorphism_assuming_externalLiterature
   model
   noHiddenInertia :
   IsPolynomialAutomorphism F
+
+planarAutomorphism_of_boundaryCoherence ...
 ```
 
 This is the complete conditional dependency statement.  The fully
 parameterized theorem `planarVanishing_of` displays the geometric
-interfaces in its signature.  The two convenience wrappers use the named
+interfaces in its signature.  The convenience wrappers use the named
 literature axioms internally; those dependencies are visible with
 `#print axioms`.
 
@@ -537,15 +574,24 @@ R_F^\circ=\varnothing.
 }
 ```
 
-The secant construction gives the clopen diagonal/off-diagonal
-decomposition.  The planar no-hidden-inertia route is what conditionally
-forces the off-diagonal factor to vanish.
+The secant construction identifies the endpoint $q_F=0$ with disappearance
+of the off-diagonal factor.  The single divisorial endgame reaches that
+endpoint after codimension-one unramifiedness; boundary coherence is the
+equivalent global-boundary formulation.
+
+The manuscript also proves the classical normal/Galois marked-extension
+case by boundary-divisor rigidity.  It follows that generic degree two is
+impossible for a nonautomorphic planar Keller map; any unresolved planar
+case has nonnormal function-field extension of degree at least three.  This
+divisor argument is not yet formalized in Lean.
 
 ### Public planar modules
 
-`CollisionIdeals.Planar` exposes exactly the dependency spine in the table
-above.  The normalization diagram and its no-hidden-inertia predicate form
-the single planar boundary API.
+`CollisionIdeals.Planar` exports `RigidityTargets` and `BoundarySeparation`
+alongside the legacy no-hidden-inertia API.
+
+Import `CollisionIdeals.Planar.Research` explicitly for the prospective
+principal-parts, conjugate-secant, and completed tame-ramification modules.
 
 ## Cubic $S_3$ contrast
 
@@ -553,9 +599,9 @@ The intended comparison is:
 
 ```math
 \begin{array}{c|c}
-\text{conditional planar Keller target} &
+\text{planar ramification-elimination criterion} &
 \mathrm{Keller}(F)+\text{normalization model}
-+\text{no hidden inertia}
++\text{an explicit ramification-elimination hypothesis}
 \Longrightarrow\mathrm{Obs}(F)=0
 \\[2mm]
 \text{separable non-Galois cubic class} &

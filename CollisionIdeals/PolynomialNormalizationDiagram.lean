@@ -122,6 +122,16 @@ structure PolynomialNormalizationDiagram where
             1) =
         (polynomialNormalClosureModelToIntermediateNormalization
           cover.normalClosure).base E.1
+  centerAtRepresentative :
+    ∀ E g,
+      centerAtClass E
+          (DoubleCoset.mk
+            (decompositionGroupAt (PolynomialMapBaseFunctionField F)
+              (valuationAt E).valuationRing)
+            cover.normalClosure.intermediateFixingSubgroup
+            g) =
+        (polynomialConjugateNormalClosureModelToIntermediateNormalization
+          cover.normalClosure g).base E.1
 
 namespace PolynomialNormalizationDiagram
 
