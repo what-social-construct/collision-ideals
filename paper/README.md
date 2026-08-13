@@ -32,17 +32,16 @@ The status distinction in the paper is intentional:
   unramified; finite-étale rigidity then gives $N=K$, and collision descent
   gives $q_F=0$ and $I_R=I_\Delta$;
 - the stable boundary API canonically joins the inertia-fixed locus to the
-  boundaries of all moved sheets.  Its fixed--moving local-cohomology
-  specialization, together with the trace-dual, secant-to-trace, and
-  logarithmic-inertia constructions, is retained as a prospective mechanism
-  under the opt-in `CollisionIdeals.Planar.Research` umbrella; these are not
-  steps in the stable divisorial endgame.  The underlying conjugate-secant
-  evaluation and moved-sheet vanishing theorem itself is already proved;
-- the manuscript proves the secant separability/trace-coevaluation identity
-  and an explicit Hilbert--Burch presentation of a nonzero off-diagonal
-  factor.  The remaining research theorem is a nonzero secant/frame
-  multiplier landing the relevant principal parts in the finite trace-dual
-  stage; these refinements are not yet formalized;
+  boundaries of all moved sheets.  The research reduction now consists of
+  two proved statements and one missing morphism: the fixed--moving module
+  has an unbounded DVR pole tower at a hidden divisor; the trace-dual quotient
+  is finite and locally bounded; and one must construct an explicit nonzero
+  secant/frame multiplier whose multiplication map lands in that quotient.
+  The map is not assumed injective.  The required localization, trace-dual
+  specialization, common ambient embeddings, and landing morphism are not
+  yet formalized;
+- repository-wide manuscript/Lean parity and the deletion gates for legacy or
+  optional research objects are recorded in `../SEMANTIC-PARITY.md`;
 - the dimension-three theorem is an abstract implication from explicit
   cubic residual-field and marked-normal-closure data.  It concludes
   `IsComplexThreeJacobianCounterexample F`, but does not instantiate those

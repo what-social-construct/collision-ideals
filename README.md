@@ -338,22 +338,24 @@ The canonical modules are:
 off-diagonal factor.  It constructs the secant projector and proves the
 colon-ideal criterion described below.
 
-The prospective principal-parts, fixed--moving boundary, secant-transport,
-and logarithmic-inertia mechanisms are preserved behind the separate
-`CollisionIdeals.Planar.Research` umbrella.  They are not imported by the
-stable `CollisionIdeals.Planar` API.  `BoundaryPrincipalParts` remains in the
-core because it defines PBC; generic bounded-trace comparison scaffolding
-lives in `Planar.Research.PrincipalPartsStrategy`.  The research-only
-`FixedMovingBoundaryPrincipalParts` applies that general local-cohomology
-object directly to the canonical sum of the fixed-locus and moved-sheet
-boundary ideals.  Its height-one localization and equivalence with boundary
-separation are proved in the manuscript but are not yet formalized.
-The manuscript further identifies the secant diagonal idempotent with the
-normal-closure trace coevaluation tensor and gives a Hilbert--Burch
-presentation of the nonzero off-diagonal factor.  What remains open is the
-Keller-specific construction of a nonzero secant/frame multiplier carrying
-all relevant fixed--moving boundary principal parts into the finite
-trace-dual stage; these manuscript calculations are not yet formalized.
+The prospective principal-parts and trace-landing objects are preserved
+behind the separate `CollisionIdeals.Planar.Research` umbrella; they are not
+imported by the stable API.  The manuscript now isolates exactly two proved
+statements: a hidden fixed--moving divisor localizes
+`FixedMovingBoundaryPrincipalParts` to the unbounded DVR pole tower, while
+the trace dual gives a finite bounded quotient.  The single missing theorem
+is an explicitly secant/frame-constructed nonzero multiplier whose
+multiplication map factors through that trace-dual quotient.  It is not an
+abstract injectivity assumption, and its construction is precisely the
+remaining Keller-specific content.  The corresponding localization,
+trace-dual specialization, common ambient embeddings, and landing morphism
+are not yet formalized.
+
+The manuscript/Lean semantic-parity work is tracked in
+[`SEMANTIC-PARITY.md`](SEMANTIC-PARITY.md).  In particular, no older
+research or compatibility object is removed until its replacement is proved,
+all consumers have migrated, both presentations have matching semantics, and
+the Lean and manuscript builds pass.
 
 ### The map-specific model
 
