@@ -2235,9 +2235,9 @@ That possible mechanism is isolated after the completed endgame.
 
 The generic idempotents and the conjugate affine opens play different
 roles.  The former separate components of the generic collision algebra,
-whereas (U_g\subset Z) tests whether the corresponding conjugate center
+whereas \(U_g\subset Z\) tests whether the corresponding conjugate center
 remains integral.  At a ramified divisor those generic components can meet
-in an integral model, so no extension of (e_g) as an integral idempotent is
+in an integral model, so no extension of \(e_g\) as an integral idempotent is
 asserted.  The research mechanism below instead attaches to this generic
 sheet isolation a fixed--moving boundary contribution supported on
 
@@ -2371,20 +2371,23 @@ coordinates have nonnegative valuation.  Taking complements gives the
 second display.
 \end{proof}
 
+For a nontrivial subgroup \(I\leq G\), define its moving-boundary ideal by
+\[
+  \mathfrak j_I^{\mathrm{mov}}
+  :=
+  \sum_{\substack{g\in G\\I\nsubseteq gHg^{-1}}}\mathfrak j_g.
+\]
+The sum is taken in the common Galois-normalization ring \(A_N\); this is
+why the Galois closure enters only at this final specialization.
+
 \begin{proposition}[Moving-sheet coverage dictionary]
 \label{prop:moving-sheet-coverage-dictionary}
-For \(E\in\Ram^{(1)}(Z/Y)\), put
-\[
-  \mathfrak j_E^{\mathrm{mov}}
-  :=
-  \sum_{\substack{g\in G\\I_E\nsubseteq gHg^{-1}}}\mathfrak j_g.
-\]
-Then
+For \(E\in\Ram^{(1)}(Z/Y)\), one has
 \[
   \exists g\in G,\quad
   I_E\nsubseteq gHg^{-1},\quad \eta_E\in U_g
   \quad\Longleftrightarrow\quad
-  \mathfrak j_E^{\mathrm{mov}}\nsubseteq\mathfrak p_E.
+  \mathfrak j_{I_E}^{\mathrm{mov}}\nsubseteq\mathfrak p_E.
 \]
 Thus eliminating \(E\) is exactly the failure of its moving-boundary
 ideal to be contained in its height-one prime.
@@ -2395,15 +2398,6 @@ A prime contains a sum of ideals exactly when it contains every summand.
 Apply Proposition~\ref{prop:pulled-back-boundary-dictionary} to each
 inertia-moving \(g\).
 \end{proof}
-
-For a nontrivial subgroup \(I\leq G\), define its moving-boundary ideal by
-\[
-  \mathfrak j_I^{\mathrm{mov}}
-  :=
-  \sum_{\substack{g\in G\\I\nsubseteq gHg^{-1}}}\mathfrak j_g.
-\]
-The sum is taken in the common Galois-normalization ring \(A_N\); this is
-why the Galois closure enters only at this final specialization.
 
 The same common ring gives a finite-group formulation which does not first
 choose a ramified divisor.  For a subgroup \(C\leq G\), let
@@ -2687,28 +2681,8 @@ than three additional routes.
 
 \subsection{Vanishing of the off-diagonal factor}
 
-The main argument can now be read as a single spine:
-\[
-  \begin{gathered}
-    \operatorname{Sep}_2(F)
-    \Longleftrightarrow
-    \operatorname{Cov}_2(F)
-    \Longleftrightarrow
-    \Ram^{(1)}(Z/Y)=\varnothing,\\
-    \Ram^{(1)}(Z/Y)=\varnothing
-    \Longrightarrow
-    Z/Y\text{ finite \'etale}
-    \Longrightarrow
-    N=L=K,\\
-    N=L=K
-    \Longrightarrow
-    F\in\Aut_{\mathrm{poly}}(\A^2_{\C})
-    \Longleftrightarrow
-    I_R=I_\Delta.
-  \end{gathered}
-\]
-The next theorem records the remaining named objects as equivalent
-translations of this spine.
+The next theorem records all named formulations as exact translations of
+the preceding divisorial endgame.
 
 \begin{theorem}[Equivalent boundary criteria for planar vanishing]
 \label{thm:planar-vanishing}
@@ -2896,14 +2870,15 @@ endgame.
 
 \subsubsection{Fixed--moving boundary principal parts}
 
-For a normal Noetherian integral surface \(W=\Spec R\) with dense open
-\(U=W\setminus V(\mathfrak j)\), define its boundary principal-parts module
-by
+For a Noetherian domain \(R\) and a nonzero ideal \(\mathfrak j\), define
+the boundary principal-parts module by
 \[
   \mathcal P_{\mathfrak j}(R):=H^1_{\mathfrak j}(R).
 \]
-The open-complement sequence identifies it with rational functions regular
-on \(U\) modulo those extending to \(W\).  At a height-one prime,
+For \(W=\Spec R\) and the dense open
+\(U=W\setminus V(\mathfrak j)\), the open-complement sequence identifies it
+with rational functions regular on \(U\) modulo those extending to \(W\).
+If \(R\) is normal and \(\mathfrak p\) has height one, then
 \[
   \mathcal P_{\mathfrak j}(R)_{\mathfrak p}
   \cong
@@ -2921,27 +2896,28 @@ Indeed, localization reduces to the one-element \v{C}ech complex of the DVR
     U_C^{\mathrm{mov}}
       &:=Z\setminus V(\mathfrak j_C^{\mathrm{mov}})
         =\bigcup_{C\nsubseteq gHg^{-1}}U_g,\\
-    \mathcal P_C^{\mathrm{mov}}
-      &:=H^1_{\mathfrak j_C^{\mathrm{mov}}}(T),
-    &
     \mathcal P_C^{\mathrm{fix,mov}}
-      &:=H^0_{\mathfrak a_C}
-          \bigl(\mathcal P_C^{\mathrm{mov}}\bigr).
+      &:=H^1_{\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}}(T).
   \end{aligned}
 \]
-We call the last module the \emph{fixed--moving boundary contribution}.
-It uses support on the scheme-theoretic fixed locus; it does not take
-\(C\)-invariants.  Since \(\core_G(H)=1\), a nontrivial \(C\) moves at
+We call this the \emph{fixed--moving boundary contribution}.  It is first
+local cohomology with support on the scheme-theoretic intersection of the
+fixed locus and all moved-sheet boundaries; it does not take
+\(C\)-invariants.  For comparison, put
+\[
+  \mathcal P_C^{\mathrm{mov}}
+  :=H^1_{\mathfrak j_C^{\mathrm{mov}}}(T).
+\]
+Since \(\core_G(H)=1\), a nontrivial \(C\) moves at
 least one conjugate sheet.  The domain property then gives
 \(H^0_{\mathfrak j_C^{\mathrm{mov}}}(T)=0\).  The spectral sequence for
 successive supports, using
 \(\Gamma_{\mathfrak a_C}\Gamma_{\mathfrak j_C^{\mathrm{mov}}}
 =\Gamma_{\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}}\), therefore gives
-the canonical identification
+the canonical successive-support interpretation
 \[
-  \mathcal P_C^{\mathrm{fix,mov}}
-  \cong
-  H^1_{\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}}(T).
+  H^0_{\mathfrak a_C}\bigl(\mathcal P_C^{\mathrm{mov}}\bigr)
+  \cong \mathcal P_C^{\mathrm{fix,mov}}.
 \]
 For a height-one prime \(\mathfrak p_E\subset T\), the same DVR calculation
 gives
@@ -2959,7 +2935,7 @@ The first case says exactly that \(C\leq I_E\) and that \(E\) belongs to
 every boundary \(D_g\) whose sheet is moved by \(C\).  Thus failure of
 \(\operatorname{Sep}_2(F)\) produces precisely an unbounded height-one
 localization of \(\mathcal P_C^{\mathrm{fix,mov}}\).  Conversely, normality
-makes \(T\) an (S_2\) surface, so when the displayed support has no
+makes \(T\) an \(S_2\) surface, so when the displayed support has no
 height-one point its grade is at least two and this first local cohomology
 vanishes.  Hence
 \[
@@ -2971,12 +2947,12 @@ vanishes.  Hence
 
 The pole filtration records the same obstruction equivariantly.  In the
 first case let \(\chi_E\) denote the tame character of \(C\) on the
-cotangent line of the DVR (T_{\mathfrak p_E}\).  For
+cotangent line of the DVR \(T_{\mathfrak p_E}\).  For
 \[
   F_m:=\pi_E^{-m}T_{\mathfrak p_E}/T_{\mathfrak p_E},
-  \qquad m\geq0,
+  \qquad m\geq0.
 \]
-one has
+For \(m\geq1\), one has
 \[
   \operatorname{gr}_m^F
     \left(\mathcal P_C^{\mathrm{fix,mov}}\right)_{\mathfrak p_E}
@@ -3088,19 +3064,7 @@ fixed--moving contribution.  Imposing it on the whole ring
 boundary divisors and can force the ideal to be zero for reasons stronger
 than the hidden-inertia problem.
 
-Multiplication defines a canonical map
-\[
-  \Phi_C:\mathcal P_C^{\mathrm{fix,mov}}
-  \longrightarrow
-  \operatorname{Hom}_T
-    (\mathfrak c_C^{\mathrm{fm,tr}},Q_{\mathrm{tr}}),
-  \qquad
-  \Phi_C(\xi)(s)=s\xi.
-\]
-The target is finite: \(T\) is Noetherian, so
-\(\mathfrak c_C^{\mathrm{fm,tr}}\) is finite, and both
-\(Q_{\mathrm{tr}}\) and the displayed Hom module are finite.  More sharply,
-if a height-one prime contains
+If a height-one prime contains
 \(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\), then
 \[
   \mathfrak c_C^{\mathrm{fm,tr}}=0.
@@ -3142,29 +3106,11 @@ Then \(R\) is finite free over \(B_0\), and the boundary curve
   H^1_{(s)}(R)=R_s/R=\bigcup_{m\geq1}s^{-m}R/R
 \]
 is not finitely generated.  What is missing is a uniform transverse pole
-bound.  The precise target is a Keller-specific theorem showing that the
-fixed--moving boundary classes lie in one fixed fractional stage.  Writing
-\[
-  \mathfrak d_N:=\operatorname{Fitt}^T_0\Omega_{T/B},
-\]
-define
-\[
-  Q_{\mathfrak d}^{(m)}
-  :=(T:_N\mathfrak d_N^m)/T
-  =\{z\in N:\mathfrak d_N^m z\subseteq T\}/T,
-\]
-which avoids treating the K\"ahler different as a globally invertible ideal.
-After localization at \(\mathfrak p_E\), this becomes the bounded stage
-\[
-  \left(Q_{\mathfrak d}^{(m)}\right)_{\mathfrak p_E}
-  \cong
-  \pi_E^{-m(e_E-1)}T_{\mathfrak p_E}/T_{\mathfrak p_E}.
-\]
-Alternatively, one may ask for a uniform power of
+bound.  Equivalently, one may ask for a uniform power of
 \(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\) to annihilate
 \(\mathcal P_C^{\mathrm{fix,mov}}\).  Either statement is incompatible with
-the DVR pole tower, but neither follows from finite flatness and neither is
-constructed here
+the DVR pole tower, but neither follows from finite flatness; the trace-dual
+quotient above is the canonical bounded stage used here
 \cite{StacksLocalCohomology,StacksLocalCohomologyFiniteness}.  Likewise, the
 secant determinant detects marked versus moving generic sheets, but it
 vanishes on a moving sheet and by itself gives no nonzero parameter that
@@ -3240,8 +3186,9 @@ Ax--Grothendieck, branch purity, and finite-\'etale rigidity of
 \leanpath{PlanarNoHiddenInertia} are formalized; constructing the model and
 proving coverage remain separate formalization tasks.  The fixed-locus
 ideal \leanpath{fixedLocusIdeal}, the moving-boundary sum
-\leanpath{movingBoundaryIdeal}, and the height-one condition
-\leanpath{BoundaryIdealData.PlanarBoundarySeparation} are formalized in
+\leanpath{movingBoundaryIdeal}, the canonical sum
+\leanpath{fixedMovingBoundaryIdeal}, and the height-one condition
+\leanpath{PlanarBoundarySeparation} are formalized in
 \leanpath{CollisionIdeals/Planar/BoundarySeparation.lean}.  The Lean
 predicate quantifies over all nontrivial subgroups; the
 manuscript's prime-order formulation is its equivalent Cauchy reduction.
@@ -3262,15 +3209,10 @@ explicit input \leanpath{BoundaryCoherenceBridge} and theorem
 proved.  Likewise, \leanpath{RamificationRigidityBridge} isolates the
 unformalized finite-length support step in the divisorial route.  The stable
 local-cohomology object \leanpath{BoundaryPrincipalParts} is defined in
-\leanpath{CollisionIdeals/BoundaryPrincipalParts.lean}.  The general
-combined-support and uniform-annihilator objects
-\leanpath{CombinedSupportPrincipalParts} and
-\leanpath{HasUniformCombinedSupportAnnihilator} are kept in
-\leanpath{CollisionIdeals/Planar/Research/PrincipalPartsStrategy.lean}.
-Their canonical fixed--moving specialization
-\leanpath{FixedMovingBoundaryPrincipalParts}, its support ideal
-\leanpath{fixedMovingBoundarySupportIdeal}, and its exact equivalence with
-the existing height-one separation predicate are formalized in
+\leanpath{CollisionIdeals/BoundaryPrincipalParts.lean}.  The canonical
+fixed--moving module \leanpath{FixedMovingBoundaryPrincipalParts} and its
+specialized \leanpath{HasUniformFixedMovingBoundaryAnnihilator} target are
+formalized in
 \leanpath{CollisionIdeals/Planar/Research/FixedMovingBoundaryPrincipalParts.lean}.
 The successive-support isomorphism, DVR localization, and graded
 pole-character used in the manuscript are not yet formalized.  The abstract
@@ -3286,9 +3228,8 @@ prospective modules are collected under the opt-in umbrella
 \leanpath{CollisionIdeals/Planar/Research.lean}, rather than the stable
 \leanpath{CollisionIdeals/Planar.lean} import spine.  The
 generic trace-integral submodule
-\leanpath{TraceIntegralSubmodule}, the transporter
-\leanpath{boundedStageComparisonIdeal}, and its canonical multiplication map
-\leanpath{boundedStageComparisonMap} are also formalized abstractly in the
+\leanpath{TraceIntegralSubmodule} and the transporter
+\leanpath{boundedStageComparisonIdeal} are also formalized abstractly in the
 research layer.  Their specialization to the finite normalization---including
 the trace-dual/Hom identification, the open-complement embeddings, the
 height-one DVR calculation, and especially a nonzero secant multiplier---

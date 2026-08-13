@@ -8,9 +8,8 @@ This file gives the stable commutative-algebra object used by the global
 boundary-coherence formulation in the paper.  It uses mathlib's actual local
 cohomology functor, defined as a filtered colimit of Ext modules.
 
-The ramification-supported principal-parts and uniform-annihilator objects
-belong to the prospective finite-control strategy and are kept in
-`CollisionIdeals.Planar.Research.PrincipalPartsStrategy`.
+The fixed--moving specialization and its prospective uniform-annihilator
+condition live in the opt-in planar research layer.
 -/
 
 set_option autoImplicit false
@@ -38,6 +37,11 @@ this algebraic definition.
 -/
 def BoundaryCoherence (J : Ideal R) : Prop :=
   Module.Finite R (BoundaryPrincipalParts R J)
+
+/-- A positive power of an ideal annihilates a supplied module. -/
+def HasUniformIdealPowerAnnihilator
+    (I : Ideal R) (M : ModuleCat R) : Prop :=
+  ∃ n : ℕ, 0 < n ∧ I ^ n ≤ Module.annihilator R M
 
 /-- Boundary principal parts depend only on the radical of the support ideal. -/
 def boundaryPrincipalPartsIsoOfSameRadical

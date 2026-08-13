@@ -1,4 +1,3 @@
-import CollisionIdeals.Planar.Research.PrincipalPartsStrategy
 import CollisionIdeals.Planar.Research.UnboundedPrincipalParts
 import Mathlib.RingTheory.Noetherian.Basic
 
@@ -6,15 +5,15 @@ import Mathlib.RingTheory.Noetherian.Basic
 # Finite control of planar principal parts
 
 This file formalizes an abstract exclusion criterion.  A comparison injection
-from the ramification-supported principal-parts module into any finite module
-makes the former finite over a Noetherian ring.
+from any selected principal-parts module into a finite module makes the former
+finite over a Noetherian ring.
 
 For the intended geometric application, the trace dual naturally embeds as a
 bounded-pole submodule of principal parts, not conversely.  Thus the structure
 below is not claimed to arise formally from finite flatness: constructing it
 would already exclude hidden unbounded principal parts.  The more intrinsic
-target is a Keller/secant-derived uniform different-power annihilator, or an
-equivalent theorem forcing all relevant classes into one bounded codifferent
+target is a Keller/secant-derived uniform power of the fixed--moving ideal, or
+an equivalent theorem forcing all relevant classes into one bounded trace-dual
 stage.
 
 Combining such finite control with the unbounded-pole conclusion of

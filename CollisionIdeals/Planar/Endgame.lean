@@ -297,43 +297,24 @@ sheets moved by that subgroup.
 theorem planarVanishing_of_boundarySeparation
     {F : PlanarPolynomialMap}
     (M : PlanarKellerCollisionModel F)
-    (B :
-      letI : Field M.N := M.fieldN
-      letI : Algebra (PlanarBaseFunctionField F) M.N :=
-        M.algebraN
-      BoundaryIdealData M.diagram)
     (hSeparation :
       letI : Field M.N := M.fieldN
       letI : Algebra (PlanarBaseFunctionField F) M.N :=
         M.algebraN
-      B.PlanarBoundarySeparation) :
+      PlanarBoundarySeparation M.diagram) :
     obstructionIdeal F = ⊥ := by
   letI : Field M.N := M.fieldN
   letI : Algebra (PlanarBaseFunctionField F) M.N :=
     M.algebraN
   exact
-    planarVanishing_assuming_standardGeometry M
-      (B.noHiddenInertia hSeparation)
-
-/-- The canonical boundary package version of the separation criterion. -/
-theorem planarVanishing_of_canonicalBoundarySeparation
-    {F : PlanarPolynomialMap}
-    (M : PlanarKellerCollisionModel F)
-    (hSeparation :
-      letI : Field M.N := M.fieldN
-      letI : Algebra (PlanarBaseFunctionField F) M.N :=
-        M.algebraN
-      M.boundaryIdealData.PlanarBoundarySeparation) :
-    obstructionIdeal F = ⊥ := by
-  letI : Field M.N := M.fieldN
-  letI : Algebra (PlanarBaseFunctionField F) M.N :=
-    M.algebraN
-  exact
-    planarVanishing_of_boundarySeparation M M.boundaryIdealData hSeparation
+    planarVanishing_of_noCodimensionOneRamification
+      ExternalAssumptions.branchPurityA2
+      ExternalAssumptions.affinePlaneFiniteEtaleRigidity M
+      (M.boundaryIdealData.noCodimensionOneRamification hSeparation)
 
 /--
 Using the third external literature theorem, Ax--Grothendieck, the
-conditional ideal-vanishing result yields a polynomial automorphism.
+hypothesis-parametrized ideal-vanishing result yields a polynomial automorphism.
 -/
 theorem planarAutomorphism_assuming_externalLiterature
     {F : PlanarPolynomialMap}
@@ -370,23 +351,20 @@ inputs, yields the polynomial-automorphism conclusion.
 theorem planarAutomorphism_of_boundarySeparation
     {F : PlanarPolynomialMap}
     (M : PlanarKellerCollisionModel F)
-    (B :
-      letI : Field M.N := M.fieldN
-      letI : Algebra (PlanarBaseFunctionField F) M.N :=
-        M.algebraN
-      BoundaryIdealData M.diagram)
     (hSeparation :
       letI : Field M.N := M.fieldN
       letI : Algebra (PlanarBaseFunctionField F) M.N :=
         M.algebraN
-      B.PlanarBoundarySeparation) :
+      PlanarBoundarySeparation M.diagram) :
     IsPolynomialAutomorphism F := by
   letI : Field M.N := M.fieldN
   letI : Algebra (PlanarBaseFunctionField F) M.N :=
     M.algebraN
+  apply ExternalAssumptions.axGrothendieckA2 F
   exact
-    planarAutomorphism_assuming_externalLiterature M
-      (B.noHiddenInertia hSeparation)
+    pointMap_injective_of_collisionIdeal_eq_diagonalIdeal F
+      ((obstructionIdeal_eq_bot_iff F).1
+        (planarVanishing_of_boundarySeparation M hSeparation))
 
 end
 

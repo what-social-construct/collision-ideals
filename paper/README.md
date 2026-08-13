@@ -31,14 +31,13 @@ The status distinction in the paper is intentional:
 - branch purity is applied only after every height-one point has been shown
   unramified; finite-étale rigidity then gives $N=K$, and collision descent
   gives $q_F=0$ and $I_R=I_\Delta$;
-- the fixed--moving support ideal and its combined local-cohomology module
-  canonically join the inertia-fixed locus to the boundaries of all moved
-  sheets.  Together with the codifferent-bound, secant-to-trace, and
-  logarithmic-inertia constructions, they are retained as prospective
-  mechanisms under the opt-in `CollisionIdeals.Planar.Research` umbrella;
-  they are not steps in the stable divisorial endgame.  The underlying
-  conjugate-secant evaluation and moved-sheet vanishing theorem itself is
-  already proved;
+- the stable boundary API canonically joins the inertia-fixed locus to the
+  boundaries of all moved sheets.  Its fixed--moving local-cohomology
+  specialization, together with the trace-dual, secant-to-trace, and
+  logarithmic-inertia constructions, is retained as a prospective mechanism
+  under the opt-in `CollisionIdeals.Planar.Research` umbrella; these are not
+  steps in the stable divisorial endgame.  The underlying conjugate-secant
+  evaluation and moved-sheet vanishing theorem itself is already proved;
 - the manuscript proves the secant separability/trace-coevaluation identity
   and an explicit Hilbert--Burch presentation of a nonzero off-diagonal
   factor.  The remaining research theorem is a nonzero secant/frame

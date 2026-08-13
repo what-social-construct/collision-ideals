@@ -133,6 +133,10 @@ ordered pairs with equal image.  The closed
 subscheme cut out by $\mathrm{Obs}(F)$, regarded as an ideal of
 $A_F$, is the diagonal.  Thus $\mathrm{Obs}(F)=0$ says that the
 self-fiber product is scheme-theoretically only the diagonal.
+Write
+$A_F^\circ:=S/(I_R:I_\Delta)$ and
+$R_F^\circ:=\operatorname{Spec}(A_F^\circ)$ for the affine off-diagonal
+factor.
 
 ## Universal property
 
@@ -190,8 +194,9 @@ Universal `PlanarBoundaryCoherence` and `PlanarRamificationRigidity` are not
 proved.  Their current Lean routes use the explicit
 `BoundaryCoherenceBridge` and `RamificationRigidityBridge`; moving-sheet
 coverage, boundary separation, and the older no-hidden-inertia interface are
-likewise explicit hypotheses.  The formal cubic theorem does not instantiate
-its hypotheses with a concrete three-dimensional Keller map.
+likewise explicit inputs to their formal theorems.  The formal cubic theorem
+does not instantiate its hypotheses with a concrete three-dimensional Keller
+map.
 
 <details>
 <summary>Detailed theorem inventory</summary>
@@ -250,7 +255,7 @@ The current development is dimension-generic and proves:
 - from the supplied Keller-to-étale bridge and ramification realization,
   the theorem placing every positive-index conjugate center in the deleted
   boundary, kept separate from `PlanarNoHiddenInertia`;
-- the conditional compositions from no codimension-one ramification---
+- the hypothesis-parametrized compositions from no codimension-one ramification---
   including the explicit `PlanarRamificationRigidity`/
   `RamificationRigidityBridge` route---through branch purity and
   finite-étale rigidity to `PlanarVanishing`;
@@ -269,7 +274,7 @@ The current development is dimension-generic and proves:
   $\mathrm{Gal}(N/K)\simeq S_3$;
 - for $F:\mathbb A^3_{\mathbb C}\to\mathbb A^3_{\mathbb C}$, the theorem
   `complexThreeCubicS3Collision` packages the Keller condition, the
-  generic decomposition $K\otimes_BC_F\simeq L\times N$, the $S_3$
+  generic decomposition $K\otimes_BA_F\simeq L\times N$, the $S_3$
   certificate, `IsComplexThreeJacobianCounterexample F`, nonemptiness of
   the off-diagonal collision scheme, and strict containment
   $I_R(F)\subsetneq I_\Delta$;
@@ -337,11 +342,12 @@ The prospective principal-parts, fixed--moving boundary, secant-transport,
 and logarithmic-inertia mechanisms are preserved behind the separate
 `CollisionIdeals.Planar.Research` umbrella.  They are not imported by the
 stable `CollisionIdeals.Planar` API.  `BoundaryPrincipalParts` remains in the
-core because it defines PBC; general combined-support and bounded-codifferent
-scaffolding live in `Planar.Research.PrincipalPartsStrategy`.  The research-only
-`FixedMovingBoundaryPrincipalParts` specialization joins the fixed-locus and
-moved-sheet boundary ideals and proves that its support condition is exactly
-the existing height-one boundary-separation predicate.
+core because it defines PBC; generic bounded-trace comparison scaffolding
+lives in `Planar.Research.PrincipalPartsStrategy`.  The research-only
+`FixedMovingBoundaryPrincipalParts` applies that general local-cohomology
+object directly to the canonical sum of the fixed-locus and moved-sheet
+boundary ideals.  Its height-one localization and equivalence with boundary
+separation are proved in the manuscript but are not yet formalized.
 The manuscript further identifies the secant diagonal idempotent with the
 normal-closure trace coevaluation tensor and gives a Hilbert--Burch
 presentation of the nonzero off-diagonal factor.  What remains open is the
@@ -452,7 +458,7 @@ M.diagram.noCodimensionOneRamification.
 
 The canonical boundary API also exposes the sharper
 `PlanarMovingSheetCoverage` and
-`BoundaryIdealData.PlanarBoundarySeparation` conditions; either eliminates
+`PlanarBoundarySeparation` conditions; either eliminates
 ramified height-one points directly.  `PlanarNoHiddenInertia` remains as the
 older compatible interface.
 
@@ -495,7 +501,8 @@ axGrothendieckA2
 
 They are the only project axioms here.  `BoundaryCoherenceBridge`,
 `RamificationRigidityBridge`, and the alternative coverage, separation, and
-no-hidden-inertia conditions remain explicit route-specific hypotheses.
+no-hidden-inertia conditions remain explicit route-specific parameters, not
+project axioms.
 
 The principal exported statements are schematically:
 
@@ -526,7 +533,7 @@ planarAutomorphism_assuming_externalLiterature
 planarAutomorphism_of_boundaryCoherence ...
 ```
 
-This is the complete conditional dependency statement.  The fully
+This is the complete dependency statement.  The fully
 parameterized theorem `planarVanishing_of` displays the geometric
 interfaces in its signature.  The convenience wrappers use the named
 literature axioms internally; those dependencies are visible with
@@ -634,7 +641,7 @@ is equivalent to
 ```math
 \ker(\bar\mu_F)\neq0,
 \qquad
-C_F^{\mathrm{off}}\neq0.
+A_F^\circ\neq0.
 ```
 
 Generically, suppose the associated function-field extension $L/K$ is
@@ -653,7 +660,7 @@ $S_3$-Galois closure $N$.  The formal theorem requires that the marked
 embedding in `NormalClosureData` agree with the $L$-algebra structure
 used for this residual factor.  It identifies $N$ at the generic
 base-changed level; it does not assert an equivalence
-$\mathrm{Frac}(C_F^{\mathrm{off}})\simeq N$.
+$\mathrm{Frac}(A_F^\circ)\simeq N$.
 The nonzero generic kernel nevertheless descends to the affine
 obstruction and records the failure of
 

@@ -303,6 +303,17 @@ def movingBoundaryIdeal
         (MulAut.conj g).toMonoidHom),
     boundaryIdeal g
 
+/--
+The canonical ideal cutting out the intersection of the `C`-fixed locus
+with the boundaries of every conjugate affine sheet moved by `C`.
+-/
+def fixedMovingBoundaryIdeal
+    (D : NormalizationDiagram (F := F) (N := N))
+    (C : Subgroup (NormalizationGaloisGroup D)) :
+    Ideal (GaloisNormalizationRing (F := F) (N := N)) :=
+  fixedLocusIdeal C +
+    movingBoundaryIdeal (pulledBackConjugateBoundaryIdeal D) C
+
 /-- Membership in the moving-boundary sum is tested sheet by sheet. -/
 theorem movingBoundaryIdeal_le_iff
     {D : NormalizationDiagram (F := F) (N := N)}
@@ -315,6 +326,86 @@ theorem movingBoundaryIdeal_le_iff
           (MulAut.conj g).toMonoidHom →
         boundaryIdeal g ≤ I := by
   simp [movingBoundaryIdeal]
+
+/-- Containment of the fixed--moving ideal is containment of both parts. -/
+@[simp]
+theorem fixedMovingBoundaryIdeal_le_iff
+    (D : NormalizationDiagram (F := F) (N := N))
+    (C : Subgroup (NormalizationGaloisGroup D))
+    (I : Ideal (GaloisNormalizationRing (F := F) (N := N))) :
+    fixedMovingBoundaryIdeal D C ≤ I ↔
+      fixedLocusIdeal C ≤ I ∧
+        movingBoundaryIdeal (pulledBackConjugateBoundaryIdeal D) C ≤ I := by
+  simp [fixedMovingBoundaryIdeal]
+
+/-- Fixed-locus ideals grow with the acting subgroup. -/
+theorem fixedLocusIdeal_mono
+    {D : NormalizationDiagram (F := F) (N := N)}
+    {C C' : Subgroup (NormalizationGaloisGroup D)}
+    (h : C ≤ C') :
+    fixedLocusIdeal C ≤ fixedLocusIdeal C' := by
+  rw [fixedLocusIdeal_le_iff]
+  intro σ t
+  apply Ideal.subset_span
+  exact ⟨⟨σ.1, h σ.2⟩, t, rfl⟩
+
+/--
+The moving-boundary zero locus is the intersection of the boundaries of all
+conjugate sheets moved by `C`.
+-/
+theorem zeroLocus_movingBoundaryIdeal
+    (D : NormalizationDiagram (F := F) (N := N))
+    (C : Subgroup (NormalizationGaloisGroup D)) :
+    PrimeSpectrum.zeroLocus
+        (R := GaloisNormalizationRing (F := F) (N := N))
+        (movingBoundaryIdeal (pulledBackConjugateBoundaryIdeal D) C) =
+      ⋂ (g : NormalizationGaloisGroup D),
+        ⋂ (_ : ¬ C ≤ D.cover.normalClosure.intermediateFixingSubgroup.map
+          (MulAut.conj g).toMonoidHom),
+          pulledBackConjugateBoundary D g := by
+  simp [movingBoundaryIdeal, PrimeSpectrum.zeroLocus_iSup,
+    zeroLocus_pulledBackConjugateBoundaryIdeal]
+
+/-- The fixed--moving ideal cuts out the exact common boundary fixed locus. -/
+theorem zeroLocus_fixedMovingBoundaryIdeal
+    (D : NormalizationDiagram (F := F) (N := N))
+    (C : Subgroup (NormalizationGaloisGroup D)) :
+    PrimeSpectrum.zeroLocus
+        (R := GaloisNormalizationRing (F := F) (N := N))
+        (fixedMovingBoundaryIdeal D C) =
+      PrimeSpectrum.zeroLocus
+          (R := GaloisNormalizationRing (F := F) (N := N))
+          (fixedLocusIdeal (D := D) C) ∩
+        ⋂ (g : NormalizationGaloisGroup D),
+          ⋂ (_ : ¬ C ≤ D.cover.normalClosure.intermediateFixingSubgroup.map
+            (MulAut.conj g).toMonoidHom),
+            pulledBackConjugateBoundary D g := by
+  rw [show PrimeSpectrum.zeroLocus
+        (R := GaloisNormalizationRing (F := F) (N := N))
+        (fixedMovingBoundaryIdeal D C) =
+      PrimeSpectrum.zeroLocus
+          (R := GaloisNormalizationRing (F := F) (N := N))
+          (fixedLocusIdeal (D := D) C : Ideal _) ∩
+      PrimeSpectrum.zeroLocus
+          (R := GaloisNormalizationRing (F := F) (N := N))
+          (movingBoundaryIdeal
+            (pulledBackConjugateBoundaryIdeal D) C : Ideal _) by
+        simp [fixedMovingBoundaryIdeal, PrimeSpectrum.zeroLocus_sup],
+    zeroLocus_movingBoundaryIdeal]
+
+/--
+The height-one-prime form of planar boundary separation.  It says directly
+that no nontrivial fixed--moving boundary ideal is contained in a
+height-one prime.  This is the formal codimension-one condition consumed by
+purity; the ideal itself is defined without any height restriction.
+-/
+def PlanarBoundarySeparation
+    (D : NormalizationDiagram (F := F) (N := N)) : Prop :=
+  ∀ (C : Subgroup (NormalizationGaloisGroup D)),
+    C ≠ ⊥ →
+      ∀ p : PrimeSpectrum (GaloisNormalizationRing (F := F) (N := N)),
+        p.asIdeal.primeHeight = 1 →
+          ¬ fixedMovingBoundaryIdeal D C ≤ p.asIdeal
 
 /--
 The pulled-back-open form of moving-sheet coverage: every ramified
@@ -515,6 +606,17 @@ theorem movingBoundaryIdeal_le_ramifiedPrime
     inertiaQuotientIndex_ne_one _ _
       (fun hInertia => hg (hC.trans hInertia))
 
+/-- Inertia fixes the residue field, hence its fixed-locus ideal lies in the center prime. -/
+theorem actualInertiaFixedLocusIdeal_le_ramifiedPrime
+    (D : NormalizationDiagram (F := F) (N := N))
+    (E : PolynomialRamifiedCodimensionOnePoint (F := F) (N := N)) :
+    fixedLocusIdeal (D := D)
+        (inertiaGroupAt (PlanarBaseFunctionField F)
+          (D.valuationAt E).valuationRing) ≤ E.1.asIdeal := by
+  rw [fixedLocusIdeal_le_iff]
+  intro σ t
+  exact inertia_sub_mem_ramifiedPrime D E σ t
+
 /--
 The geometric data needed to apply the canonical boundary construction to
 one planar normalization diagram.  The diagram supplies conjugate centers
@@ -531,28 +633,11 @@ namespace BoundaryIdealData
 
 variable {D : NormalizationDiagram (F := F) (N := N)}
 
-/-- The canonical pulled-back boundary ideal attached to a conjugate sheet. -/
-def boundaryIdeal (_B : BoundaryIdealData D) :
-    NormalizationGaloisGroup D →
-      Ideal (GaloisNormalizationRing (F := F) (N := N)) :=
-  pulledBackConjugateBoundaryIdeal D
-
-/-- Inertia fixes the residue field, hence the fixed-locus ideal lies in the center prime. -/
-theorem fixedLocusIdeal_le
-    (_B : BoundaryIdealData D)
-    (E : PolynomialRamifiedCodimensionOnePoint (F := F) (N := N)) :
-    fixedLocusIdeal (D := D)
-        (inertiaGroupAt (PlanarBaseFunctionField F)
-          (D.valuationAt E).valuationRing) ≤ E.1.asIdeal := by
-  rw [fixedLocusIdeal_le_iff]
-  intro σ t
-  exact inertia_sub_mem_ramifiedPrime D E σ t
-
 /-- Every boundary moved by the full divisorial inertia group lies in its center prime. -/
 theorem actualInertiaMovingBoundaryIdeal_le
     (B : BoundaryIdealData D)
     (E : PolynomialRamifiedCodimensionOnePoint (F := F) (N := N)) :
-    Planar.movingBoundaryIdeal B.boundaryIdeal
+    Planar.movingBoundaryIdeal (pulledBackConjugateBoundaryIdeal D)
         (inertiaGroupAt (PlanarBaseFunctionField F)
           (D.valuationAt E).valuationRing) ≤ E.1.asIdeal :=
   movingBoundaryIdeal_le_ramifiedPrime
@@ -561,35 +646,45 @@ theorem actualInertiaMovingBoundaryIdeal_le
       (D.valuationAt E).valuationRing)
     le_rfl
 
-
 /--
-The height-one-prime form of planar boundary separation.  It serves as the
-formal substitute for saying that every fixed--moving boundary locus has
-codimension at least two, without first formalizing Krull codimension of a
-closed subscheme.
+If `C` lies in the inertia group at a ramified divisor, its complete
+fixed--moving boundary ideal lies in the corresponding center prime.
 -/
-def PlanarBoundarySeparation (B : BoundaryIdealData D) : Prop :=
-  ∀ (C : Subgroup (NormalizationGaloisGroup D)),
-    C ≠ ⊥ →
-      ∀ p : PrimeSpectrum (GaloisNormalizationRing (F := F) (N := N)),
-        p.asIdeal.primeHeight = 1 →
-          fixedLocusIdeal C ≤ p.asIdeal →
-            ¬ movingBoundaryIdeal B.boundaryIdeal C ≤ p.asIdeal
+theorem fixedMovingBoundaryIdeal_le_ramifiedPrime
+    (B : BoundaryIdealData D)
+    (E : PolynomialRamifiedCodimensionOnePoint (F := F) (N := N))
+    (C : Subgroup (NormalizationGaloisGroup D))
+    (hC : C ≤ inertiaGroupAt (PlanarBaseFunctionField F)
+      (D.valuationAt E).valuationRing) :
+    fixedMovingBoundaryIdeal D C ≤ E.1.asIdeal := by
+  rw [fixedMovingBoundaryIdeal_le_iff]
+  exact ⟨
+    (fixedLocusIdeal_mono hC).trans
+      (actualInertiaFixedLocusIdeal_le_ramifiedPrime D E),
+    movingBoundaryIdeal_le_ramifiedPrime
+      B.ramificationRealization B.sourceEtale E C hC⟩
+
+/-- The fixed--moving ideal for the actual inertia lies at its center. -/
+theorem actualInertiaFixedMovingBoundaryIdeal_le
+    (B : BoundaryIdealData D)
+    (E : PolynomialRamifiedCodimensionOnePoint (F := F) (N := N)) :
+    fixedMovingBoundaryIdeal D
+      (inertiaGroupAt (PlanarBaseFunctionField F)
+        (D.valuationAt E).valuationRing) ≤ E.1.asIdeal :=
+  B.fixedMovingBoundaryIdeal_le_ramifiedPrime E _ le_rfl
 
 /-- Boundary separation excludes every ramified height-one point. -/
 theorem ramifiedCodimensionOnePoint_isEmpty
     (B : BoundaryIdealData D)
-    (hSeparation : B.PlanarBoundarySeparation) :
+    (hSeparation : PlanarBoundarySeparation D) :
     IsEmpty (PolynomialRamifiedCodimensionOnePoint (F := F) (N := N)) := by
   constructor
   intro E
-  exact
-    (hSeparation
-      (inertiaGroupAt (PlanarBaseFunctionField F)
-        (D.valuationAt E).valuationRing)
-      (D.inertia_nontrivial E) E.1 E.2.1
-      (B.fixedLocusIdeal_le E))
-      (B.actualInertiaMovingBoundaryIdeal_le E)
+  exact hSeparation
+    (inertiaGroupAt (PlanarBaseFunctionField F)
+      (D.valuationAt E).valuationRing)
+    (D.inertia_nontrivial E) E.1 E.2.1
+    (B.actualInertiaFixedMovingBoundaryIdeal_le E)
 
 /-- The exact moving-sheet coverage condition excludes every ramified divisor. -/
 theorem ramifiedCodimensionOnePoint_isEmpty_of_movingSheetCoverage
@@ -605,7 +700,7 @@ theorem ramifiedCodimensionOnePoint_isEmpty_of_movingSheetCoverage
 /-- Boundary separation implies the existing no-hidden-inertia interface. -/
 theorem noHiddenInertia
     (B : BoundaryIdealData D)
-    (hSeparation : B.PlanarBoundarySeparation) :
+    (hSeparation : PlanarBoundarySeparation D) :
     PlanarNoHiddenInertia D := by
   intro hHidden
   obtain ⟨E, _, _⟩ := hHidden
@@ -625,7 +720,7 @@ theorem noHiddenInertia_of_movingSheetCoverage
 /-- The exact codimension-one unramifiedness input consumed by purity. -/
 theorem noCodimensionOneRamification
     (B : BoundaryIdealData D)
-    (hSeparation : B.PlanarBoundarySeparation) :
+    (hSeparation : PlanarBoundarySeparation D) :
     NoCodimensionOneRamification (F := F) (N := N) := by
   intro p hp
   by_contra hRamified

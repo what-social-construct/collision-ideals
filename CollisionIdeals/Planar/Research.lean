@@ -1,9 +1,7 @@
 import CollisionIdeals.Planar.Research.PrincipalPartsStrategy
 import CollisionIdeals.Planar.Research.FixedMovingBoundaryPrincipalParts
-import CollisionIdeals.Planar.Research.UnboundedPrincipalParts
 import CollisionIdeals.Planar.Research.FinitePrincipalPartsControl
 import CollisionIdeals.Planar.ConjugateSecantEvaluation
-import CollisionIdeals.Planar.Research.LogarithmicInertia
 import CollisionIdeals.Planar.Research.CompletedTameRamification
 
 /-!
