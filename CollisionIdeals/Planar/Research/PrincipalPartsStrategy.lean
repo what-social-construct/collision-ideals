@@ -1,5 +1,5 @@
 import Mathlib.RingTheory.Ideal.Colon
-import Mathlib.RingTheory.Trace.Defs
+import Mathlib.RingTheory.DedekindDomain.Different
 
 /-!
 # Trace-integral bounded-stage comparison
@@ -58,6 +58,27 @@ def TraceIntegralSubmodule
   smul_mem' := by
     intro r z hz a
     simpa [Algebra.smul_def, mul_assoc, mul_comm, mul_left_comm] using hz (r * a)
+
+/-- The trace-integral carrier is exactly Mathlib's trace dual of the unit
+order.  This bridge prevents the research layer from maintaining a second
+independent codifferent object. -/
+theorem traceIntegralSubmodule_eq_traceDual
+    (B K T N : Type*)
+    [CommRing B] [Field K] [CommRing T] [Field N]
+    [Algebra B K] [Algebra B T] [Algebra B N] [Algebra K N] [Algebra T N]
+    [IsScalarTower B K N] [IsScalarTower B T N]
+    [FiniteDimensional K N] :
+    TraceIntegralSubmodule B K T N =
+      Submodule.traceDual B K (1 : Submodule T N) := by
+  ext z
+  rw [Submodule.mem_traceDual]
+  constructor
+  · intro hz a ha
+    rw [Submodule.mem_one] at ha
+    obtain ⟨t, rfl⟩ := ha
+    simpa [Algebra.traceForm_apply] using hz t
+  · intro hz t
+    exact hz (algebraMap T N t) (by simp)
 
 section BoundedStageComparison
 

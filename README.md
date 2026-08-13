@@ -334,6 +334,7 @@ The canonical modules are:
 | secant projector | `Planar.Secant` | planar construction of $q_F$ from the secant determinant |
 | explicit planar input | `Planar.ExplicitSecant`, `Planar.KellerFrame` | canonical telescoping divided differences and the polynomial inverse-Jacobian frame |
 | landing candidate | `Planar.Research.SecantFrameDenominator` | nonzero finite-coefficient denominator ideals; uniform trace landing remains open |
+| monogenic trace order | `Planar.Research.MonogenicOrder` | thin reuse of Mathlib's monogenic order, power basis, hypersurface presentation, Jacobian element, and conductor |
 | endpoint API | `Planar.Conclusion` | packaged consequences |
 
 `Planar.Secant` is an independent algebraic entry point into the same
@@ -342,14 +343,21 @@ colon-ideal criterion described below.
 
 The prospective principal-parts and trace-landing objects are preserved
 behind the separate `CollisionIdeals.Planar.Research` umbrella; they are not
-imported by the stable API.  The manuscript now isolates exactly two proved
-statements: a hidden fixed--moving divisor localizes
+imported by the stable API.  The manuscript now isolates two geometric
+statements and a proved finite Tate--conductor reduction: a hidden
+fixed--moving divisor localizes
 `FixedMovingBoundaryPrincipalParts` to the unbounded DVR pole tower, while
 the trace dual gives a finite bounded quotient.  The explicit divided-
 difference secant and polynomial inverse-Jacobian frame are now formalized,
 as is the generic nonzero denominator theorem for a finite coefficient
-family.  The single missing theorem is uniform trace landing: the prescribed
-secant--frame denominator ideal must be contained in the trace transporter.
+family.  The manuscript's monogenic Tate--conductor reduction is wired in
+Lean to Mathlib's existing order and conductor objects, and the generic
+trace-integral carrier is proved equal to Mathlib's `Submodule.traceDual`.
+Tate reconstruction and the specialized conductor--codifferent equality
+remain to be formalized.  The single
+missing geometric theorem is uniform trace landing: the prescribed
+secant--frame denominator ideal must be contained in the trace transporter,
+equivalently its Jacobian multiple must land in the normalization conductor.
 A merely nonzero intersection would only restate boundary separation; the
 coefficientwise inclusion is the Keller-specific research target.
 The corresponding local-cohomology localization, trace-dual specialization,

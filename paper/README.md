@@ -33,15 +33,20 @@ The status distinction in the paper is intentional:
   gives $q_F=0$ and $I_R=I_\Delta$;
 - the stable boundary API canonically joins the inertia-fixed locus to the
   boundaries of all moved sheets.  The research reduction now consists of
-  two proved statements and one missing morphism: the fixed--moving module
+  two geometric statements, a finite Tate--conductor reduction, and one
+  missing morphism: the fixed--moving module
   has an unbounded DVR pole tower at a hidden divisor; the trace-dual quotient
   is finite and locally bounded; and the explicit first-jet secant--frame
   denominator ideal must be contained in the trace-transporter ideal.  A
   merely nonzero intersection would only restate boundary separation.  The
   polynomial frame and explicit divided-difference secant are formalized,
-  together with a generic nonzero denominator theorem; the required
-  localization, trace-dual specialization, common ambient embeddings, and
-  uniform trace-landing identity are not yet formalized;
+  together with a generic nonzero denominator theorem.  The research layer
+  also reuses Mathlib's monogenic order, power basis, hypersurface, Jacobian,
+  conductor, and trace-dual objects.  The generic trace-integral carrier is
+  identified with Mathlib's trace dual.  Tate reconstruction, the specialized
+  conductor--codifferent equality, the required localization and common
+  ambient embeddings, and the uniform trace-landing identity are not yet
+  formalized;
 - repository-wide manuscript/Lean parity and the deletion gates for legacy or
   optional research objects are recorded in `../SEMANTIC-PARITY.md`;
 - the dimension-three theorem is an abstract implication from explicit

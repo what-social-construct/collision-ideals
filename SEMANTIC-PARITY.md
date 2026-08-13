@@ -1,9 +1,10 @@
 # Planar semantic parity queue
 
-This queue tracks the manuscript's planar reduction as two proved statements,
-one missing morphism, and the existing divisorial endgame.  It is deliberately
-conservative: an older declaration is not deleted merely because it is not on
-the shortest current proof path.
+This queue tracks the manuscript's planar reduction as two geometric
+statements, a proved finite Tate--conductor reduction, one missing morphism,
+and the existing divisorial endgame.  It is deliberately conservative: an
+older declaration is not deleted merely because it is not on the shortest
+current proof path.
 
 ## Deletion gate
 
@@ -38,7 +39,16 @@ the current research reduction is:
 2. **Trace-dual bounded stage.**  The quotient
    (Q_{\mathrm{tr}}=T^\dagger/T) is finite and has bounded height-one
    poles.
-3. **Missing Secant--Frame Trace Landing.**  The explicit first-jet
+3. **Monogenic Tate--conductor reduction.**  For an integral primitive
+   generator (\alpha_{\mathrm{sec}}\in T), the finite hypersurface order
+   (R_{\mathrm{sec}}=B[\alpha_{\mathrm{sec}}]) has Jacobian
+   (J_{\mathrm{sec}}=f'_{\mathrm{sec}}(\alpha_{\mathrm{sec}})) and conductor
+   (\mathfrak f_{\mathrm{sec}}=(R_{\mathrm{sec}}:T)).  Tate reconstruction
+   gives
+   (T^\dagger=J_{\mathrm{sec}}^{-1}\mathfrak f_{\mathrm{sec}}), reducing
+   trace landing to a conductor containment and finitely many trace
+   coordinates.  It does not bound the remaining arbitrary (r\in R_C).
+4. **Missing Secant--Frame Trace Landing.**  The explicit first-jet
    secant--frame lattice has the nonzero denominator ideal
    (\mathfrak d_{C,1}^{\mathrm{sf}}).  Prove the coefficientwise inclusion
    (\mathfrak d_{C,1}^{\mathrm{sf}}\subseteq
@@ -47,7 +57,7 @@ the current research reduction is:
    \{s:sR_C\subseteq T^\dagger\}).  Equivalently, prove the uniform trace
    identity (\operatorname{Tr}_{N/K}(srt)\in B) for all
    (s\in\mathfrak d_{C,1}^{\mathrm{sf}}), (r\in R_C), and (t\in T).
-4. **Endgame.**  The resulting contradiction gives boundary separation,
+5. **Endgame.**  The resulting contradiction gives boundary separation,
    then no height-one ramification, purity, (N=K), and collision vanishing.
 
 The secant--frame denominator ideal is constructed and nonzero; its inclusion
@@ -70,10 +80,12 @@ the first-jet choice is sufficient.
 | P1 | DVR pole-tower calculation | proved | missing | add local-cohomology localization/Čech infrastructure and unboundedness |
 | P1 | (S_2) vanishing and `Sep ↔ P=0` | proved | missing | formalize after the local calculation |
 | P1 | Common map (\mathcal P_C^{\mathrm{fm}}\to N/T) | constructed by the open-complement sequence | missing | construct before typing the landing square |
-| P2 | Trace dual (T^\dagger) | specialized and proved finite | generic carrier only | identify the generic object with Mathlib `Submodule.traceDual`, then specialize |
+| P2 | Trace dual (T^\dagger) | specialized and proved finite | generic carrier proved equal to Mathlib `Submodule.traceDual`; geometric specialization and finiteness missing | specialize to the normalization data and its finite-local-free structure |
 | P2 | (Q_{\mathrm{tr}}=T^\dagger/T\to N/T) | proved | missing | define quotient, finiteness, and ambient inclusion |
 | P2 | Local inverse-different stage | proved | missing | reuse Mathlib different/trace-dual API; formalize tame exponent afterward |
 | P2 | Finite local freeness of (T/B) | proved from surface CM and miracle flatness | not formalized | prove it or expose a narrowly scoped geometric interface |
+| P2 | Monogenic comparison order (R_{\mathrm{sec}}) | finite-free hypersurface, power basis, Jacobian, and conductor constructed | thin aliases to Mathlib `Algebra.adjoin`, `powerBasis'`, `minpoly.equivAdjoin`, and `conductor` in `Research.MonogenicOrder` | retain the transparent specialization; do not duplicate Mathlib's objects |
+| P2 | Tate--conductor identity (T^\dagger=J_{\mathrm{sec}}^{-1}(R_{\mathrm{sec}}:T)) | proved | missing | formalize Tate reconstruction and the trace-dual/conductor equality; do not package landing into this theorem |
 | P3 | Explicit divided-difference secant matrix | defined canonically | explicit coefficientwise construction and its identities are proved in `Planar.ExplicitSecant`; legacy chosen data remain in use | migrate downstream secant consumers only after proving equivalence/compatibility |
 | P3 | Conjugate secant evaluation | proved for actual (g\)-sheets | only generic collision-cocone vanishing | construct the (g\)-cocone and prove the (g\in H/g\notin H) formula |
 | P3 | Inverse-Jacobian frame | defined and proved; extension preserves each (A_g), not (T) | polynomial frame and four duality identities are proved in `Planar.KellerFrame`; field extensions are missing | extend to (L,N) and conjugate rings |
