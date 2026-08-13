@@ -10,7 +10,7 @@ cohomology functor, defined as a filtered colimit of Ext modules.
 
 The ramification-supported principal-parts and uniform-annihilator objects
 belong to the prospective finite-control strategy and are kept in
-`CollisionIdeals.Planar.PrincipalPartsStrategy`.
+`CollisionIdeals.Planar.Research.PrincipalPartsStrategy`.
 -/
 
 set_option autoImplicit false
@@ -32,7 +32,7 @@ def BoundaryPrincipalParts (J : Ideal R) : ModuleCat R :=
 /--
 Boundary coherence for an affine open complement: the first local-cohomology
 module is finite over the ambient affine ring.  In the planar Zariski--Main
-factorization this is the strong target that forces the entire deleted
+factorization this is the global criterion that forces the entire deleted
 boundary to disappear; that geometric implication is kept separate from
 this algebraic definition.
 -/

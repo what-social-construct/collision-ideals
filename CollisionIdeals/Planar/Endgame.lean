@@ -131,7 +131,7 @@ theorem planarVanishing_of_noCodimensionOneRamification
       F (M.kellerFlat M.keller) hFunctionFieldTrivial
 
 /--
-The strong boundary-coherence route.  Once the explicit local-cohomology
+The global boundary-coherence route.  Once the explicit local-cohomology
 bridge removes the intermediate-normalization boundary, moving-sheet
 coverage is automatic; the common codimension-one endgame then applies.
 -/
@@ -177,7 +177,7 @@ theorem planarVanishing_of_boundaryCoherence
     exact Set.notMem_empty _
 
 /--
-The weak module-theoretic route: finite-length Kähler differentials first
+The divisorial module-theoretic route: finite-length Kähler differentials first
 eliminate height-one ramification through the explicit support bridge, after
 which purity and finite-étale rigidity complete the planar endgame.
 -/
@@ -200,7 +200,7 @@ theorem planarVanishing_of_ramificationRigidity
       (hBridge M.diagram.cover hRigidity)
 
 /--
-The conditional planar vanishing spine.
+The hypothesis-parametrized planar divisorial endgame.
 
 All concrete normalization and collision data is carried by M.
 The planar no-hidden-inertia statement—the negation of the positive
@@ -243,7 +243,7 @@ theorem planarVanishing_assuming_standardGeometry
     M hNoHidden
 
 /--
-The explicit conjugate-coverage route through the conditional planar spine.
+The explicit conjugate-coverage route through the planar divisorial endgame.
 Coverage supplies an inertia-moving affine center for every ramified
 divisor; such a center contradicts the boundary conclusion from étaleness,
 so no hidden inertia remains.
@@ -289,8 +289,8 @@ theorem planarVanishing_of_movingSheetCoverage
         hCoverage)
 
 /--
-The finite-group, ideal-theoretic route through the conditional planar
-spine.  Boundary separation says that no height-one prime can contain both
+The finite-group, ideal-theoretic route through the planar divisorial
+endgame.  Boundary separation says that no height-one prime can contain both
 the fixed-locus ideal of a nontrivial subgroup and all boundaries of the
 sheets moved by that subgroup.
 -/

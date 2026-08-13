@@ -1,5 +1,5 @@
 import CollisionIdeals.AutomorphismCriterion
-import CollisionIdeals.Planar.ConditionalVanishing
+import CollisionIdeals.Planar.Endgame
 import CollisionIdeals.Planar.Secant
 
 set_option autoImplicit false
@@ -68,7 +68,7 @@ namespace PlanarKellerCollisionModel
 variable {F : PlanarPolynomialMap}
 
 /--
-The conditional planar spine kills the chosen off-diagonal idempotent.
+The planar divisorial endgame kills the chosen off-diagonal idempotent.
 
 The concrete Keller collision model and the global no-hidden-inertia
 hypothesis are displayed as separate inputs.
@@ -89,7 +89,7 @@ theorem collisionIdempotent_eq_zero
     planarVanishing_assuming_standardGeometry M hNoHidden
 
 /--
-The same conditional spine identifies the collision and diagonal ideals.
+The same divisorial endgame identifies the collision and diagonal ideals.
 -/
 theorem collisionIdeal_eq_diagonalIdeal
     (M : PlanarKellerCollisionModel F)
@@ -106,7 +106,7 @@ theorem collisionIdeal_eq_diagonalIdeal
 
 /--
 With Ax--Grothendieck supplied by the literature interface, the
-conditional planar spine makes the Keller map a polynomial automorphism.
+planar divisorial endgame makes the Keller map a polynomial automorphism.
 -/
 theorem isPolynomialAutomorphism
     (M : PlanarKellerCollisionModel F)

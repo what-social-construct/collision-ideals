@@ -4,19 +4,19 @@ import Mathlib.RingTheory.Length
 import Mathlib.RingTheory.Kaehler.Basic
 
 /-!
-# Two planar finiteness targets
+# Two planar finiteness criteria
 
-This file names the two module-theoretic targets used in the planar paper.
+This file names the two module-theoretic criteria used in the planar paper.
 They are deliberately distinct from the finiteness already built into the
 normalization diagram.
 
 * `PlanarBoundaryCoherence F` says that the first local cohomology of the
-  deleted Zariski--Main boundary is finite.  This is the stronger target: its
-  geometric consequence is that the whole boundary is empty.
+  deleted Zariski--Main boundary is finite.  This is the global-boundary
+  formulation: its geometric consequence is that the whole boundary is empty.
 * `PlanarRamificationRigidity` says that the already finite module of relative
   Kähler differentials on the Galois normalization has finite length.  This is
-  the weaker target: its geometric consequence is only the absence of
-  height-one ramification.
+  the divisorial formulation: its immediate geometric consequence is the
+  absence of height-one ramification.
 
 The local-cohomology comparison with sections on the affine open and the
 finite-length/support comparison are substantive geometric bridges.  They are
@@ -40,7 +40,7 @@ def planarIntermediateBoundaryIdeal (F : PlanarPolynomialMap) :
     (polynomialIntermediateNormalizationBoundary F)
 
 /--
-The strong planar target: first local cohomology of the deleted boundary is
+The global-boundary criterion: first local cohomology of the deleted boundary is
 finite over the intermediate normalization ring.
 -/
 def PlanarBoundaryCoherence (F : PlanarPolynomialMap) : Prop :=
@@ -48,7 +48,7 @@ def PlanarBoundaryCoherence (F : PlanarPolynomialMap) : Prop :=
     (planarIntermediateBoundaryIdeal F)
 
 /--
-The explicit geometric bridge for the strong route.  It is separate because
+The explicit geometric bridge for the global-boundary route.  It is separate because
 the open-complement local-cohomology sequence and the finite-open-immersion
 argument are not yet formalized in the development.
 -/

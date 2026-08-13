@@ -319,13 +319,13 @@ The canonical modules are:
 | conjugate sheets | `DecompositionSheets` | dimension-independent $D_E\backslash G/H$ classes and sheet index |
 | geometric centers | `PolynomialNormalizationDiagram`, `Planar.NormalizationDiagram` | shared centers and the legacy no-hidden-inertia interface |
 | ramification realization | `VisibleRamification` | dimension-independent identification of sheet and geometric ramification indices |
-| finiteness criteria | `BoundaryPrincipalParts`, `Planar.RigidityTargets` | global boundary coherence, divisorial ramification rigidity, and the explicit support bridge |
+| finiteness criteria | `BoundaryPrincipalParts`, `Planar.RigidityTargets` | global boundary coherence, divisorial ramification rigidity, and their explicit bridge interfaces |
 | canonical boundary API | `Planar.BoundarySeparation` | pulled-back conjugate boundaries and ideals, valuation containment, moving-sheet coverage, and boundary separation |
 | Keller local geometry | `KellerGeometry` | dimension-generic Keller-to-étale and Keller-to-flat bridges |
 | Keller collision model | `KellerCollisionModel` | dimension-generic package of the supplied normalization and local-geometry data |
 | generic degree one | `GenericDegreeOne` | dimension-generic descent from $L=K$ and flatness to obstruction vanishing |
 | literature interfaces | `Planar.ExternalAssumptions` | branch purity, finite-étale rigidity, Ax–Grothendieck |
-| composition | `Planar.ConditionalVanishing` | the hypothesis-parametrized divisorial endgame and automorphism theorems |
+| composition | `Planar.Endgame` | the hypothesis-parametrized divisorial endgame and automorphism theorems |
 | secant projector | `Planar.Secant` | planar construction of $q_F$ from the secant determinant |
 | endpoint API | `Planar.Conclusion` | packaged consequences |
 
@@ -333,12 +333,21 @@ The canonical modules are:
 off-diagonal factor.  It constructs the secant projector and proves the
 colon-ideal criterion described below.
 
-The prospective principal-parts, secant-transport, and logarithmic-inertia
-mechanisms are preserved behind the separate `CollisionIdeals.Planar.Research`
-umbrella.  They are not imported by the stable `CollisionIdeals.Planar` API.
-`BoundaryPrincipalParts` remains in the core because it defines PBC;
-ramification-supported principal parts and bounded-codifferent control live
-in `Planar.PrincipalPartsStrategy` and the research umbrella.
+The prospective principal-parts, fixed--moving boundary, secant-transport,
+and logarithmic-inertia mechanisms are preserved behind the separate
+`CollisionIdeals.Planar.Research` umbrella.  They are not imported by the
+stable `CollisionIdeals.Planar` API.  `BoundaryPrincipalParts` remains in the
+core because it defines PBC; general combined-support and bounded-codifferent
+scaffolding live in `Planar.Research.PrincipalPartsStrategy`.  The research-only
+`FixedMovingBoundaryPrincipalParts` specialization joins the fixed-locus and
+moved-sheet boundary ideals and proves that its support condition is exactly
+the existing height-one boundary-separation predicate.
+The manuscript further identifies the secant diagonal idempotent with the
+normal-closure trace coevaluation tensor and gives a Hilbert--Burch
+presentation of the nonzero off-diagonal factor.  What remains open is the
+Keller-specific construction of a nonzero secant/frame multiplier carrying
+all relevant fixed--moving boundary principal parts into the finite
+trace-dual stage; these manuscript calculations are not yet formalized.
 
 ### The map-specific model
 

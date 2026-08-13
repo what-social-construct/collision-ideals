@@ -1377,6 +1377,39 @@ Let \(\bar\delta_F\) be the class of \(\delta_F\) in \(C_F\), and define
 \[
   q_F:=1-c^{-1}\bar\delta_F.
 \]
+Set also
+\[
+  e_F:=1-q_F=c^{-1}\bar\delta_F.
+\]
+
+\begin{proposition}[Secant separability idempotent]
+\label{prop:secant-separability-idempotent}
+Under \(C_F\cong A\otimes_BA\), the element \(e_F\) satisfies
+\[
+  e_F^2=e_F,
+  \qquad
+  \bar\mu_F(e_F)=1,
+  \qquad
+  (a\otimes1)e_F=(1\otimes a)e_F
+  \quad(a\in A).
+\]
+Thus \(e_F\) is the diagonal separability idempotent written explicitly by
+the planar secant determinant.
+\end{proposition}
+
+\begin{proof}
+Proposition~\ref{prop:secant-annihilator} gives
+\(\bar\delta_FJ=0\), while
+\(\bar\delta_F-c\in J\).  Hence
+\(\bar\delta_F(\bar\delta_F-c)=0\), so
+\(e_F^2=e_F\).
+Diagonal evaluation gives
+\(\bar\mu_F(\bar\delta_F)=c\), so
+\(\bar\mu_F(e_F)=1\).  Finally,
+\(a\otimes1-1\otimes a\) belongs to
+\(J=\ker(\bar\mu_F)\), while \(e_F\) annihilates \(J\); this is exactly the
+last displayed identity.
+\end{proof}
 
 \begin{theorem}[Planar collision-sheet decomposition]
 \label{thm:collision-sheet-decomposition}
@@ -1532,6 +1565,82 @@ In particular, the secant determinant cuts out the off-diagonal factor:
   =
   \Spec\!\bigl(S/(I_R+(\delta_F))\bigr).
 \]
+
+The entries of the full secant matrix give more than its determinant.  Write
+\[
+  M_F=
+  \begin{pmatrix}
+    m_{11}&m_{12}\\
+    m_{21}&m_{22}
+  \end{pmatrix},
+  \qquad
+  d_i=x_i-y_i,
+  \qquad
+  r_1=P(x)-P(y),\quad r_2=Q(x)-Q(y),
+\]
+and define
+\[
+  \Phi_F=
+  \begin{pmatrix}
+    m_{22}&-m_{21}\\
+    -m_{12}&m_{11}\\
+    -d_1&-d_2
+  \end{pmatrix}.
+\]
+
+\begin{proposition}[Secant Hilbert--Burch resolution]
+\label{prop:secant-hilbert-burch}
+Assume that \(C_F^\circ\ne0\).  The signed maximal minors of \(\Phi_F\)
+are \(r_1,r_2,\delta_F\), and there is an exact sequence
+\[
+  0\longrightarrow S^2
+  \xrightarrow{\ \Phi_F\ }S^3
+  \xrightarrow{\ (r_1,r_2,\delta_F)\ }S
+  \longrightarrow C_F^\circ\longrightarrow0.
+\]
+Consequently
+\[
+  \omega_{C_F^\circ}
+  \cong\operatorname{coker}(\Phi_F^{\mathsf t})
+  \cong C_F^\circ.
+\]
+The last isomorphism is induced by
+\[
+  (u,v)\longmapsto-d_2u+d_1v.
+\]
+\end{proposition}
+
+\begin{proof}
+Direct calculation gives
+\[
+  \det\!\begin{pmatrix}-m_{12}&m_{11}\\-d_1&-d_2\end{pmatrix}=r_1,
+  \quad
+  -\det\!\begin{pmatrix}m_{22}&-m_{21}\\-d_1&-d_2\end{pmatrix}=r_2,
+  \quad
+  \det\!\begin{pmatrix}m_{22}&-m_{21}\\-m_{12}&m_{11}\end{pmatrix}
+  =\delta_F.
+\]
+Thus the maximal-minor ideal is
+\(I_R+(\delta_F)=I_{\mathrm{off}}\).  The first projection makes
+\(C_F=A\otimes_BA\) an \'etale \(A\)-algebra, so its nonzero direct factor
+\(C_F^\circ\) is a regular Cohen--Macaulay surface.  Hence
+\(I_{\mathrm{off}}\subset S\) has grade two, and Hilbert--Burch gives the
+displayed resolution \cite{StacksComplexExactness}.
+
+Dualizing the resolution over the regular four-dimensional ring \(S\) gives
+\(\omega_{C_F^\circ}\cong\operatorname{coker}(\Phi_F^{\mathsf t})\).
+The row \((-d_2,d_1)\) kills every row of \(\Phi_F\) modulo
+\((r_1,r_2,\delta_F)\), so it induces the stated map to \(C_F^\circ\).
+Moreover \((d_1,d_2)C_F^\circ=C_F^\circ\): otherwise a prime containing
+both would also contain \(\delta_F\), although
+\(\delta_F\equiv c\pmod{(d_1,d_2)}\).  The induced map is therefore
+surjective.  Both source and target are rank-one locally free modules on the
+regular scheme \(\Spec C_F^\circ\), so it is an isomorphism.
+\end{proof}
+
+The final trivialization is intrinsic up to a unit.  Identifying this
+particular Hilbert--Burch generator with a chosen volume form requires a
+separate comparison; no such identification is used below.
 
 \subsection{Galois specialization and conjugate coordinates}
 
@@ -2085,6 +2194,37 @@ some \(x_i\) is moved, since \(L=\C(x_1,x_2)\).  The corresponding factor
 \(\delta_{F,g}=0\).  The formulas for \(q_{F,g}\) follow.
 \end{proof}
 
+The complementary idempotent \(e_F=1-q_F\) gives an explicit
+trace-theoretic bridge.  Under the standard finite Galois decomposition
+\[
+  N\otimes_KN\xrightarrow{\sim}\prod_{\sigma\in G}N,
+  \qquad
+  a\otimes b\longmapsto\bigl(a\,\sigma(b)\bigr)_{\sigma},
+\]
+the generic base change of \(e_F\) is the characteristic function of
+\(H\).  Let \(e_g=(g\otimes g)e_F\); then \(e_g\) is the characteristic
+function of \(gHg^{-1}\).  Proposition
+\ref{prop:conjugate-embedding-action} gives
+\[
+  e_N:=\prod_{g\in G}e_g
+  =\mathbf1_{\core_G(H)}
+  =\mathbf1_{\{1\}}.
+\]
+Finally, the trace pairing gives a canonical \(K\)-linear isomorphism
+\[
+  \Theta_N:N\otimes_KN\xrightarrow{\sim}\operatorname{End}_K(N),
+  \qquad
+  \Theta_N(a\otimes b)(z)=a\operatorname{Tr}_{N/K}(bz),
+\]
+and \(\Theta_N(e_N)=\operatorname{id}_N\).  Thus the product of the
+conjugate planar secant idempotents is the trace coevaluation tensor for
+\(N/K\).  Notice that \(\Theta_N\) is a linear, not a ring, isomorphism.
+For the finite locally free order \(T=A_N\), the integral coevaluation tensor
+lies in \(T\otimes_B\operatorname{Hom}_B(T,B)\); its generic fiber is
+\(e_N\) after the trace identification.  This identifies the finite
+trace-dual lattice canonically, but does not yet bound poles of moving-sheet
+principal parts.
+
 This follows the exponent-one secant bound completely into the normal
 closure, but also locates its limit.  On a nonmarked sheet
 \(\delta_{F,g}\) is the zero function; it is therefore a generic-sheet
@@ -2092,6 +2232,18 @@ projector, not a nonzero boundary parameter whose fixed power bounds pole
 order.  Any use of the secant matrix for uniform boundary control therefore
 needs a further transport statement, using more than the determinant alone.
 That possible mechanism is isolated after the completed endgame.
+
+The generic idempotents and the conjugate affine opens play different
+roles.  The former separate components of the generic collision algebra,
+whereas (U_g\subset Z) tests whether the corresponding conjugate center
+remains integral.  At a ramified divisor those generic components can meet
+in an integral model, so no extension of (e_g) as an integral idempotent is
+asserted.  The research mechanism below instead attaches to this generic
+sheet isolation a fixed--moving boundary contribution supported on
+
+\[
+  V\!\left(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\right).
+\]
 
 For \(E\in\Ram^{(1)}(Z/Y)\) and
 \(\omega\in\mathcal Q_E\), Proposition
@@ -2742,7 +2894,9 @@ following mechanisms ask how its divisorial premise might be established
 from the special polynomial-plane data; they are not additional steps in the
 endgame.
 
-For a normal Noetherian surface \(W=\Spec R\) with dense open
+\subsubsection{Fixed--moving boundary principal parts}
+
+For a normal Noetherian integral surface \(W=\Spec R\) with dense open
 \(U=W\setminus V(\mathfrak j)\), define its boundary principal-parts module
 by
 \[
@@ -2760,47 +2914,108 @@ on \(U\) modulo those extending to \(W\).  At a height-one prime,
   \end{cases}
 \]
 Indeed, localization reduces to the one-element \v{C}ech complex of the DVR
-\(R_{\mathfrak p}\).  For a nontrivial \(I\leq G\), put
+\(R_{\mathfrak p}\).  Put \(T:=A_N\).  For a prime-order subgroup
+\(C\leq G\), set
 \[
-  \mathcal P_I^{\mathrm{mov}}
-  :=H^1_{\mathfrak j_I^{\mathrm{mov}}}(A_N),
-  \qquad
-  \mathcal P_I^{\mathrm{ram}}
-  :=H^0_{\mathfrak d_N}(\mathcal P_I^{\mathrm{mov}}),
-  \qquad
-  \mathfrak d_N:=\mathfrak D_{A_N/B}.
+  \begin{aligned}
+    U_C^{\mathrm{mov}}
+      &:=Z\setminus V(\mathfrak j_C^{\mathrm{mov}})
+        =\bigcup_{C\nsubseteq gHg^{-1}}U_g,\\
+    \mathcal P_C^{\mathrm{mov}}
+      &:=H^1_{\mathfrak j_C^{\mathrm{mov}}}(T),
+    &
+    \mathcal P_C^{\mathrm{fix,mov}}
+      &:=H^0_{\mathfrak a_C}
+          \bigl(\mathcal P_C^{\mathrm{mov}}\bigr).
+  \end{aligned}
 \]
-Successive supports give
+We call the last module the \emph{fixed--moving boundary contribution}.
+It uses support on the scheme-theoretic fixed locus; it does not take
+\(C\)-invariants.  Since \(\core_G(H)=1\), a nontrivial \(C\) moves at
+least one conjugate sheet.  The domain property then gives
+\(H^0_{\mathfrak j_C^{\mathrm{mov}}}(T)=0\).  The spectral sequence for
+successive supports, using
+\(\Gamma_{\mathfrak a_C}\Gamma_{\mathfrak j_C^{\mathrm{mov}}}
+=\Gamma_{\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}}\), therefore gives
+the canonical identification
 \[
-  \mathcal P_I^{\mathrm{ram}}
+  \mathcal P_C^{\mathrm{fix,mov}}
   \cong
-  H^1_{\mathfrak d_N+\mathfrak j_I^{\mathrm{mov}}}(A_N).
+  H^1_{\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}}(T).
 \]
-If \(E\) is a hidden ramified divisor with \(I=I_E\), then the pulled-back
-boundary dictionary and the DVR calculation give
+For a height-one prime \(\mathfrak p_E\subset T\), the same DVR calculation
+gives
 \[
-  (\mathcal P_I^{\mathrm{ram}})_{\mathfrak p_E}
+  \left(\mathcal P_C^{\mathrm{fix,mov}}\right)_{\mathfrak p_E}
   \cong
-  \Frac((A_N)_{\mathfrak p_E})/(A_N)_{\mathfrak p_E},
+  \begin{cases}
+    \Frac(T_{\mathfrak p_E})/T_{\mathfrak p_E},
+      &\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}
+         \subseteq\mathfrak p_E,\\[2pt]
+    0,&\text{otherwise}.
+  \end{cases}
 \]
-whose pole orders are unbounded; hence
-\(\mathcal P_I^{\mathrm{ram}}\) is not finite.  This is the nonfiniteness
-half of a prospective contradiction.
+The first case says exactly that \(C\leq I_E\) and that \(E\) belongs to
+every boundary \(D_g\) whose sheet is moved by \(C\).  Thus failure of
+\(\operatorname{Sep}_2(F)\) produces precisely an unbounded height-one
+localization of \(\mathcal P_C^{\mathrm{fix,mov}}\).  Conversely, normality
+makes \(T\) an (S_2\) surface, so when the displayed support has no
+height-one point its grade is at least two and this first local cohomology
+vanishes.  Hence
+\[
+  \operatorname{Sep}_2(F)
+  \quad\Longleftrightarrow\quad
+  \mathcal P_C^{\mathrm{fix,mov}}=0
+  \quad\text{for every prime-order }C\leq G.
+\]
+
+The pole filtration records the same obstruction equivariantly.  In the
+first case let \(\chi_E\) denote the tame character of \(C\) on the
+cotangent line of the DVR (T_{\mathfrak p_E}\).  For
+\[
+  F_m:=\pi_E^{-m}T_{\mathfrak p_E}/T_{\mathfrak p_E},
+  \qquad m\geq0,
+\]
+one has
+\[
+  \operatorname{gr}_m^F
+    \left(\mathcal P_C^{\mathrm{fix,mov}}\right)_{\mathfrak p_E}
+  \cong \kappa(E)\otimes\chi_E^{-m}.
+\]
+If \(\sigma\) generates \(C\), \(\chi_E(\sigma)=\zeta\), and
+\(\ell=|C|\), its formal graded pole-character is
+\[
+  \sum_{m\geq1}\zeta^{-m}q^m
+  =\frac{\zeta^{-1}q}{1-\zeta^{-1}q},
+  \qquad
+  \text{with invariant subseries }
+  \frac{q^\ell}{1-q^\ell}.
+\]
+A bounded codifferent stage instead has a polynomial character.  This is
+formally analogous to fixed-point and tangent-cone character expansions
+\cite{SardoInfirri1995}, but no global Lefschetz formula is being asserted:
+local rational tails can cancel in a virtual character, while the present
+problem requires an actual module-theoretic pole bound.
+
+\subsubsection{Trace-dual target and secant transport}
 
 There is nevertheless a canonical finite bounded-pole lattice.  Write
 \[
   T^\dagger
   :=\{z\in N:\operatorname{Tr}_{N/K}(zT)\subseteq B\}
-  \cong \operatorname{Hom}_B(T,B),
-  \qquad T:=A_N.
+  \cong \operatorname{Hom}_B(T,B).
 \]
-Finite flatness makes \(T^\dagger\) a finite \(B\)-module, and integrality of
-traces gives \(T\subseteq T^\dagger\).  Consequently
+Finite flatness and generic separability identify \(T^\dagger\) with the
+finite \(B\)-module \(\operatorname{Hom}_B(T,B)\) through the trace pairing.
+Because \(B\) is normal, the trace of every element integral over \(B\) lies
+in \(B\), so \(T\subseteq T^\dagger\).  Consequently
 \[
   Q_{\mathrm{tr}}:=T^\dagger/T
 \]
-is finite.  At a height-one tame DVR with uniformizer \(\pi_E\) and
-ramification index \(e_E\), it is the bounded codifferent stage
+is finite.  If \(\mathfrak q_E=\mathfrak p_E\cap B\), then after localizing
+the DVR extension over \(B_{\mathfrak q_E}\), separating its unramified
+part, and choosing a uniformizer \(\pi_E\) of \(T_{\mathfrak p_E}\), the
+characteristic-zero tame formula gives the bounded codifferent stage
 \[
   (Q_{\mathrm{tr}})_{\mathfrak p_E}
   \cong
@@ -2810,6 +3025,35 @@ Here ``codifferent'' means the trace-dual lattice.  Its inverse agrees with
 the K\"ahler different after height-one localization; no global invertibility
 or global identification with \(\operatorname{Fitt}_0\Omega_{T/B}\) is used
 \cite{StacksDedekindDifferent,StacksFiniteFlatDifferent}.
+
+Write
+\(\omega_Z:=\operatorname{Hom}_B(T,\omega_Y)\) for the finite-duality
+canonical module.  Trivializing \(\omega_Y\) by \(dP\wedge dQ\) identifies
+\(\omega_Z\) with
+\(T^\dagger\cong\operatorname{Hom}_B(T,B)\)
+\cite{StacksQuasiFiniteDualizing}.  If
+\[
+  \eta_F:=c^{-1}dP\wedge dQ,
+\]
+then the Keller identity restricts \(\eta_F\) to
+\(d(gx_1)\wedge d(gx_2)\) on the sheet \(X_g\).  Under the trace
+identification,
+\[
+  T\eta_F\subseteq\omega_Z,
+  \qquad
+  Q_F^{\mathrm{sec}}
+  :=\omega_Z/T\eta_F
+  \cong T^\dagger/T=Q_{\mathrm{tr}}.
+\]
+Thus the ``secant canonical-form target'' is not a second finite module: it
+is the same codifferent quotient described geometrically.  At a tame
+ramified divisor one has
+\(\eta_F=u\pi_E^{e_E-1}\omega_E\) for a unit \(u\) and a local generator
+\(\omega_E\) of \(\omega_Z\), recovering the bounded-pole formula above.
+The Hilbert--Burch trivialization of
+Proposition~\ref{prop:secant-hilbert-burch} supplies a natural generic-sheet
+presentation, but identifying its chosen generator with \(\eta_F\) is a
+separate comparison and is not needed for the finite target itself.
 
 The natural inclusion runs from this bounded stage into principal parts,
 not in the reverse direction:
@@ -2821,52 +3065,69 @@ not in the reverse direction:
 Indeed, every \(T_{\mathfrak p_E}\)-linear map from the divisible module
 \(\Frac(T_{\mathfrak p_E})/T_{\mathfrak p_E}\) to a finite
 \(T_{\mathfrak p_E}\)-module is zero.  Thus finite flatness does not supply
-an injection of the entire ramification-supported principal-parts module into
-\(Q_{\mathrm{tr}}\); such an injection would already exclude a hidden
-ramified divisor.
+an injection of the fixed--moving principal-parts module into
+\(Q_{\mathrm{tr}}\); such an injection would already exclude a divisorial
+fixed--moving boundary component.
 
-This bounded stage nevertheless gives a canonical comparison construction.
-View \(Q_{\mathrm{tr}}\) as a submodule of the rational principal-parts
-module \(N/T\), and view \(\mathcal P_I^{\mathrm{ram}}\) inside \(N/T\) via
-the open-complement description.  Define the trace-comparison ideal
+This bounded stage nevertheless gives a canonical diagnostic.  The
+open-complement exact sequence embeds
+\(\mathcal P_C^{\mathrm{mov}}\cong
+\Gamma(U_C^{\mathrm{mov}},\mathcal O_Z)/T\) into \(N/T\); hence it embeds
+\(\mathcal P_C^{\mathrm{fix,mov}}\), while
+\(T\subseteq T^\dagger\subseteq N\) embeds \(Q_{\mathrm{tr}}\) in the same
+module.  Define the trace-comparison ideal
 \[
-  \mathfrak c_I^{\mathrm{tr}}
+  \mathfrak c_C^{\mathrm{fm,tr}}
   :=
-  \{s\in T:s\mathcal P_I^{\mathrm{ram}}\subseteq Q_{\mathrm{tr}}\}.
+  \{s\in T:
+      s\mathcal P_C^{\mathrm{fix,mov}}\subseteq Q_{\mathrm{tr}}\}.
 \]
 It is important to impose this condition only on the
-ramification-supported classes.  Imposing it on the whole ring
-\(\Gamma(U_I^{\mathrm{mov}},\mathcal O_Z)\) would also detect unrelated
-unramified boundary divisors and can force the ideal to be zero for reasons
-stronger than the hidden-inertia problem.
+fixed--moving contribution.  Imposing it on the whole ring
+\(\Gamma(U_C^{\mathrm{mov}},\mathcal O_Z)\) would also detect unrelated
+boundary divisors and can force the ideal to be zero for reasons stronger
+than the hidden-inertia problem.
 
 Multiplication defines a canonical map
 \[
-  \Phi_I:\mathcal P_I^{\mathrm{ram}}
+  \Phi_C:\mathcal P_C^{\mathrm{fix,mov}}
   \longrightarrow
   \operatorname{Hom}_T
-    (\mathfrak c_I^{\mathrm{tr}},Q_{\mathrm{tr}}),
+    (\mathfrak c_C^{\mathrm{fm,tr}},Q_{\mathrm{tr}}),
   \qquad
-  \Phi_I(\xi)(s)=s\xi.
+  \Phi_C(\xi)(s)=s\xi.
 \]
 The target is finite: \(T\) is Noetherian, so
-\(\mathfrak c_I^{\mathrm{tr}}\) is finite, and both
-\(Q_{\mathrm{tr}}\) and the displayed Hom module are finite.  If \(E\) is
-hidden with \(I_E=I\) and
-\(\mathfrak c_I^{\mathrm{tr}}\nsubseteq\mathfrak p_E\), then some comparison
-multiplier is a unit after localizing at \(E\), so
-\((\Phi_I)_{\mathfrak p_E}\) is injective.  This would inject
-\(\Frac(T_{\mathfrak p_E})/T_{\mathfrak p_E}\) into a finite module, a
-contradiction.  The remaining geometric problem is therefore the precise
-height-one detection assertion
+\(\mathfrak c_C^{\mathrm{fm,tr}}\) is finite, and both
+\(Q_{\mathrm{tr}}\) and the displayed Hom module are finite.  More sharply,
+if a height-one prime contains
+\(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\), then
 \[
-  E\text{ hidden with }I_E=I
-  \quad\Longrightarrow\quad
-  \mathfrak c_I^{\mathrm{tr}}\nsubseteq\mathfrak p_E.
+  \mathfrak c_C^{\mathrm{fm,tr}}=0.
 \]
-Equivalently, one may construct a finitely generated secant/frame ideal
-\(\mathfrak s_I^{\mathrm{sec}}\subseteq\mathfrak c_I^{\mathrm{tr}}\) that is
-not contained in any such \(\mathfrak p_E\).
+Indeed, let \(0\ne s\in\mathfrak c_C^{\mathrm{fm,tr}}\) and localize at
+\(\mathfrak p_E\).  Multiplication by the nonzero element \(s\) on the
+divisible module
+\(\Frac(T_{\mathfrak p_E})/T_{\mathfrak p_E}\) is surjective.  Its image
+therefore still has arbitrarily deep poles and cannot lie in the bounded
+finite module \((Q_{\mathrm{tr}})_{\mathfrak p_E}\), a contradiction.
+Thus the exact prospective target is simply
+\[
+  \mathfrak c_C^{\mathrm{fm,tr}}\ne0
+  \qquad\text{for every prime-order }C\leq G.
+\]
+More concretely, one may construct a nonzero secant/frame ideal
+\[
+  0\ne\mathfrak s_C^{\mathrm{sec}}
+  \subseteq\mathfrak c_C^{\mathrm{fm,tr}}.
+\]
+No separate condition
+\(\mathfrak s_C^{\mathrm{sec}}\nsubseteq\mathfrak p_E\) is needed: every
+nonzero element of the domain \(T\) remains nonzero in
+\(T_{\mathfrak p_E}\), and multiplication by it on the divisible quotient
+is already surjective.  This transporter construction
+packages the desired uniform pole bound; trace duality alone gives no reason
+for the transporter to be nonzero.
 
 The fact that \(A_N\) or a boundary quotient is
 finite over its base does not give the opposite conclusion.  For example,
@@ -2882,13 +3143,28 @@ Then \(R\) is finite free over \(B_0\), and the boundary curve
 \]
 is not finitely generated.  What is missing is a uniform transverse pole
 bound.  The precise target is a Keller-specific theorem showing that the
-relevant boundary classes lie in one fixed codifferent stage
-\(\mathfrak d^{-m}/T\), or equivalently that they admit a uniform
-different-power annihilator; neither assertion follows from finite flatness
-and neither is constructed here.  More explicitly, if some power of
-\(\mathfrak d_N+\mathfrak j_I^{\mathrm{mov}}\) uniformly annihilated the
-displayed local-cohomology module for every relevant \(I\), local-cohomology
-finiteness and the DVR detector would force its vanishing and hence coverage
+fixed--moving boundary classes lie in one fixed fractional stage.  Writing
+\[
+  \mathfrak d_N:=\operatorname{Fitt}^T_0\Omega_{T/B},
+\]
+define
+\[
+  Q_{\mathfrak d}^{(m)}
+  :=(T:_N\mathfrak d_N^m)/T
+  =\{z\in N:\mathfrak d_N^m z\subseteq T\}/T,
+\]
+which avoids treating the K\"ahler different as a globally invertible ideal.
+After localization at \(\mathfrak p_E\), this becomes the bounded stage
+\[
+  \left(Q_{\mathfrak d}^{(m)}\right)_{\mathfrak p_E}
+  \cong
+  \pi_E^{-m(e_E-1)}T_{\mathfrak p_E}/T_{\mathfrak p_E}.
+\]
+Alternatively, one may ask for a uniform power of
+\(\mathfrak a_C+\mathfrak j_C^{\mathrm{mov}}\) to annihilate
+\(\mathcal P_C^{\mathrm{fix,mov}}\).  Either statement is incompatible with
+the DVR pole tower, but neither follows from finite flatness and neither is
+constructed here
 \cite{StacksLocalCohomology,StacksLocalCohomologyFiniteness}.  Likewise, the
 secant determinant detects marked versus moving generic sheets, but it
 vanishes on a moving sheet and by itself gives no nonzero parameter that
@@ -2907,13 +3183,16 @@ problem.  Writing \(c=\det JF\), the polynomial derivations
 \]
 restrict to the coordinate derivations on \(K=\C(P,Q)\).  Their unique
 extensions to the finite separable normal closure commute with \(G\), hence
-preserve every conjugate affine ring \(gA\).  In the tame height-one model
-\(u=t^e\), differentiating gives
+preserve every conjugate affine ring \(gA\).  In the standard tame
+height-one model after a suitable completed Kummer base change (including a
+root of the unit), \(u=t^e\), and differentiating gives
 \(\partial t/\partial u=(e t^{e-1})^{-1}\), the expected
-inverse-different denominator.  A prospective secant--trace landing theorem would use
+inverse-different denominator.  Intrinsically, only its valuation
+\(-(e-1)\) is used.  A prospective secant--trace landing theorem
+would use
 the evaluated full secant matrix or its adjugate, together with this frame,
-to produce \(\mathfrak s_I^{\mathrm{sec}}\).  Neither trace landing nor
-height-one detection is asserted here.
+to produce a nonzero \(\mathfrak s_C^{\mathrm{sec}}\).  Neither trace landing
+nor nonvanishing of such an ideal is asserted here.
 
 For clarity, the logical status of the constructions used above is:
 
@@ -2933,12 +3212,14 @@ map; universal validity is equivalent to \(JC(2)\) \\
 Equivalent to automorphy for each map; not known universally \\
 Torsion of \([R_{\bar\nu}]\) & Sufficient divisor-class mechanism &
 Established for normal/Galois \(L/K\), hence for generic degree two \\
-Finiteness or uniform annihilation of \(\mathcal P_I^{\mathrm{ram}}\) &
-Sufficient principal-parts mechanism & Hidden inertia gives the opposite
-nonfiniteness; finite control is not derived from the Keller data \\
-Secant--trace/codifferent boundedness & Possible source of a fixed bounded
-pole stage & The trace dual supplies the stage; no secant/frame theorem forces
-the relevant classes into it \\
+Vanishing or uniform annihilation of
+\(\mathcal P_C^{\mathrm{fix,mov}}\) & Fixed--moving principal-parts
+description of boundary separation & A divisorial fixed--moving locus gives
+the unbounded DVR pole tower; uniform control is not derived from Keller data \\
+Fixed--moving secant--trace boundedness & Possible boundary-compatible
+extension of generic sheet isolation & Secant coevaluation and the
+trace-dual/canonical-form target are explicit; no secant/frame theorem
+supplies a nonzero multiplier landing all relevant classes in it \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2981,27 +3262,39 @@ explicit input \leanpath{BoundaryCoherenceBridge} and theorem
 proved.  Likewise, \leanpath{RamificationRigidityBridge} isolates the
 unformalized finite-length support step in the divisorial route.  The stable
 local-cohomology object \leanpath{BoundaryPrincipalParts} is defined in
-\leanpath{CollisionIdeals/BoundaryPrincipalParts.lean}.  The
-ramification-supported objects
-\leanpath{RamificationSupportedBoundaryPrincipalParts} and
-\leanpath{HasUniformBoundaryAnnihilator} are kept in the prospective module
-\leanpath{CollisionIdeals/Planar/PrincipalPartsStrategy.lean}.  The abstract
+\leanpath{CollisionIdeals/BoundaryPrincipalParts.lean}.  The general
+combined-support and uniform-annihilator objects
+\leanpath{CombinedSupportPrincipalParts} and
+\leanpath{HasUniformCombinedSupportAnnihilator} are kept in
+\leanpath{CollisionIdeals/Planar/Research/PrincipalPartsStrategy.lean}.
+Their canonical fixed--moving specialization
+\leanpath{FixedMovingBoundaryPrincipalParts}, its support ideal
+\leanpath{fixedMovingBoundarySupportIdeal}, and its exact equivalence with
+the existing height-one separation predicate are formalized in
+\leanpath{CollisionIdeals/Planar/Research/FixedMovingBoundaryPrincipalParts.lean}.
+The successive-support isomorphism, DVR localization, and graded
+pole-character used in the manuscript are not yet formalized.  The abstract
 nonfiniteness mechanism for unbounded locally power-torsion principal parts
 is proved in
-\leanpath{CollisionIdeals/Planar/UnboundedPrincipalParts.lean}; finite
+\leanpath{CollisionIdeals/Planar/Research/UnboundedPrincipalParts.lean}; finite
 comparison control and the resulting direct contradiction are formalized in
-\leanpath{CollisionIdeals/Planar/FinitePrincipalPartsControl.lean}.  The
+\leanpath{CollisionIdeals/Planar/Research/FinitePrincipalPartsControl.lean}.  The
 evaluation of the planar secant relation on an arbitrary pair of collision
 sheets, including its vanishing when a coordinate is moved, is formalized in
 \leanpath{CollisionIdeals/Planar/ConjugateSecantEvaluation.lean}.  The
 prospective modules are collected under the opt-in umbrella
 \leanpath{CollisionIdeals/Planar/Research.lean}, rather than the stable
 \leanpath{CollisionIdeals/Planar.lean} import spine.  The
-geometric comparison with sections on an open complement, the height-one DVR
-detector, the boundary-coherence implication, the finite-length
-differentials criterion, the trace-dual bounded stage, and the construction
-of a uniform codifferent bound from the planar Keller data remain separate
-formalization tasks.  The properness and
+generic trace-integral submodule
+\leanpath{TraceIntegralSubmodule}, the transporter
+\leanpath{boundedStageComparisonIdeal}, and its canonical multiplication map
+\leanpath{boundedStageComparisonMap} are also formalized abstractly in the
+research layer.  Their specialization to the finite normalization---including
+the trace-dual/Hom identification, the open-complement embeddings, the
+height-one DVR calculation, and especially a nonzero secant multiplier---
+remains to be constructed.  The boundary-coherence implication and the
+finite-length differentials criterion likewise remain separate formalization
+tasks.  The properness and
 divisor-class criteria above are likewise not presently part of the Lean
 development.
 \end{leanfiles}

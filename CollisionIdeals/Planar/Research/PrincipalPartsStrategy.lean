@@ -9,7 +9,8 @@ This file contains the local-cohomology objects for the prospective
 principal-parts strategy.  They are not needed to state or prove the stable
 planar equivalence spine.  The intended missing input is a Keller-specific
 uniform bound placing the relevant boundary classes in one bounded
-codifferent stage (equivalently, a uniform different-power annihilator).
+codifferent stage; after the intended height-one localization, a uniform
+different-power annihilator is its corresponding algebraic form.
 
 Finite flatness alone does not provide a comparison from the whole
 principal-parts module to a finite trace-dual quotient: locally at a hidden
@@ -49,23 +50,27 @@ def HasUniformIdealPowerAnnihilator
   ∃ n : ℕ, 0 < n ∧ I ^ n ≤ Module.annihilator R M
 
 /--
-The uniform-annihilator target for ramification-supported boundary principal
-parts.  This is the algebraic form of a uniform bounded-codifferent-stage
-theorem.  Its derivation from planar Keller data remains open.
+The uniform-annihilator target for the combined-support local-cohomology
+module.  After the intended height-one localization this is the algebraic
+counterpart of a bounded-codifferent-stage theorem.  No global equivalence
+with the ramification-supported iterated local cohomology is asserted here;
+its derivation from planar Keller data remains open.
 -/
-def HasUniformBoundaryAnnihilator (d J : Ideal R) : Prop :=
+def HasUniformCombinedSupportAnnihilator (d J : Ideal R) : Prop :=
   HasUniformIdealPowerAnnihilator R (d + J)
     (CombinedSupportPrincipalParts R d J)
 
 /--
-The global trace-dual lattice of a finite normalization, defined inside its
-generic field by the trace-integrality condition.  The intended application
-is `B = ℂ[P,Q]`, `K = Frac(B)`, and `T = A_N ⊆ N`.
+The trace-integral dual submodule inside a generic field.  The intended
+application is `B = ℂ[P,Q]`, `K = Frac(B)`, and `T = A_N ⊆ N`.
 
-Its finiteness and identification with `Hom_B(T,B)` require the finite-flat
-and generic-separability hypotheses and are deliberately separate theorems.
+Calling this submodule a finite trace-dual *lattice* and identifying it with
+`Hom_B(T,B)` additionally require faithful embeddings, a generic-fiber
+identification `K ⊗[B] T ≃ₐ[K] N`, finite local freeness of `T / B`, and
+generic separability.  Those geometric hypotheses and conclusions are
+deliberately separate from this definition.
 -/
-def TraceDualLattice
+def TraceIntegralSubmodule
     (B K T N : Type*)
     [CommRing B] [Field K] [CommRing T] [Field N]
     [Algebra B K] [Algebra B T] [Algebra B N] [Algebra K N] [Algebra T N]
@@ -138,10 +143,10 @@ def boundedStageComparisonMap
     exact smul_comm _ _ _
 
 /--
-If the comparison ideal contains a unit, the canonical bounded-stage
-comparison is injective.  Geometrically this is the local algebra behind the
-condition that the comparison ideal avoid a candidate hidden height-one
-prime after localization.
+If the comparison ideal contains a global unit, the canonical bounded-stage
+comparison is injective.  The analogous statement after avoiding a
+height-one prime requires a separate localization theorem (including the
+finite-presentation/Hom compatibility); it is not asserted here.
 -/
 theorem boundedStageComparisonMap_injective_of_isUnit_mem
     {bounded relevant : Submodule R M} {s : R}

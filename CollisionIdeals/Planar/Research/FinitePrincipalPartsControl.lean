@@ -1,5 +1,5 @@
-import CollisionIdeals.Planar.PrincipalPartsStrategy
-import CollisionIdeals.Planar.UnboundedPrincipalParts
+import CollisionIdeals.Planar.Research.PrincipalPartsStrategy
+import CollisionIdeals.Planar.Research.UnboundedPrincipalParts
 import Mathlib.RingTheory.Noetherian.Basic
 
 /-!

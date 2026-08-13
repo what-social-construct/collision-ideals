@@ -47,7 +47,7 @@ def AffinePlaneFiniteEtaleRigidity : Prop :=
       M.normalClosure.ExtensionTrivial
 
 /-!
-The three external literature inputs used by the conditional planar spine
+The three external literature inputs used by the planar divisorial endgame
 and its final automorphism corollary.
 
 They live in a dedicated namespace so every downstream dependency remains

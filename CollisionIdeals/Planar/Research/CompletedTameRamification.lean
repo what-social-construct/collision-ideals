@@ -1,4 +1,4 @@
-import CollisionIdeals.Planar.LogarithmicInertia
+import CollisionIdeals.Planar.Research.LogarithmicInertia
 import CollisionIdeals.Planar.NormalizationDiagram
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 

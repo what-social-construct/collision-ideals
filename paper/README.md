@@ -31,10 +31,19 @@ The status distinction in the paper is intentional:
 - branch purity is applied only after every height-one point has been shown
   unramified; finite-étale rigidity then gives $N=K$, and collision descent
   gives $q_F=0$ and $I_R=I_\Delta$;
-- the principal-parts, codifferent-bound, conjugate-secant, and logarithmic
-  inertia constructions are retained as prospective mechanisms under the
-  opt-in `CollisionIdeals.Planar.Research` umbrella; they are not steps in
-  the stable divisorial endgame;
+- the fixed--moving support ideal and its combined local-cohomology module
+  canonically join the inertia-fixed locus to the boundaries of all moved
+  sheets.  Together with the codifferent-bound, secant-to-trace, and
+  logarithmic-inertia constructions, they are retained as prospective
+  mechanisms under the opt-in `CollisionIdeals.Planar.Research` umbrella;
+  they are not steps in the stable divisorial endgame.  The underlying
+  conjugate-secant evaluation and moved-sheet vanishing theorem itself is
+  already proved;
+- the manuscript proves the secant separability/trace-coevaluation identity
+  and an explicit Hilbert--Burch presentation of a nonzero off-diagonal
+  factor.  The remaining research theorem is a nonzero secant/frame
+  multiplier landing the relevant principal parts in the finite trace-dual
+  stage; these refinements are not yet formalized;
 - the dimension-three theorem is an abstract implication from explicit
   cubic residual-field and marked-normal-closure data.  It concludes
   `IsComplexThreeJacobianCounterexample F`, but does not instantiate those
