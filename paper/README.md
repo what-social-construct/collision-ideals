@@ -35,11 +35,13 @@ The status distinction in the paper is intentional:
   boundaries of all moved sheets.  The research reduction now consists of
   two proved statements and one missing morphism: the fixed--moving module
   has an unbounded DVR pole tower at a hidden divisor; the trace-dual quotient
-  is finite and locally bounded; and one must construct an explicit nonzero
-  secant/frame multiplier whose multiplication map lands in that quotient.
-  The map is not assumed injective.  The required localization, trace-dual
-  specialization, common ambient embeddings, and landing morphism are not
-  yet formalized;
+  is finite and locally bounded; and the explicit first-jet secant--frame
+  denominator ideal must be contained in the trace-transporter ideal.  A
+  merely nonzero intersection would only restate boundary separation.  The
+  polynomial frame and explicit divided-difference secant are formalized,
+  together with a generic nonzero denominator theorem; the required
+  localization, trace-dual specialization, common ambient embeddings, and
+  uniform trace-landing identity are not yet formalized;
 - repository-wide manuscript/Lean parity and the deletion gates for legacy or
   optional research objects are recorded in `../SEMANTIC-PARITY.md`;
 - the dimension-three theorem is an abstract implication from explicit

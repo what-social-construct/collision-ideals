@@ -332,6 +332,8 @@ The canonical modules are:
 | literature interfaces | `Planar.ExternalAssumptions` | branch purity, finite-étale rigidity, Ax–Grothendieck |
 | composition | `Planar.Endgame` | the hypothesis-parametrized divisorial endgame and automorphism theorems |
 | secant projector | `Planar.Secant` | planar construction of $q_F$ from the secant determinant |
+| explicit planar input | `Planar.ExplicitSecant`, `Planar.KellerFrame` | canonical telescoping divided differences and the polynomial inverse-Jacobian frame |
+| landing candidate | `Planar.Research.SecantFrameDenominator` | nonzero finite-coefficient denominator ideals; uniform trace landing remains open |
 | endpoint API | `Planar.Conclusion` | packaged consequences |
 
 `Planar.Secant` is an independent algebraic entry point into the same
@@ -343,13 +345,16 @@ behind the separate `CollisionIdeals.Planar.Research` umbrella; they are not
 imported by the stable API.  The manuscript now isolates exactly two proved
 statements: a hidden fixed--moving divisor localizes
 `FixedMovingBoundaryPrincipalParts` to the unbounded DVR pole tower, while
-the trace dual gives a finite bounded quotient.  The single missing theorem
-is an explicitly secant/frame-constructed nonzero multiplier whose
-multiplication map factors through that trace-dual quotient.  It is not an
-abstract injectivity assumption, and its construction is precisely the
-remaining Keller-specific content.  The corresponding localization,
-trace-dual specialization, common ambient embeddings, and landing morphism
-are not yet formalized.
+the trace dual gives a finite bounded quotient.  The explicit divided-
+difference secant and polynomial inverse-Jacobian frame are now formalized,
+as is the generic nonzero denominator theorem for a finite coefficient
+family.  The single missing theorem is uniform trace landing: the prescribed
+secant--frame denominator ideal must be contained in the trace transporter.
+A merely nonzero intersection would only restate boundary separation; the
+coefficientwise inclusion is the Keller-specific research target.
+The corresponding local-cohomology localization, trace-dual specialization,
+common ambient embeddings, and uniform landing identity are not yet
+formalized.
 
 The manuscript/Lean semantic-parity work is tracked in
 [`SEMANTIC-PARITY.md`](SEMANTIC-PARITY.md).  In particular, no older

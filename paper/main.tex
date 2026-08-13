@@ -3030,68 +3030,174 @@ submodule \(T\subseteq T^\dagger\), and therefore identifies the two
 quotients \cite{StacksQuasiFiniteDualizing}.
 \end{proof}
 
-The open-complement sequence and the inclusions
-\(T\subseteq T^\dagger\subseteq N\) place both modules in the same ambient
-principal-parts module:
+\paragraph{The trace transporter.}
+Fix a prime-order subgroup \(C\leq G\), and put
 \[
-  \iota_C\colon\mathcal P_C^{\mathrm{fm}}\lhook\joinrel\longrightarrow N/T,
+  U_C:=\Spec T\setminus V(\mathfrak J_C),
   \qquad
-  \iota_{\mathrm{tr}}\colon Q_{\mathrm{tr}}
-    \lhook\joinrel\longrightarrow N/T.
+  R_C:=\Gamma(U_C,\mathcal O_{U_C})\subseteq N.
 \]
-Statements I and II therefore isolate the exact contrast
+Faithfulness of the \(G\)-action gives \(\mathfrak J_C\neq0\), so \(U_C\)
+is dense and its ring of regular functions embeds in \(\Frac(T)=N\).
+Since \(T\) is a domain, \(H^0_{\mathfrak J_C}(T)=0\), and the affine
+open-complement sequence gives
 \[
-  \underbrace{\mathcal P_C^{\mathrm{fm}}}
-    _{\text{unbounded if a hidden divisor exists}}
-  \qquad\text{and}\qquad
-  \underbrace{Q_F^{\omega}\cong Q_{\mathrm{tr}}}
-    _{\text{finite and bounded}}.
+  0\longrightarrow T\longrightarrow R_C
+  \longrightarrow H^1_{\mathfrak J_C}(T)\longrightarrow0,
+  \qquad
+  \mathcal P_C^{\mathrm{fm}}\cong R_C/T
+  \cite{StacksLocalCohomologySequence}.
 \]
+Thus \(T\subseteq T^\dagger\subseteq N\) places both
+\(\mathcal P_C^{\mathrm{fm}}\) and \(Q_{\mathrm{tr}}\) in \(N/T\).  Define
+the trace-transporter ideal
+\[
+  \mathfrak c_C^{\mathrm{tr}}
+  :=\{s\in T:sR_C\subseteq T^\dagger\}.
+\]
+For \(s\in T\), the following conditions are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)}]
+  \item \(s\in\mathfrak c_C^{\mathrm{tr}}\);
+  \item
+  \[
+    \operatorname{Tr}_{N/K}(srt)\in B
+    \qquad(r\in R_C,\ t\in T);
+  \]
+  \item multiplication by \(s\) on \(N/T\) restricts to the unique
+  \(T\)-linear morphism
+  \[
+    \lambda_{C,s}\colon\mathcal P_C^{\mathrm{fm}}\longrightarrow
+    Q_{\mathrm{tr}},
+    \qquad [r]\longmapsto[sr].
+  \]
+\end{enumerate}
+Indeed, the first two conditions are equivalent by the definition of
+\(T^\dagger\).  Under condition \textup{(i)}, one has
+\(sR_C\subseteq T^\dagger\), while \(sT\subseteq T\); hence multiplication
+by \(s\) descends to the quotient map in \textup{(iii)}.  This is the exact
+landing morphism; it is not required to be injective.
+
+\paragraph{The secant--frame denominator candidate.}
+For \(g\in G\), evaluate the full secant matrix and its adjugate on the
+\(g\)-conjugate sheet:
+\[
+  M_{F,g}:=M_F(x,g(x))\in M_2(N),
+  \qquad
+  A_{F,g}:=\operatorname{adj}(M_{F,g}).
+\]
+The extended Keller frame of Proposition
+\ref{prop:keller-inverse-jacobian-frame} consists of derivations
+\(\widetilde\partial_P,\widetilde\partial_Q\) on \(N\).  They commute:
+their commutator vanishes on \(K=\C(P,Q)\), and uniqueness of extension
+across the finite separable extension \(N/K\) makes it zero on \(N\).  For
+\(\alpha=(a,b)\in\mathbf N^2\), set
+\(D^\alpha=\widetilde\partial_P^a
+\widetilde\partial_Q^b\), and, for \(r\geq0\), let
+\[
+  \Xi_{g,r}:=
+  \left\{
+    D^\alpha(M_{F,g})_{ij},
+    D^\alpha(A_{F,g})_{ij}
+    :1\leq i,j\leq2,\ |\alpha|\leq r
+  \right\}\subset N.
+\]
+Put
+\[
+  \Lambda_{C,r}^{\mathrm{sf}}
+  :=T+\sum_{\substack{g\in G\\C\nsubseteq gHg^{-1}}}
+       \ \sum_{\xi\in\Xi_{g,r}}T\xi\subseteq N,
+  \qquad
+  \mathfrak d_{C,r}^{\mathrm{sf}}
+  :=\{s\in T:s\Lambda_{C,r}^{\mathrm{sf}}\subseteq T\}.
+\]
+Indexing over all \(g\in G\) avoids any choice of coset representatives; the
+family is still finite.  The case \(r=1\) is the first-jet candidate obtained
+from the secant matrix, its adjugate, and the inverse-Jacobian frame.
+
+\begin{proposition}[Nonzero secant--frame denominator]
+\label{prop:nonzero-secant-frame-denominator}
+For every \(C\) and every \(r\geq0\),
+\[
+  \mathfrak d_{C,r}^{\mathrm{sf}}\neq0.
+\]
+Moreover, every nonzero element of this ideal remains nonzero in
+\(T_{\mathfrak p}\) for every prime \(\mathfrak p\subset T\).
+\end{proposition}
+
+\begin{proof}
+The set of generators in \(\Lambda_{C,r}^{\mathrm{sf}}\) is finite, and
+each belongs to \(N=\Frac(T)\).  Clearing their finitely many denominators
+produces \(0\neq s\in T\) with
+\(s\Lambda_{C,r}^{\mathrm{sf}}\subseteq T\).  The localization assertion
+follows because \(T\) is a domain.
+\end{proof}
 
 \paragraph{Missing morphism: Secant--Frame Trace Landing.}
-The frame used below is the one constructed in
-Proposition~\ref{prop:keller-inverse-jacobian-frame}; in particular, no
-preservation of the integral order \(T\) is being assumed.
+The explicit first-jet research target is the ideal containment
+\[
+  \boxed{
+  \ \mathfrak d_{C,1}^{\mathrm{sf}}
+  \subseteq\mathfrak c_C^{\mathrm{tr}}\ }
+  \tag{\(\mathrm{SFTL}_C\)}
+\]
+for every prime-order \(C\leq G\).  Equivalently, every
+secant--frame denominator must satisfy the uniform trace identity
+\[
+  \operatorname{Tr}_{N/K}(srt)\in B
+  \qquad(s\in\mathfrak d_{C,1}^{\mathrm{sf}},\ r\in R_C,\ t\in T).
+\]
+The nonzero-denominator proposition then supplies
+\(0\neq s_C^{\mathrm{sf}}\in\mathfrak d_{C,1}^{\mathrm{sf}}\), and that
+identity defines the required map explicitly by
+\[
+  \lambda_{C,s_C^{\mathrm{sf}}}([r])=[s_C^{\mathrm{sf}}r].
+\]
 
-For each prime-order \(C\), construct explicitly from the full secant
-matrix, its adjugate, and the inverse-Jacobian frame a nonzero element
-\(s_C^{\mathrm{sec}}\in T\) and a \(T\)-linear morphism
-\[
-  \lambda_C\colon\mathcal P_C^{\mathrm{fm}}\longrightarrow Q_{\mathrm{tr}}
-\]
-compatible with multiplication in the common ambient module:
-\[
-  \iota_{\mathrm{tr}}\circ\lambda_C
-  =m_{s_C^{\mathrm{sec}}}\circ\iota_C
-  \qquad\text{in }N/T.
-\]
-Equivalently,
-\[
-  s_C^{\mathrm{sec}}\mathcal P_C^{\mathrm{fm}}
-  \subseteq Q_{\mathrm{tr}}\subseteq N/T.
-\]
-The map \(\lambda_C\) is not required to be injective.  If a height-one
-prime contained \(\mathfrak J_C\), Statement I would identify the localized
-source with \(\Frac(T_{\mathfrak p})/T_{\mathfrak p}\).  Multiplication by
-any nonzero element of the DVR on this quotient is surjective, whereas
-Statement II places the localized target in a proper bounded pole stage.
-The compatibility equation is therefore impossible, eliminating that
-height-one prime.  No extra condition
-\(s_C^{\mathrm{sec}}\notin\mathfrak p\) is needed.
+Merely asking for a nonzero element of
+\(\mathfrak d_{C,1}^{\mathrm{sf}}\cap\mathfrak c_C^{\mathrm{tr}}\) would
+not define a new mechanism: since \(T\) is a domain and
+\(\mathfrak d_{C,1}^{\mathrm{sf}}\neq0\), that intersection is nonzero
+exactly when \(\mathfrak c_C^{\mathrm{tr}}\neq0\), which is boundary
+separation itself.  In fact the dichotomy below shows that the full
+containment \((\mathrm{SFTL}_C)\) is logically equivalent to the same
+separation assertion.  Its value as a research target is therefore not a
+weaker logical premise, but the prescribed coefficientwise trace identity
+that one can try to prove directly from the displayed secant--frame data.
+No identity proved here yet shows that first jets suffice; \(r=1\) is the
+first sharply typed candidate.
 
-It is essential that \(s_C^{\mathrm{sec}}\) be prescribed by the secant and
-frame data.  Bare existence of some nonzero multiplier merely repackages
-boundary separation: if Statement I gives
-\(\mathcal P_C^{\mathrm{fm}}=0\), one may take \(s_C=1\).  Trace duality
-proves Statement II, and generic secant coevaluation isolates the sheets,
-but neither supplies the displayed landing morphism.  Constructing it by a
-concrete trace identity is the remaining Keller-specific theorem, not a
-consequence of finite flatness.
+The nonvanishing proposition is only finite denominator clearing; it does
+not prove landing for the generally nonfinite overring \(R_C\).  Indeed, if
+a height-one prime \(\mathfrak p\) contains \(\mathfrak J_C\), Statement I
+and the localized open-complement sequence, together with Statement II, give
+\[
+  (R_C)_{\mathfrak p}=\Frac(T_{\mathfrak p}),
+  \qquad
+  (T^\dagger)_{\mathfrak p}
+  =\pi^{-(e_{\mathfrak p}-1)}T_{\mathfrak p}.
+\]
+For every \(0\neq s\in T\), multiplication by \(s/1\) on
+\(\Frac(T_{\mathfrak p})/T_{\mathfrak p}\) is surjective and therefore
+cannot land in the proper bounded stage
+\(\pi^{-(e_{\mathfrak p}-1)}T_{\mathfrak p}/T_{\mathfrak p}\).
+Consequently \((\mathfrak c_C^{\mathrm{tr}})_{\mathfrak p}=0\).  Since
+\(T\to T_{\mathfrak p}\) is injective, this forces
+\(\mathfrak c_C^{\mathrm{tr}}=0\), and
+\((\mathrm{SFTL}_C)\) excludes \(\mathfrak p\).  Notice that no unit or
+avoidance condition \(s_C^{\mathrm{sf}}\notin\mathfrak p\) is needed:
+global nonzeroness already survives localization in the domain \(T\).
+
+Conversely, boundary separation gives \(R_C=T\), hence
+\(\mathfrak c_C^{\mathrm{tr}}=T\).  Thus nonzero trace landing is an exact
+Keller-specific formulation of the open divisorial assertion, rather than
+a consequence of finite flatness.  The secant and frame data now provide a
+concrete finite candidate ideal; the missing theorem is the uniform passage
+from those finitely many coefficients to every \(r\in R_C\).
 
 Thus the purity argument remains the unique endgame.  Statements I and II
-identify its unbounded source and finite target; the single missing
-secant--trace morphism is the proposed way to establish its height-one
-premise.
+identify its unbounded source and finite target, while
+\((\mathrm{SFTL}_C)\) is a concrete first-jet construction problem whose
+solution would establish its height-one premise.
 
 \begin{leanfiles}
 The stable API formalizes the canonical ideals
@@ -3113,10 +3219,14 @@ generic \leanpath{TraceIntegralSubmodule} and
 \leanpath{boundedStageComparisonIdeal}; specializing them to prove the
 trace-dual/Hom and local inverse-different assertions of Statement~II is
 also unfinished.  Conjugate-sheet secant evaluation is formalized in
-\leanpath{CollisionIdeals/Planar/ConjugateSecantEvaluation.lean}.  The common
-embeddings in \(N/T\), and especially the nonzero Secant--Frame Trace
-Landing morphism, remain to be constructed.  These prospective objects are
-kept behind \leanpath{CollisionIdeals/Planar/Research.lean}, outside the
+\leanpath{CollisionIdeals/Planar/ConjugateSecantEvaluation.lean}; the
+choice-free telescoping coefficients and polynomial Keller frame are in
+\leanpath{Planar.ExplicitSecant} and \leanpath{Planar.KellerFrame}.  The
+research theorem \leanpath{finiteCoefficientDenominatorIdeal_ne_bot}
+formalizes finite denominator clearing, but the actual conjugate evaluated
+family, the common embeddings in \(N/T\), and the ideal containment
+\((\mathrm{SFTL}_C)\) remain to be constructed.  These prospective objects
+are kept behind \leanpath{CollisionIdeals/Planar/Research.lean}, outside the
 stable import spine.
 \end{leanfiles}
 

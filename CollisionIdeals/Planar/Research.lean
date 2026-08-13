@@ -2,6 +2,9 @@ import CollisionIdeals.Planar.Research.PrincipalPartsStrategy
 import CollisionIdeals.Planar.Research.FixedMovingBoundaryPrincipalParts
 import CollisionIdeals.Planar.Research.FinitePrincipalPartsControl
 import CollisionIdeals.Planar.ConjugateSecantEvaluation
+import CollisionIdeals.Planar.ExplicitSecant
+import CollisionIdeals.Planar.KellerFrame
+import CollisionIdeals.Planar.Research.SecantFrameDenominator
 import CollisionIdeals.Planar.Research.CompletedTameRamification
 
 /-!
@@ -13,8 +16,10 @@ two-statements/one-morphism reduction without placing them in the stable
 
 * a hidden fixed--moving divisor produces an unbounded DVR pole tower;
 * the trace dual supplies a finite bounded stage;
-* the missing Keller-specific theorem is a nonzero secant/frame multiplier
-  whose multiplication map factors through that stage.
+* explicit divided differences and the polynomial Keller frame supply a
+  canonical finite coefficient package with a nonzero denominator ideal;
+* the missing Keller-specific theorem says that this prescribed ideal is
+  contained in the trace transporter for the whole pole tower.
 
 The last item is not packaged as another abstract bridge here.  Constructing
 it is the research problem, while the stable planar API begins only after the

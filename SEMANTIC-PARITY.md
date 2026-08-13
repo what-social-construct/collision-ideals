@@ -38,15 +38,26 @@ the current research reduction is:
 2. **Trace-dual bounded stage.**  The quotient
    (Q_{\mathrm{tr}}=T^\dagger/T) is finite and has bounded height-one
    poles.
-3. **Missing Secant--Frame Trace Landing.**  Construct a prescribed
-   secant/frame multiplier (s_C^{\mathrm{sec}}\neq0) such that
-   multiplication by it on (\mathcal P_C^{\mathrm{fm}}) factors through
-   (Q_{\mathrm{tr}}) inside (N/T).
+3. **Missing Secant--Frame Trace Landing.**  The explicit first-jet
+   secant--frame lattice has the nonzero denominator ideal
+   (\mathfrak d_{C,1}^{\mathrm{sf}}).  Prove the coefficientwise inclusion
+   (\mathfrak d_{C,1}^{\mathrm{sf}}\subseteq
+   \mathfrak c_C^{\mathrm{tr}}), where
+   (\mathfrak c_C^{\mathrm{tr}}=
+   \{s:sR_C\subseteq T^\dagger\}).  Equivalently, prove the uniform trace
+   identity (\operatorname{Tr}_{N/K}(srt)\in B) for all
+   (s\in\mathfrak d_{C,1}^{\mathrm{sf}}), (r\in R_C), and (t\in T).
 4. **Endgame.**  The resulting contradiction gives boundary separation,
    then no height-one ramification, purity, (N=K), and collision vanishing.
 
-The word “prescribed” is essential.  Bare existential landing is equivalent
-to boundary separation: once the source vanishes, (s=1) works trivially.
+The secant--frame denominator ideal is constructed and nonzero; its inclusion
+in the trace transporter remains open.  A merely nonzero intersection would
+still be equivalent to boundary separation, because nonzero ideals in the
+domain (T) have nonzero product.  The coefficientwise inclusion is likewise
+logically equivalent to separation here; its proposed value is that it is a
+prescribed trace identity tied to the finite secant--frame coefficients, not
+an arbitrary existential bridge.  No established identity yet shows that
+the first-jet choice is sufficient.
 
 ## Parity queue
 
@@ -63,10 +74,10 @@ to boundary separation: once the source vanishes, (s=1) works trivially.
 | P2 | (Q_{\mathrm{tr}}=T^\dagger/T\to N/T) | proved | missing | define quotient, finiteness, and ambient inclusion |
 | P2 | Local inverse-different stage | proved | missing | reuse Mathlib different/trace-dual API; formalize tame exponent afterward |
 | P2 | Finite local freeness of (T/B) | proved from surface CM and miracle flatness | not formalized | prove it or expose a narrowly scoped geometric interface |
-| P3 | Explicit divided-difference secant matrix | defined canonically | coefficients chosen by `Classical.choice` | add the manuscript's explicit matrix before any Galois-equivariant construction |
+| P3 | Explicit divided-difference secant matrix | defined canonically | explicit coefficientwise construction and its identities are proved in `Planar.ExplicitSecant`; legacy chosen data remain in use | migrate downstream secant consumers only after proving equivalence/compatibility |
 | P3 | Conjugate secant evaluation | proved for actual (g\)-sheets | only generic collision-cocone vanishing | construct the (g\)-cocone and prove the (g\in H/g\notin H) formula |
-| P3 | Inverse-Jacobian frame | defined and proved; extension preserves each (A_g), not (T) | missing | formalize on (A), then extend to (L,N) and conjugate rings |
-| P3 | Prescribed (s_C^{\mathrm{sec}}) | construction problem only | absent | do not add an existential bridge; first define a concrete candidate |
+| P3 | Inverse-Jacobian frame | defined and proved; extension preserves each (A_g), not (T) | polynomial frame and four duality identities are proved in `Planar.KellerFrame`; field extensions are missing | extend to (L,N) and conjugate rings |
+| P3 | Secant--frame denominator candidate | first-jet lattice and nonzero denominator are proved; landing is open | generic nonzero finite-family denominator theorem is proved in `Research.SecantFrameDenominator`; the actual evaluated family is missing | construct the conjugate evaluated coefficient family and specialize without adding an existential bridge |
 | P3 | Landing compatibility square | missing theorem | absent | define only after both ambient embeddings and the concrete multiplier exist |
 | P4 | Landing implies separation | proved by the DVR contradiction | absent | formalize; injectivity of the landing map is not required |
 | P4 | Purity/endgame | proved | forward implication formalized with explicit literature interfaces | retain and compose after P4 landing contradiction |
