@@ -43,10 +43,18 @@ The status distinction in the paper is intentional:
   together with a generic nonzero denominator theorem.  The research layer
   also reuses Mathlib's monogenic order, power basis, hypersurface, Jacobian,
   conductor, and trace-dual objects.  The generic trace-integral carrier is
-  identified with Mathlib's trace dual.  Tate reconstruction, the specialized
-  conductor--codifferent equality, the required localization and common
-  ambient embeddings, and the uniform trace-landing identity are not yet
-  formalized;
+  identified with Mathlib's trace dual; finite power-basis Tate
+  reconstruction and the generic monogenic/overorder conductor--trace-dual
+  identities are proved.  The conductor bounded stage and its landing ideal
+  are also defined; a generic normal-Noetherian finite-overring collapse and
+  a conditional pointwise-pole route to the existing endgame are proved.  The
+  local-cohomology/DVR pole theorem needed by the pointwise-pole route,
+  concrete normalization and
+  quotient specialization, actual conjugate-evaluated coefficient family,
+  and uniform candidate containment are not yet formalized.  The first-jet
+  ideal is the sharp candidate, while any finite jet order would suffice;
+  full ideal inclusion is choice-free, although one explicitly prescribed
+  nonzero landing scalar would be enough;
 - repository-wide manuscript/Lean parity and the deletion gates for legacy or
   optional research objects are recorded in `../SEMANTIC-PARITY.md`;
 - the dimension-three theorem is an abstract implication from explicit

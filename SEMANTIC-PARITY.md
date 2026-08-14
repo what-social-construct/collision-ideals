@@ -69,6 +69,31 @@ prescribed trace identity tied to the finite secant--frame coefficients, not
 an arbitrary existential bridge.  No established identity yet shows that
 the first-jet choice is sufficient.
 
+The index (1) records the sharp current candidate, not a theorem that first
+jets suffice.  The weaker finite-order target
+
+\[
+  \exists \ell<\infty,\qquad
+  \mathfrak d_{C,\ell}^{\mathrm{sf}}
+  \subseteq\mathfrak c_C^{\mathrm{tr}}
+\]
+
+would give the same endgame.  Likewise, full ideal containment is a clean,
+choice-free statement but is stronger than the minimum conclusion: one
+*explicitly prescribed* nonzero (s_C\in\mathfrak d_{C,\ell}^{\mathrm{sf}})
+with uniform landing suffices.  Merely asserting the existence of some
+nonzero element in the intersection is not a new mechanism; it is equivalent
+here to boundary separation.
+
+There is also a finite-overring shortcut: a nonzero scalar
+with (J_{\mathrm{sec}}sR_C\subseteq R_{\mathrm{sec}}) places (R_C) inside
+the finite (T)-module ((J_{\mathrm{sec}}s)^{-1}T).  Noetherianity and
+normality then force (R_C=T).  The generic algebraic collapse lemma is proved
+in `Research.MonogenicLanding`.  The open-section algebra (R_C) and its
+specialization to that lemma are not yet formalized; the current planar
+theorems instead reach separation through an explicit pointwise pole-test
+hypothesis.
+
 ## Parity queue
 
 | Priority | Semantic item | Manuscript | Lean | Action |
@@ -85,13 +110,13 @@ the first-jet choice is sufficient.
 | P2 | Local inverse-different stage | proved | missing | reuse Mathlib different/trace-dual API; formalize tame exponent afterward |
 | P2 | Finite local freeness of (T/B) | proved from surface CM and miracle flatness | not formalized | prove it or expose a narrowly scoped geometric interface |
 | P2 | Monogenic comparison order (R_{\mathrm{sec}}) | finite-free hypersurface, power basis, Jacobian, and conductor constructed | thin aliases to Mathlib `Algebra.adjoin`, `powerBasis'`, `minpoly.equivAdjoin`, and `conductor` in `Research.MonogenicOrder` | retain the transparent specialization; do not duplicate Mathlib's objects |
-| P2 | Tate--conductor identity (T^\dagger=J_{\mathrm{sec}}^{-1}(R_{\mathrm{sec}}:T)) | proved | missing | formalize Tate reconstruction and the trace-dual/conductor equality; do not package landing into this theorem |
+| P2 | Tate--conductor identity (T^\dagger=J_{\mathrm{sec}}^{-1}(R_{\mathrm{sec}}:T)) | proved | generic power-basis reconstruction and monogenic/overorder trace-dual--conductor identities proved in `Research.TateReconstruction` and `Research.MonogenicTraceDual`; concrete normalization specialization not wired | specialize to the normalization data; do not package landing into this theorem |
 | P3 | Explicit divided-difference secant matrix | defined canonically | explicit coefficientwise construction and its identities are proved in `Planar.ExplicitSecant`; legacy chosen data remain in use | migrate downstream secant consumers only after proving equivalence/compatibility |
 | P3 | Conjugate secant evaluation | proved for actual (g\)-sheets | only generic collision-cocone vanishing | construct the (g\)-cocone and prove the (g\in H/g\notin H) formula |
 | P3 | Inverse-Jacobian frame | defined and proved; extension preserves each (A_g), not (T) | polynomial frame and four duality identities are proved in `Planar.KellerFrame`; field extensions are missing | extend to (L,N) and conjugate rings |
 | P3 | Secant--frame denominator candidate | first-jet lattice and nonzero denominator are proved; landing is open | generic nonzero finite-family denominator theorem is proved in `Research.SecantFrameDenominator`; the actual evaluated family is missing | construct the conjugate evaluated coefficient family and specialize without adding an existential bridge |
-| P3 | Landing compatibility square | missing theorem | absent | define only after both ambient embeddings and the concrete multiplier exist |
-| P4 | Landing implies separation | proved by the DVR contradiction | absent | formalize; injectivity of the landing map is not required |
+| P3 | Landing compatibility square | missing theorem | generic conductor bounded stage and transporter ideal defined in `Research.MonogenicLanding`; common quotient maps and actual candidate containment absent | finish the ambient embeddings and concrete candidate before typing the geometric square |
+| P4 | Landing implies separation | proved by the DVR contradiction; finite-overring shortcut also available | generic finite-overring collapse proved; planar implication proved conditionally from candidate-ideal containment and a pointwise pole-test hypothesis | construct the open-section algebra and specialize the finite-overring lemma, or formalize the DVR/local-cohomology pole test; injectivity is not required |
 | P4 | Purity/endgame | proved | forward implication formalized with explicit literature interfaces | retain and compose after P4 landing contradiction |
 
 ## Retain-until-gates inventory
@@ -105,7 +130,7 @@ deleted yet:
   direct landing contradiction is formalized.
 - `HasUniformIdealPowerAnnihilator` and
   `HasUniformFixedMovingBoundaryAnnihilator`: an alternate uniform-bound
-  formulation.  Retain until the scalar landing mechanism supersedes all
+  formulation.  Retain until the ideal-containment landing mechanism supersedes all
   consumers.
 - `LogarithmicInertia` and `CompletedTameRamification`: local diagnostics,
   not inputs to Statements I or II.  Retain as opt-in research until the

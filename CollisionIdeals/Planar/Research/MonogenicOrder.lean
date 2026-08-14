@@ -38,6 +38,23 @@ theorem monogenicOrderGenerator_coe (alpha : T) :
     (monogenicOrderGenerator B T alpha : T) = alpha :=
   rfl
 
+/-- The derivative of the defining minimal polynomial evaluated at the generator.
+This definition itself needs no integrality or normality hypothesis. -/
+def monogenicOrderJacobian (alpha : T) : T :=
+  Polynomial.aeval alpha (Polynomial.derivative (minpoly B alpha))
+
+/-- The same Jacobian element, retained in the monogenic order. -/
+def monogenicOrderJacobianInOrder (alpha : T) :
+    monogenicOrder B T alpha :=
+  ⟨monogenicOrderJacobian B T alpha,
+    Polynomial.aeval_mem_adjoin_singleton B alpha⟩
+
+@[simp]
+theorem monogenicOrderJacobianInOrder_coe (alpha : T) :
+    (monogenicOrderJacobianInOrder B T alpha : T) =
+      monogenicOrderJacobian B T alpha :=
+  rfl
+
 section IntegralGenerator
 
 variable [IsDomain B] [IsDomain T] [NoZeroSMulDivisors B T]
@@ -74,24 +91,6 @@ def monogenicOrderEquivAdjoinRoot
     (alpha : T) (halpha : IsIntegral B alpha) :
     AdjoinRoot (minpoly B alpha) ≃ₐ[B] monogenicOrder B T alpha :=
   minpoly.equivAdjoin halpha
-
-/-- The derivative of the defining minimal polynomial evaluated at the generator. -/
-def monogenicOrderJacobian (alpha : T) : T :=
-  Polynomial.aeval alpha (Polynomial.derivative (minpoly B alpha))
-
-/-- The same Jacobian element, retained in the monogenic order. -/
-def monogenicOrderJacobianInOrder (alpha : T) :
-    monogenicOrder B T alpha :=
-  ⟨monogenicOrderJacobian B T alpha,
-    Polynomial.aeval_mem_adjoin_singleton B alpha⟩
-
-omit [IsDomain B] [IsDomain T] [NoZeroSMulDivisors B T]
-  [IsIntegrallyClosed B] in
-@[simp]
-theorem monogenicOrderJacobianInOrder_coe (alpha : T) :
-    (monogenicOrderJacobianInOrder B T alpha : T) =
-      monogenicOrderJacobian B T alpha :=
-  rfl
 
 end IntegralGenerator
 

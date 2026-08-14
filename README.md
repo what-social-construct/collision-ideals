@@ -335,6 +335,9 @@ The canonical modules are:
 | explicit planar input | `Planar.ExplicitSecant`, `Planar.KellerFrame` | canonical telescoping divided differences and the polynomial inverse-Jacobian frame |
 | landing candidate | `Planar.Research.SecantFrameDenominator` | nonzero finite-coefficient denominator ideals; uniform trace landing remains open |
 | monogenic trace order | `Planar.Research.MonogenicOrder` | thin reuse of Mathlib's monogenic order, power basis, hypersurface presentation, Jacobian element, and conductor |
+| finite Tate reconstruction | `Planar.Research.TateReconstruction` | explicit power-basis trace reduction and the monogenic trace-dual membership criterion |
+| trace-dual/conductor comparison | `Planar.Research.MonogenicTraceDual` | generic monogenic and overorder identities; concrete normalization specialization remains separate |
+| conductor landing API | `Planar.Research.MonogenicLanding` | bounded conductor stage, landing ideal, generic finite-overring collapse, and the conditional pointwise-pole passage to the planar endgame |
 | endpoint API | `Planar.Conclusion` | packaged consequences |
 
 `Planar.Secant` is an independent algebraic entry point into the same
@@ -350,19 +353,28 @@ fixed--moving divisor localizes
 the trace dual gives a finite bounded quotient.  The explicit divided-
 difference secant and polynomial inverse-Jacobian frame are now formalized,
 as is the generic nonzero denominator theorem for a finite coefficient
-family.  The manuscript's monogenic Tate--conductor reduction is wired in
-Lean to Mathlib's existing order and conductor objects, and the generic
-trace-integral carrier is proved equal to Mathlib's `Submodule.traceDual`.
-Tate reconstruction and the specialized conductor--codifferent equality
-remain to be formalized.  The single
-missing geometric theorem is uniform trace landing: the prescribed
+family.  The research layer proves the finite power-basis Tate
+reconstruction formula, identifies the generic trace-integral carrier with
+Mathlib's `Submodule.traceDual`, and proves the generic monogenic and
+overorder conductor--trace-dual identities.  It also defines the associated
+bounded conductor stage and landing ideal, and proves a generic normal
+Noetherian finite-overring collapse lemma.  The single new mathematical
+theorem still missing from the selected route is uniform trace landing: the
+prescribed
 secant--frame denominator ideal must be contained in the trace transporter,
 equivalently its Jacobian multiple must land in the normalization conductor.
 A merely nonzero intersection would only restate boundary separation; the
 coefficientwise inclusion is the Keller-specific research target.
-The corresponding local-cohomology localization, trace-dual specialization,
-common ambient embeddings, and uniform landing identity are not yet
-formalized.
+The first-jet ideal is the sharp current candidate; it is enough more
+generally to prove the same inclusion for some finite jet order.  Full ideal
+inclusion is choice-free and stronger than the minimum needed conclusion:
+one explicitly prescribed nonzero scalar in the candidate ideal with uniform
+landing would also finish the endgame.  An unqualified existential scalar,
+however, is just the already-equivalent boundary-separation assertion.
+The corresponding local-cohomology localization and pointwise DVR pole
+test, concrete normalization specialization, common ambient quotient maps,
+actual conjugate-evaluated coefficient family, and uniform candidate
+containment are not yet formalized.
 
 The manuscript/Lean semantic-parity work is tracked in
 [`SEMANTIC-PARITY.md`](SEMANTIC-PARITY.md).  In particular, no older
