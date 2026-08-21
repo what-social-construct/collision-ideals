@@ -50,9 +50,9 @@ The status distinction in the paper is intentional:
   a conditional pointwise-pole route to the existing endgame are proved.  The
   local-cohomology/DVR pole theorem needed by the pointwise-pole route,
   concrete normalization and
-  quotient specialization, actual conjugate-evaluated coefficient family,
+  quotient specialization, actual \((g,\sigma g)\) overlap coefficient family,
   and uniform candidate containment are not yet formalized.  The first-jet
-  ideal is the sharp candidate, while any finite jet order would suffice;
+  ideal is the designated candidate, while any finite jet order would suffice;
   full ideal inclusion is choice-free, although one explicitly prescribed
   nonzero landing scalar would be enough;
 - repository-wide manuscript/Lean parity and the deletion gates for legacy or

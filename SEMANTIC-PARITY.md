@@ -69,7 +69,7 @@ prescribed trace identity tied to the finite secant--frame coefficients, not
 an arbitrary existential bridge.  No established identity yet shows that
 the first-jet choice is sufficient.
 
-The index (1) records the sharp current candidate, not a theorem that first
+The index (1) records the designated current candidate, not a theorem that first
 jets suffice.  The weaker finite-order target
 
 \[
@@ -112,9 +112,9 @@ hypothesis.
 | P2 | Monogenic comparison order (R_{\mathrm{sec}}) | finite-free hypersurface, power basis, Jacobian, and conductor constructed | thin aliases to Mathlib `Algebra.adjoin`, `powerBasis'`, `minpoly.equivAdjoin`, and `conductor` in `Research.MonogenicOrder` | retain the transparent specialization; do not duplicate Mathlib's objects |
 | P2 | Tate--conductor identity (T^\dagger=J_{\mathrm{sec}}^{-1}(R_{\mathrm{sec}}:T)) | proved | generic power-basis reconstruction and monogenic/overorder trace-dual--conductor identities proved in `Research.TateReconstruction` and `Research.MonogenicTraceDual`; concrete normalization specialization not wired | specialize to the normalization data; do not package landing into this theorem |
 | P3 | Explicit divided-difference secant matrix | defined canonically | explicit coefficientwise construction and its identities are proved in `Planar.ExplicitSecant`; legacy chosen data remain in use | migrate downstream secant consumers only after proving equivalence/compatibility |
-| P3 | Conjugate secant evaluation | proved for actual (g\)-sheets | only generic collision-cocone vanishing | construct the (g\)-cocone and prove the (g\in H/g\notin H) formula |
+| P3 | Conjugate secant evaluation and off-diagonal lift | the \((x,gx)\) two-case formula and the boundary-compatible \((gx,\sigma gx)\) overlap factorization are proved | generic collision-cocone vanishing and its canonical factorization through `OffDiagonalRing` are proved | construct the actual Galois cocones, recover the \(g\in H/g\notin H\) formula, and specialize the \((g,\sigma g)\) overlap family |
 | P3 | Inverse-Jacobian frame | defined and proved; extension preserves each (A_g), not (T) | polynomial frame and four duality identities are proved in `Planar.KellerFrame`; field extensions are missing | extend to (L,N) and conjugate rings |
-| P3 | Secant--frame denominator candidate | first-jet lattice and nonzero denominator are proved; landing is open | generic nonzero finite-family denominator theorem is proved in `Research.SecantFrameDenominator`; the actual evaluated family is missing | construct the conjugate evaluated coefficient family and specialize without adding an existential bridge |
+| P3 | Secant--frame denominator candidate | the pairwise \((g,\sigma g)\) first-jet lattice and nonzero denominator are proved; landing is open | generic nonzero finite-family denominator theorem is proved in `Research.SecantFrameDenominator`; the actual evaluated overlap family is missing | construct the conjugate evaluated coefficient family and specialize without adding an existential bridge |
 | P3 | Landing compatibility square | missing theorem | generic conductor bounded stage and transporter ideal defined in `Research.MonogenicLanding`; common quotient maps and actual candidate containment absent | finish the ambient embeddings and concrete candidate before typing the geometric square |
 | P4 | Landing implies separation | proved by the DVR contradiction; finite-overring shortcut also available | generic finite-overring collapse proved; planar implication proved conditionally from candidate-ideal containment and a pointwise pole-test hypothesis | construct the open-section algebra and specialize the finite-overring lemma, or formalize the DVR/local-cohomology pole test; injectivity is not required |
 | P4 | Purity/endgame | proved | forward implication formalized with explicit literature interfaces | retain and compose after P4 landing contradiction |

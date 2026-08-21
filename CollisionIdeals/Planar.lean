@@ -1,6 +1,7 @@
 import CollisionIdeals.Planar.BoundarySeparation
 import CollisionIdeals.Planar.ConjugateSecantEvaluation
 import CollisionIdeals.Planar.ExplicitSecant
+import CollisionIdeals.Planar.GaloisCollisionCocone
 import CollisionIdeals.Planar.KellerFrame
 import CollisionIdeals.Planar.RigidityTargets
 import CollisionIdeals.Planar.Conclusion

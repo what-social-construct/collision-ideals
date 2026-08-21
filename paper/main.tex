@@ -1565,6 +1565,56 @@ the disjoint union of the two spectra, this isomorphism dualizes to
 \]
 \end{proof}
 
+\begin{proposition}[Universal moved-collision factorization]
+\label{prop:universal-moved-collision-factorization}
+Let \(D\) be a domain and let
+
+\[
+  \varphi,\psi:A\longrightarrow D
+\]
+
+be \(B\)-algebra maps.  If \(\varphi\ne\psi\), then their collision
+evaluation
+\[
+  \operatorname{ev}_{\varphi,\psi}:C_F=A\otimes_BA\longrightarrow D,
+  \qquad a\otimes b\longmapsto\varphi(a)\psi(b),
+\]
+factors uniquely through the off-diagonal algebra:
+
+\[
+  C_F\twoheadrightarrow C_F^\circ
+  \xrightarrow{\ \exists!\,\overline{\operatorname{ev}}_{\varphi,\psi}\ }D,
+  \qquad
+  \operatorname{ev}_{\varphi,\psi}
+  =\overline{\operatorname{ev}}_{\varphi,\psi}\circ
+    \bigl(C_F\twoheadrightarrow C_F^\circ\bigr).
+\]
+
+Equivalently, every collision cocone into a domain which moves at least one
+of the two planar coordinates annihilates \(I_{\mathrm{off}}\).
+\end{proposition}
+
+\begin{proof}
+The two maps agree on \(B\), so the induced pair evaluation kills \(I_R\).
+Since \(A=\C[x_1,x_2]\) and \(\varphi\ne\psi\), there is an \(i\) with
+\(\varphi(x_i)-\psi(x_i)\ne0\).  Evaluating
+Proposition~\ref{prop:secant-annihilator} gives
+
+\[
+  \varphi\!\times\!\psi(\delta_F)
+  \bigl(\varphi(x_i)-\psi(x_i)\bigr)=0.
+\]
+
+The second factor is nonzero and \(D\) is a domain, hence
+\(\varphi\!\times\!\psi(\delta_F)=0\).  Therefore the evaluation kills
+
+\[
+  I_R+(\delta_F)=I_{\mathrm{off}},
+\]
+
+and the quotient universal property gives the unique factorization.
+\end{proof}
+
 Corollary~\ref{cor:off-diagonal-empty-criterion} states that
 \[
   R_F^\circ=\varnothing
@@ -2256,7 +2306,46 @@ trace-theoretic bridge.  Under the standard finite Galois decomposition
 \]
 the generic base change of \(e_F\) is the characteristic function of
 \(H\).  Let \(e_g=(g\otimes g)e_F\); then \(e_g\) is the characteristic
-function of \(gHg^{-1}\).  Proposition
+function of \(gHg^{-1}\).
+
+\begin{proposition}[Relative coevaluation on a moved sheet]
+\label{prop:relative-coevaluation-moved-sheet}
+Let \(C\leq G\) have prime order and suppose
+\(C\nsubseteq gHg^{-1}\).  Under the relative Galois decomposition
+\[
+  N\otimes_{N^C}N\xrightarrow{\sim}\prod_{\sigma\in C}N,
+  \qquad
+  a\otimes b\longmapsto\bigl(a\,\sigma(b)\bigr)_{\sigma},
+\]
+let
+\[
+  \rho_C:N\otimes_KN\longrightarrow N\otimes_{N^C}N
+\]
+be the canonical quotient.  Then
+\(\rho_C(e_g)=\mathbf1_{\{1\}}\).  Consequently \(\rho_C(e_g)\) is the
+trace coevaluation tensor for \(N/N^C\).  In particular, if its image is
+written as a finite sum
+\[
+  \rho_C(e_g)=\sum_\nu a_{\nu,g}\otimes b_{\nu,g}
+  \quad\text{in }N\otimes_{N^C}N,
+\]
+then every \(z\in N\) satisfies the explicit reconstruction formula
+\[
+  z=\sum_\nu a_{\nu,g}\,
+       \operatorname{Tr}_{N/N^C}(b_{\nu,g}z).
+\]
+\end{proposition}
+
+\begin{proof}
+Restricting the characteristic function of \(gHg^{-1}\) from \(G\) to
+\(C\) gives the characteristic function of
+\(C\cap gHg^{-1}\).  Since \(C\) has prime order and is not contained in
+\(gHg^{-1}\), this intersection is trivial.  The relative trace-pairing
+identification sends \(\mathbf1_{\{1\}}\) to \(\operatorname{id}_N\),
+which gives the reconstruction formula.
+\end{proof}
+
+Proposition
 \ref{prop:conjugate-embedding-action} gives
 \[
   e_N:=\prod_{g\in G}e_g
@@ -3078,13 +3167,48 @@ by \(s\) descends to the quotient map in \textup{(iii)}.  This is the exact
 landing morphism; it is not required to be injective.
 
 \paragraph{The secant--frame denominator candidate.}
-For \(g\in G\), evaluate the full secant matrix and its adjugate on the
-\(g\)-conjugate sheet:
+The boundary-compatible secant is indexed by an oriented pair of conjugate
+sheets.  For \(g\in G\) and \(\sigma\in C\) with
+\(\sigma\notin gHg^{-1}\), put
 \[
-  M_{F,g}:=M_F(x,g(x))\in M_2(N),
+  M_{F;g,\sigma}:=M_F(g(x),\sigma g(x))\in M_2(N),
   \qquad
-  A_{F,g}:=\operatorname{adj}(M_{F,g}).
+  A_{F;g,\sigma}:=\operatorname{adj}(M_{F;g,\sigma}).
 \]
+The two sheet maps agree after applying \(F\), and they are distinct because
+\(\sigma gH\ne gH\).  Each \(U_h\) is dense in the integral scheme \(Z\),
+so \(U_g\cap U_{\sigma g}\) is nonempty and
+\[
+  D_{g,\sigma}:=
+  \Gamma(U_g\cap U_{\sigma g},\mathcal O_Z)\subseteq N
+\]
+is a domain.  Regularity on the two respective sheets defines the maps
+\[
+  A\rightrightarrows D_{g,\sigma},
+  \qquad
+  a\longmapsto g(a),
+  \qquad
+  a\longmapsto\sigma g(a).
+\]
+Proposition~\ref{prop:universal-moved-collision-factorization} therefore
+gives the canonical off-diagonal factorization
+\[
+  C_F^\circ\longrightarrow
+  D_{g,\sigma}.
+\]
+In particular, every entry of \(M_F\), \(\operatorname{adj}(M_F)\), and
+\(\Phi_F\), together with the distinguished row \((-d_2,d_1)\), has a
+regular image on the overlap.  We do not assert that the Hilbert--Burch
+resolution remains exact after this base change or that the row generates
+the overlap's canonical module.  This factorization comes from the general
+collision construction; it is not yet the trace/conductor landing for an
+arbitrary boundary section.
+Proposition~\ref{prop:relative-coevaluation-moved-sheet} supplies, for the
+same moved sheet, a finite relative-trace reconstruction.  It likewise does
+not bound the pole order of its trace coefficients on \(U_C\): the
+\(C\)-invariant component is trace-bearing and can still contain arbitrarily
+deep poles.  The missing inclusion below is precisely the assertion that the
+Keller-specific overlap data controls that surviving component uniformly.
 The extended Keller frame of Proposition
 \ref{prop:keller-inverse-jacobian-frame} consists of derivations
 \(\widetilde\partial_P,\widetilde\partial_Q\) on \(N\).  They commute:
@@ -3094,10 +3218,10 @@ across the finite separable extension \(N/K\) makes it zero on \(N\).  For
 \(D^\alpha=\widetilde\partial_P^a
 \widetilde\partial_Q^b\), and, for \(r\geq0\), let
 \[
-  \Xi_{g,r}:=
+  \Xi_{g,\sigma,r}:=
   \left\{
-    D^\alpha(M_{F,g})_{ij},
-    D^\alpha(A_{F,g})_{ij}
+    D^\alpha(M_{F;g,\sigma})_{ij},
+    D^\alpha(A_{F;g,\sigma})_{ij}
     :1\leq i,j\leq2,\ |\alpha|\leq r
   \right\}\subset N.
 \]
@@ -3105,14 +3229,18 @@ Put
 \[
   \Lambda_{C,r}^{\mathrm{sf}}
   :=T+\sum_{\substack{g\in G\\C\nsubseteq gHg^{-1}}}
-       \ \sum_{\xi\in\Xi_{g,r}}T\xi\subseteq N,
+       \ \sum_{\substack{\sigma\in C\\\sigma\ne1}}
+       \ \sum_{\xi\in\Xi_{g,\sigma,r}}T\xi\subseteq N,
   \qquad
   \mathfrak d_{C,r}^{\mathrm{sf}}
   :=\{s\in T:s\Lambda_{C,r}^{\mathrm{sf}}\subseteq T\}.
 \]
-Indexing over all \(g\in G\) avoids any choice of coset representatives; the
-family is still finite.  The case \(r=1\) is the first-jet candidate obtained
-from the secant matrix, its adjugate, and the inverse-Jacobian frame.
+Because \(C\) has prime order, the condition
+\(C\nsubseteq gHg^{-1}\) implies
+\(C\cap gHg^{-1}=1\); hence every \(\sigma\ne1\) in the displayed sum moves
+the sheet.  Indexing over all such \((g,\sigma)\) avoids choices and remains
+finite.  The case \(r=1\) is the first-jet candidate obtained from the
+pairwise-overlap secant matrix, its adjugate, and the inverse-Jacobian frame.
 
 \begin{proposition}[Nonzero secant--frame denominator]
 \label{prop:nonzero-secant-frame-denominator}
@@ -3324,6 +3452,31 @@ trace coordinates.  It does not prove those coordinates integral uniformly
 for the arbitrary boundary section \(r\in R_C\); that uniform-in-\(r\)
 conductor landing is precisely the remaining morphism.
 
+The relative coevaluation isolates the exact part still uncontrolled.  If
+\(p=|C|\) and
+\[
+  \operatorname{Av}_C(z):=\frac1p\sum_{\sigma\in C}\sigma(z)\in N^C,
+\]
+then transitivity of trace gives
+\[
+  \operatorname{Tr}_{N/K}(z)
+  =\operatorname{Tr}_{N^C/K}
+      \bigl(p\,\operatorname{Av}_C(z)\bigr).
+\]
+Thus the finite family above is equivalently the family of assertions
+\[
+  \operatorname{Tr}_{N^C/K}\!\left(
+    p\,\operatorname{Av}_C
+      (srt_i\alpha_{\mathrm{sec}}^j)\right)\in B.
+\]
+The non-invariant character components do not contribute to the trace.  The
+remaining problem is therefore a uniform integrality theorem for this
+\(C\)-invariant remainder.  This is substantive: in the standard tame local
+model \(\sigma(\pi)=\zeta\pi\), the invariant poles
+\(\pi^{-p},\pi^{-2p},\ldots\) survive averaging.  Hence neither cyclic
+averaging nor the finite relative reconstruction alone supplies the missing
+pole bound.
+
 \begin{proposition}[Scalar landing collapses the boundary overring]
 \label{prop:scalar-landing-collapses-overring}
 If \(0\neq s\in\mathfrak c_C^{\mathrm{tr}}\), then
@@ -3468,10 +3621,11 @@ modules \leanpath{Planar.Research.TateReconstruction} and
 sum, the monogenic trace-dual formula, and the overorder
 conductor--codifferent identity.  Trace-dual/Hom finiteness and the local
 inverse-different assertion of Statement~II remain unfinished in the planar
-specialization.  Secant evaluation on a generic collision cocone is
-formalized in
+specialization.  Secant evaluation on a generic collision cocone and its
+canonical factorization through the off-diagonal quotient are formalized in
 \leanpath{CollisionIdeals/Planar/ConjugateSecantEvaluation.lean}; the actual
-\(g\)-sheet specialization and coefficient family remain missing.  The
+Galois \((g,\sigma g)\)-overlap specialization and coefficient family remain
+missing.  The
 choice-free telescoping coefficients and polynomial Keller frame are in
 \leanpath{Planar.ExplicitSecant} and \leanpath{Planar.KellerFrame}.  The
 research theorem \leanpath{finiteCoefficientDenominatorIdeal_ne_bot}

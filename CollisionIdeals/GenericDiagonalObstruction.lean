@@ -1,5 +1,7 @@
 import CollisionIdeals.FiberProduct
 import Mathlib.RingTheory.Flat.Basic
+import Mathlib.RingTheory.Ideal.Colon
+import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 set_option autoImplicit false
 
@@ -176,6 +178,73 @@ theorem ker_ne_bot_of_flat_baseChange_product
   exact
     not_injective_of_flat_baseChange_product
       μ φ e hdiag hμ
+
+/--
+In a product presentation whose first projection is the diagonal, the
+annihilator of the diagonal kernel is exactly the kernel of the residual
+projection.
+
+This is the product-ring calculation `ann(0 × N) = D × 0`.  It takes place
+entirely after generic base change, so it does not assert that localization
+commutes with an affine first-colon ideal.
+-/
+theorem annihilator_diagonalKernel_eq_residualKernel
+    [Algebra K C]
+    [Algebra K D]
+    [Algebra K N]
+    (e : C ≃ₐ[K] D × N) :
+    (RingHom.ker
+      ((AlgHom.fst K D N).comp e.toAlgHom)).annihilator =
+        RingHom.ker
+          ((AlgHom.snd K D N).comp e.toAlgHom) := by
+  ext x
+  constructor
+  · intro hx
+    rw [RingHom.mem_ker]
+    have hy :
+        e.symm (0, (1 : N)) ∈
+          RingHom.ker
+            ((AlgHom.fst K D N).comp e.toAlgHom) := by
+      rw [RingHom.mem_ker]
+      simp
+    have hxy : x * e.symm (0, (1 : N)) = 0 :=
+      Submodule.mem_annihilator.mp hx _ hy
+    have he := congrArg (fun z : C => (e z).2) hxy
+    simpa using he
+  · intro hx
+    apply Submodule.mem_annihilator.mpr
+    intro y hy
+    apply e.injective
+    have hx' : (e x).2 = 0 := by
+      simpa [RingHom.mem_ker] using hx
+    have hy' : (e y).1 = 0 := by
+      simpa [RingHom.mem_ker] using hy
+    ext
+    · simp [map_mul, hy']
+    · simp [map_mul, hx']
+
+/--
+The residual quotient of a generic collision product is its second factor.
+
+If `e : C ≃ D × N` identifies the generic collision diagonal with the first
+projection, quotienting `C` by the annihilator of that diagonal kernel gives
+`N`.  This is the intrinsic off-diagonal quotient of the generic product.
+Identifying it with `K ⊗[B] OffDiagonalRing F` additionally requires the
+separate localization--colon comparison and is deliberately not claimed
+here.
+-/
+noncomputable def genericOffDiagonalEquivResidual
+    [Algebra K C]
+    [Algebra K D]
+    [Algebra K N]
+    (e : C ≃ₐ[K] D × N) :
+    C ⧸ (RingHom.ker
+      ((AlgHom.fst K D N).comp e.toAlgHom)).annihilator ≃+* N :=
+  (Ideal.quotEquivOfEq
+      (annihilator_diagonalKernel_eq_residualKernel e)).trans
+    (RingHom.quotientKerEquivOfSurjective (by
+      intro n
+      exact ⟨e.symm (0, n), by simp⟩))
 
 end
 

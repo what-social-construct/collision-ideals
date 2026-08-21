@@ -365,7 +365,7 @@ secant--frame denominator ideal must be contained in the trace transporter,
 equivalently its Jacobian multiple must land in the normalization conductor.
 A merely nonzero intersection would only restate boundary separation; the
 coefficientwise inclusion is the Keller-specific research target.
-The first-jet ideal is the sharp current candidate; it is enough more
+The first-jet ideal is the designated current candidate; it is enough more
 generally to prove the same inclusion for some finite jet order.  Full ideal
 inclusion is choice-free and stronger than the minimum needed conclusion:
 one explicitly prescribed nonzero scalar in the candidate ideal with uniform
@@ -373,7 +373,7 @@ landing would also finish the endgame.  An unqualified existential scalar,
 however, is just the already-equivalent boundary-separation assertion.
 The corresponding local-cohomology localization and pointwise DVR pole
 test, concrete normalization specialization, common ambient quotient maps,
-actual conjugate-evaluated coefficient family, and uniform candidate
+actual \((g,\sigma g)\) overlap coefficient family, and uniform candidate
 containment are not yet formalized.
 
 The manuscript/Lean semantic-parity work is tracked in

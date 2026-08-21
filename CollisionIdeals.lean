@@ -1,2 +1,3 @@
 import CollisionIdeals.ComplexThree
+import CollisionIdeals.ComplexThree.HiddenInertia
 import CollisionIdeals.Planar

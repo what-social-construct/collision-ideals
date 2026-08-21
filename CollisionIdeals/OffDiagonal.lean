@@ -284,6 +284,32 @@ abbrev OffDiagonalRing
     (F : κ → SourceRing R ι) :=
   PairRing R ι ⧸ collisionOffDiagonalIdeal F
 
+/-- The collision ideal is contained in its first-colon residual ideal. -/
+theorem collisionIdeal_le_collisionOffDiagonalIdeal
+    (F : κ → SourceRing R ι) :
+    collisionIdeal F ≤ collisionOffDiagonalIdeal F := by
+  exact Ideal.le_colon
+
+/--
+The canonical quotient from the collision ring to its first-colon
+off-diagonal ring.
+-/
+def collisionToOffDiagonal
+    (F : κ → SourceRing R ι) :
+    CollisionRing F →ₐ[R] OffDiagonalRing F :=
+  Ideal.Quotient.factorₐ R
+    (collisionIdeal_le_collisionOffDiagonalIdeal F)
+
+/-- The collision-to-off-diagonal quotient agrees with the direct quotient
+on the ambient pair ring. -/
+@[simp]
+theorem collisionToOffDiagonal_comp_quotient
+    (F : κ → SourceRing R ι) :
+    (collisionToOffDiagonal F).comp
+        (Ideal.Quotient.mkₐ R (collisionIdeal F)) =
+      Ideal.Quotient.mkₐ R (collisionOffDiagonalIdeal F) := by
+  rfl
+
 /-- The conventional saturation `I_R(F) : I_Δ^∞`. -/
 def collisionIdealSaturation
     (F : κ → SourceRing R ι) :

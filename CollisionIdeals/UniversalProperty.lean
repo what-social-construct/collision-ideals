@@ -62,6 +62,19 @@ structure CollisionCocone
   right : SourceRing R ι →ₐ[R] T
   agree : ∀ j, left (F j) = right (F j)
 
+/-- Distinct maps in a collision cocone differ on at least one source
+coordinate. -/
+theorem exists_coordinate_moved_of_collision_maps_ne
+    (c : CollisionCocone F T)
+    (hne : c.left ≠ c.right) :
+    ∃ i : ι, c.left (X i) ≠ c.right (X i) := by
+  by_contra h
+  apply hne
+  apply MvPolynomial.algHom_ext
+  intro i
+  by_contra hi
+  exact h ⟨i, hi⟩
+
 /-- Evaluate the two copies of the variables using a collision cocone. -/
 def collisionPairMap
     (c : CollisionCocone F T) :

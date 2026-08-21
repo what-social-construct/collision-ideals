@@ -2,7 +2,6 @@ import CollisionIdeals.ComplexThree.FunctionField
 import CollisionIdeals.ComplexThree.JacobianConjecture
 import CollisionIdeals.ComplexThree.OffDiagonal
 import CollisionIdeals.ComplexThree.S3Collision
-import CollisionIdeals.KellerCollisionModel
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -118,50 +117,6 @@ theorem complexThreeCubicS3Collision
       exists_polynomialCubicS3CollisionWitness_of_normalClosure
         F N normalClosure hmarked hsurj pb hdegree residualEquiv
           hnontrivial⟩
-
-/--
-A ramified divisor in a cubic dimension-three Keller normalization model
-realizes hidden inertia inside the same `S₃` normal closure.
-
-The `S₃` statement concerns the full normal-closure Galois group.  The
-divisor contributes a nontrivial inertia subgroup; core-freeness moves a
-conjugate sheet, and the Keller étale bridge sends every such ramified
-center into the deleted boundary.
--/
-theorem complexThreeCubicS3HiddenInertiaAt
-    (F : ComplexThreePolynomialMap)
-    (M : PolynomialKellerCollisionModel F)
-    (hdegree :
-      Module.finrank
-          (ComplexThreeBaseFunctionField F)
-          ComplexThreeSourceFunctionField = 3)
-    (hnontrivial :
-      letI : Field M.N := M.fieldN
-      letI : Algebra (ComplexThreeBaseFunctionField F) M.N :=
-        M.algebraN
-      M.diagram.cover.normalClosure.intermediateFixingSubgroup ≠ ⊥)
-    (E :
-      letI : Field M.N := M.fieldN
-      letI : Algebra (ComplexThreeBaseFunctionField F) M.N :=
-        M.algebraN
-      PolynomialRamifiedCodimensionOnePoint
-        (F := F) (N := M.N)) :
-    letI : Field M.N := M.fieldN
-    letI : Algebra (ComplexThreeBaseFunctionField F) M.N :=
-      M.algebraN
-    Nonempty
-        ((M.N ≃ₐ[ComplexThreeBaseFunctionField F] M.N) ≃*
-          Equiv.Perm (Fin 3)) ∧
-      M.diagram.HasHiddenInertiaOrbit := by
-  letI : Field M.N := M.fieldN
-  letI : Algebra (ComplexThreeBaseFunctionField F) M.N :=
-    M.algebraN
-  refine ⟨⟨?s3⟩, ?hidden⟩
-  · exact
-      M.diagram.cover.normalClosure.galoisGroupEquivPermFinThree
-        hdegree hnontrivial
-  · exact
-      M.hasHiddenInertiaOrbit_of_ramifiedCodimensionOnePoint E
 
 end
 
