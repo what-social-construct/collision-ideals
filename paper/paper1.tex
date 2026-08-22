@@ -67,59 +67,29 @@
 \maketitle
 
 \begin{abstract}
-For a polynomial self-map
-\(F\colon\A^n_{\C}\to\A^n_{\C}\), let
-\[
-  S=\C[x_1,\dots,x_n,y_1,\dots,y_n],
-  \qquad
-  I_R(F)=\bigl(F_i(x)-F_i(y)\bigr)_{i=1}^n.
-\]
-The quotient \(C_F=S/I_R(F)\) is the coordinate ring of the collision
-scheme of pairs with the same image.  The image in \(C_F\) of the diagonal
-ideal \(I_\Delta=(x_i-y_i)_{i=1}^n\) is the obstruction ideal
-\(\Obs(F)\), canonically identified with \(I_\Delta/I_R(F)\).  Equivalently,
-\(\Obs(F)=\ker(\bar\mu_F)\), where
-\(\bar\mu_F\colon C_F\to\C[x_1,\dots,x_n]\) is diagonal evaluation.
-Over \(\C\), vanishing of this ideal characterizes polynomial automorphisms.
+We study possible counterexamples to the complex three-dimensional
+Jacobian conjecture.  For a polynomial self-map
+\(F\colon\A^n_{\C}\to\A^n_{\C}\), we consider the coordinate ring \(C_F\)
+of the scheme of pairs with the same image.  Restriction to the diagonal
+has kernel \(\Obs(F)\), whose vanishing over \(\C\) characterizes polynomial
+automorphisms.  For a counterexample of generic degree three, we find that
+the residual factor of the generic collision algebra is the normal closure
+\(N\) of \(L/K\), whose Galois group is \(S_3\).
 
-We analyze this obstruction in generic degree three.  Put
-\(B=\C[F_1,\dots,F_n]\), \(K=\Frac(B)\), and
-\(L=\C(x_1,\dots,x_n)\).  Generic base change identifies the generic
-collision algebra with \(L\otimes_KL\).  For a chosen primitive generator
-\(\alpha\), the marked-root decomposition gives a quadratic residual
-\(L\)-algebra \(D_\alpha\) and equivalences
+Indeed, generic base change identifies \(K\otimes_BC_F\) with
+\(L\otimes_KL\).  For a finite separable extension and a primitive generator
+\(\alpha\), the marked-root decomposition gives
 \[
-  K\otimes_BC_F\simeq_K L\otimes_KL,
-  \qquad
   L\otimes_KL\simeq_L L\times D_\alpha,
 \]
-with tensor multiplication equal to first projection.
-This decomposition applies to any finite separable generic extension and
-requires no Keller hypothesis.  The Keller condition, though unnecessary for
-the decomposition, makes \(F\) \'etale and generically finite, so every
-possible counterexample lies in this finite separable setting.  Classical
-Galois rigidity excludes generic degrees one and two; generic degree three is
-therefore the first possible counterexample degree.  Specialize now to
-\(n=3\).  Since \([L:K]=3\), the map \(F\) cannot be a polynomial
-automorphism.  Thus, on the generic-degree-three locus,
-\[
-  F\text{ is a counterexample to }JC(3)
-  \quad\Longleftrightarrow\quad
-  F\text{ is Keller}.
-\]
-The residual algebra is split in the normal cubic branch and connected in
-the nonnormal branch.  Classical Galois rigidity excludes the normal branch
-from the counterexample locus.  Consequently, if this locus is nonempty,
-then, with \(N\) denoting the normal closure of \(L/K\),
-\[
-  D_\alpha\simeq_L N,\qquad
-  K\otimes_BC_F\simeq L\otimes_KL\simeq L\times N,
-  \qquad
-  \Gal(N/K)\simeq S_3.
-\]
-Thus the residual generic collision factor of every such counterexample is
-the normal closure \(N\), whose Galois group is \(S_3\).  No existence
-assertion is made.
+with tensor multiplication equal to first projection.  In degree three,
+\(D_\alpha\) is split in the normal branch and is the normal closure in
+the nonnormal branch.  A degree-three map is already nonautomorphic, so on
+this stratum the counterexample condition is equivalent to the Keller
+condition.  Classical Galois rigidity excludes the normal branch and yields
+the stated \(S_3\)-description.  The marked-root decomposition itself is
+Keller-free.  No existence assertion is made, and counterexamples of other
+generic degrees are not classified.
 \end{abstract}
 
 \begin{center}
@@ -133,91 +103,89 @@ assertion is made.
 \section{Introduction}
 \label{sec:introduction}
 
-Let \(F\colon\A^n_{\C}\to\A^n_{\C}\) be a polynomial self-map.  Write
+The complex Jacobian conjecture \(JC(n)\) asks whether every polynomial
+self-map
 \[
-  R_F
-  :=\A^n_{\C}\times_{\A^n_{\C}}\A^n_{\C},
+  F\colon\A^n_{\C}\longrightarrow\A^n_{\C},
+  \qquad \det JF\in\C^\times,
 \]
-where both maps to the middle copy are \(F\).  This is the collision scheme:
-its points are ordered pairs with the same image under \(F\), and the
-diagonal defines a canonical closed subscheme of \(R_F\).  We ask how the
-remaining generic factors are organized around it.
-
-Our end goal is to describe the generic-degree-three counterexample locus
-for the complex three-dimensional Jacobian conjecture.  Degree three
-already rules out polynomial automorphy, so within this locus the
-counterexample condition is equivalent to the Keller condition.  Classical
-Galois rigidity then eliminates the normal cubic branch.  Every possible
-counterexample in this degree class is therefore nonnormal; its quadratic
-residual factor is the normal closure with Galois group \(S_3\).  This is
-the conclusion toward which the paper is organized.
-
-For a polynomial map \(F\), the collision and diagonal ideals satisfy
-\(I_R\subseteq I_\Delta\).  The quotient
+is a polynomial automorphism.  The Jacobian condition makes \(F\)
+\'etale; the conjecture asks whether this local condition forces global
+invertibility.  We make the global obstruction visible through the
+self-fiber product
 \[
-  \Obs(F)=I_\Delta/I_R\subseteq C_F=S/I_R
+  R_F:=\A^n_{\C}\times_{\A^n_{\C}}\A^n_{\C},
 \]
-is the kernel of diagonal evaluation.  Consequently,
+where both maps to the target are \(F\).  Its points record equal-image
+pairs, and it contains the diagonal \(\Delta\) as a canonical closed
+subscheme.  If \(C_F\) is the coordinate ring of \(R_F\), restriction to
+\(\Delta\) defines a map \(\bar\mu_F\) with kernel \(\Obs(F)\).  Over
+\(\C\),
 \[
   \Obs(F)=0
   \quad\Longleftrightarrow\quad
-  I_R=I_\Delta
+  R_F=\Delta
   \quad\Longleftrightarrow\quad
   F\text{ is a polynomial automorphism}.
 \]
-This gives a single affine ideal whose support is the failure of the
-collision relation to collapse to the diagonal.
 
-The generic fiber makes the field-theoretic content transparent.  Put
+A possible counterexample must therefore remain globally noninvertible
+despite being \'etale.  We organize this failure by generic degree.  Put
 \[
   B=\C[F_1,\dots,F_n],\qquad
   K=\Frac(B),\qquad
   L=\C(x_1,\dots,x_n).
 \]
-Under the usual dominance and generic-finiteness hypotheses, base change
-to \(K\) identifies the collision algebra with
-\[
-  K\otimes_BC_F\simeq L\otimes_KL,
-\]
-and diagonal evaluation with tensor multiplication.  A primitive element
-of a finite separable extension then exhibits the marked root as the first
-factor and the residual conjugate algebra as the second.  These finiteness
-and separability hypotheses are automatic for Keller maps.  Galois rigidity
-then excludes degrees one and two for a counterexample, making generic degree
-three the first case to analyze.
+For a Keller map, \(L/K\) is finite separable and \([L:K]\) is the
+generic degree.  Classical Galois rigidity makes such a map an automorphism
+whenever \(L/K\) is normal.  Degree one is trivial, while every separable
+quadratic extension is normal, so generic degree three is the first possible
+degree of a counterexample.
 
-Suppose now that \([L:K]=3\).  The marked-root decomposition splits
-\(L\otimes_KL\) into its diagonal factor and a quadratic residual
-\(L\)-algebra \(D_\alpha\).  For a general cubic map, this algebra is
-split in the normal branch and connected in the nonnormal branch.  The
-degree assumption already makes \(F\) nonautomorphic, so \(F\) is a
-counterexample to \(JC(3)\) if and only if it is Keller.  On this
-counterexample locus, classical Galois rigidity excludes the split branch.
-Thus \(D_\alpha\) is connected, it is the normal closure \(N\), and
+This paper studies that first degree in dimension three.  Since polynomial
+automorphisms have generic degree one, every map with \([L:K]=3\) is already
+nonautomorphic.  On this stratum,
 \[
-  L\otimes_KL\simeq L\times N,
+  F\text{ is a counterexample to }JC(3)
+  \quad\Longleftrightarrow\quad
+  F\text{ is Keller}.
+\]
+The construction behind the cubic dichotomy is independent of the Keller
+condition.  Generic base change identifies the collision algebra with
+\(L\otimes_KL\).  If \(\alpha\) is a primitive generator and
+\(m_\alpha(T)=(T-\alpha)h_\alpha(T)\) over \(L\), then separability gives
+\[
+  K\otimes_BC_F
+  \simeq_K L\otimes_KL
+  \simeq_L L\times D_\alpha,
+  \qquad
+  D_\alpha=L[T]/(h_\alpha),
+\]
+with tensor multiplication equal to projection onto the first factor.  The
+first factor is the diagonal; \(D_\alpha\) records the remaining generic
+collisions.
+
+In degree three, \(D_\alpha\) has rank two over \(L\).  It is split exactly
+when \(L/K\) is normal and is a field when \(L/K\) is nonnormal.  On the
+Keller locus, Galois rigidity excludes the normal branch.  In the remaining
+branch, \(D_\alpha\) is the normal closure \(N\) of \(L/K\), and
+\[
+  K\otimes_BC_F\simeq L\times N,
   \qquad
   \Gal(N/K)\simeq S_3.
 \]
-Under the chosen power-basis presentation, the canonical diagonal factor
-corresponds to \(\alpha\), while the residual factor supplies a second root;
-in a cubic extension those two roots determine the third.  The
-faithful action of \(G=\Gal(N/K)\) on the three cosets of
-\(H=\Gal(N/L)\) gives the permutation representation; the degree count
-identifies this Galois group with \(S_3\).
-The nonzero residual factor is the collision-theoretic witness of
-nonautomorphy.  We do not assert that the generic-degree-three
-counterexample locus is nonempty, or that every possible counterexample
-has generic degree three.
+Thus the \(S_3\)-structure is forced by the residual collision algebra; it
+is not imposed at the outset.  This is a conditional description of the
+generic-degree-three locus: it neither asserts that the locus is nonempty
+nor classifies counterexamples of other generic degrees.
 
-Section~\ref{sec:general-construction} develops the collision ideal,
-fiber-product interpretation, generic base change, and marked-root
-decomposition.  Section~\ref{sec:cubic-s3-obstruction} identifies the
-two cubic residual branches and shows that the counterexample locus can
-occur only in the nonnormal branch, whose normal closure has Galois group
-\(S_3\).  Section
-\ref{sec:further-directions} records the dimension-independent
-normalization picture that motivates a planar sequel.
+Section~\ref{sec:general-construction} develops the dimension-independent
+collision obstruction, generic base change, marked-root decomposition, and
+automorphism criterion.  Section~\ref{sec:cubic-s3-obstruction} specializes
+these constructions to cubic extensions.  Section
+\ref{sec:further-directions} isolates the normalization and boundary
+questions leading to the planar sequel.  The closing low-degree corollary
+records the precise handoff to that paper.
 
 \section{General construction}
 \label{sec:general-construction}
