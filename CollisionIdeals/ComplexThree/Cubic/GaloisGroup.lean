@@ -69,8 +69,8 @@ variable
     [IsGalois K N]
 
 /--
-A cubic intermediate sheet inside a finite Galois normal closure has full
-`S₃` Galois group when its fixing subgroup is core-free and nontrivial.
+A cubic intermediate field inside a finite Galois normal closure has Galois
+group `S₃` when its fixing subgroup is core-free and nontrivial.
 
 The index-three hypothesis is obtained from `[L : K] = 3`; core-freeness is
 the normal-closure condition; nontriviality distinguishes the nonnormal cubic

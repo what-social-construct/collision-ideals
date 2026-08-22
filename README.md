@@ -121,10 +121,10 @@ their $n=2,\ k=\mathbb C$ specializations.
 All literature interfaces, including the standard Ax–Grothendieck
 instance, are listed together in the canonical planar spine below.
 
-Geometrically, if $A_F=S/I_R(F)$, then
+Geometrically, if $C_F=S/I_R(F)$, then
 
 ```math
-\mathrm{Spec}(A_F)
+\mathrm{Spec}(C_F)
 =
 \mathbb A^n\times_{\mathbb A^n}\mathbb A^n
 ```
@@ -133,11 +133,11 @@ represents the functor of ordered pairs of points over a test scheme with
 the same image under $F$; in particular, its complex points are the usual
 ordered pairs with equal image.  The closed
 subscheme cut out by $\mathrm{Obs}(F)$, regarded as an ideal of
-$A_F$, is the diagonal.  Thus $\mathrm{Obs}(F)=0$ says that the
+$C_F$, is the diagonal.  Thus $\mathrm{Obs}(F)=0$ says that the
 self-fiber product is scheme-theoretically only the diagonal.
 Write
-$A_F^\circ:=S/(I_R:I_\Delta)$ and
-$R_F^\circ:=\operatorname{Spec}(A_F^\circ)$ for the affine off-diagonal
+$C_F^\circ:=S/(I_R:I_\Delta)$ and
+$R_F^\circ:=\operatorname{Spec}(C_F^\circ)$ for the affine off-diagonal
 factor.
 
 ## Universal property
@@ -288,9 +288,11 @@ The current development is dimension-generic and proves:
   conditions, the same residual field $N$ satisfies
   $\mathrm{Gal}(N/K)\simeq S_3$;
 - for $F:\mathbb A^3_{\mathbb C}\to\mathbb A^3_{\mathbb C}$, the theorem
-  `complexThreeCubicS3Collision` packages the Keller condition, the
-  generic decomposition $K\otimes_BA_F\simeq L\times N$, the $S_3$
-  certificate, `IsComplexThreeJacobianCounterexample F`, nonemptiness of
+  `complexThreeCubicS3Collision` takes the Keller condition as an explicit
+  hypothesis and packages the generic decomposition
+  $K\otimes_BC_F\simeq L\times N$, the identification
+  $\operatorname{Gal}(N/K)\simeq S_3$,
+  `IsComplexThreeJacobianCounterexample F`, nonemptiness of
   the off-diagonal collision scheme, and strict containment
   $I_R(F)\subsetneq I_\Delta$;
 - from the clopen-projector datum, the scheme coproduct decomposition
@@ -600,7 +602,7 @@ $\det JF=c\in\mathbb C^\times$,
 \delta_F\equiv c\pmod {I_\Delta}.
 ```
 
-In the collision ring $A_F=S/I_R(F)$, this produces the idempotent
+In the collision ring $C_F=S/I_R(F)$, this produces the idempotent
 
 ```math
 q_F=1-\frac{\overline\delta_F}{c}
@@ -609,7 +611,7 @@ q_F=1-\frac{\overline\delta_F}{c}
 with
 
 ```math
-\mathrm{Obs}(F)=A_Fq_F.
+\mathrm{Obs}(F)=C_Fq_F.
 ```
 
 The complementary ideal in the polynomial ring is canonical:
@@ -686,7 +688,7 @@ is equivalent to
 ```math
 \ker(\bar\mu_F)\neq0,
 \qquad
-A_F^\circ\neq0.
+C_F^\circ\neq0.
 ```
 
 Generically, suppose the associated function-field extension $L/K$ is
@@ -698,14 +700,16 @@ L\otimes_KL\cong L\times N,
 ```
 
 where the first factor is the diagonal and
-$\mathrm{Gal}(N/K)\cong S_3$.  The original cubic sheet marks one
-root; the generic off-diagonal factor marks a second distinct root; those
-two roots determine the third.  Thus the generic factor is the ordered-root
-$S_3$-Galois closure $N$.  The formal theorem requires that the marked
+$\mathrm{Gal}(N/K)\cong S_3$.  Under the chosen power-basis presentation,
+the canonical diagonal factor corresponds to the chosen primitive root;
+the residual generic factor supplies a second distinct root, and those two
+roots determine the third.  Thus the residual factor is
+the normal closure $N/K$, whose Galois group is $S_3$.  The formal theorem
+requires that the marked
 embedding in `NormalClosureData` agree with the $L$-algebra structure
 used for this residual factor.  It identifies $N$ at the generic
 base-changed level; it does not assert an equivalence
-$\mathrm{Frac}(A_F^\circ)\simeq N$.
+$\mathrm{Frac}(C_F^\circ)\simeq N$.
 The nonzero generic kernel nevertheless descends to the affine
 obstruction and records the failure of
 

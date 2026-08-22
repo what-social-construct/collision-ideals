@@ -131,15 +131,16 @@ theorem fst_genericCubicResidualCollisionEquiv
       (genericCollisionEquiv x)
 
 /--
-A single certificate for the structural statement that a nonnormal cubic
-collision is precisely an `S₃` normal-closure sheet.
+A single certificate for the structural statement that the residual factor
+of a nonnormal cubic collision is its normal closure, whose Galois group is
+`S₃`.
 
 The fields `genericCollisionEquiv` and `fst_genericCollisionEquiv` say
 
 `L ⊗[K] L ≃ L × N`
 
 with the first projection equal to the diagonal multiplication map.  The
-last field identifies the symmetry group of the same second factor with
+last field identifies the Galois group of the same second factor with
 `S₃ = Perm (Fin 3)`.
 -/
 structure CubicS3CollisionWitness
@@ -163,7 +164,7 @@ Build the cubic collision witness from the shared marked-normal-closure
 package.  The generic normal-closure API supplies finiteness, normality,
 and core-freeness.  The marked-embedding equality ensures that the
 `L`-algebra structure defining the residual collision factor is the same
-marked sheet used by the normal-closure datum.
+marked embedding used by the normal-closure datum.
 -/
 def cubicS3CollisionWitnessOfNormalClosure
     [PerfectField K]
@@ -214,7 +215,7 @@ variable
 
 /--
 The polynomial collision ring, after passage to the generic point of the
-coordinate image, decomposes into its diagonal sheet and the chosen
+coordinate image, decomposes into its diagonal factor and the chosen
 residual field:
 
 `K ⊗_B C_F ≃ L × N`.

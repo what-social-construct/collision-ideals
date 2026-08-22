@@ -25,9 +25,9 @@ cubic and whose chosen normal-closure realization is the nonnormal
 
 `K ⊗_B C_F ≃ L × N`.
 
-The first factor is the diagonal sheet.  The field `N` is the nonzero
-off-diagonal ordered-root sheet, its `K`-automorphism group is `S₃`, and
-the generic factor descends to a nonzero affine obstruction:
+The first factor is the diagonal factor.  The field `N` is the nonzero
+residual normal-closure factor, its Galois group over `K` is `S₃`, and the
+generic factor descends to a nonzero affine obstruction:
 
 `obstructionIdeal F ≠ ⊥` and `collisionIdeal F < diagonalIdeal`.
 
