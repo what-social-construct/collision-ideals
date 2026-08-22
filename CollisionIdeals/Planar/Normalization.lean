@@ -1,5 +1,5 @@
 import CollisionIdeals.Planar.Basic
-import CollisionIdeals.PolynomialNormalization
+import CollisionIdeals.General.Normalization.Polynomial
 
 set_option autoImplicit false
 

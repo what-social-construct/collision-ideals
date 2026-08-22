@@ -1,7 +1,7 @@
-import CollisionIdeals.OffDiagonal
+import CollisionIdeals.General.ResidualCollision.Algebra
 import CollisionIdeals.Planar.Basic
-import CollisionIdeals.Secant
-import CollisionIdeals.SecantIdeal
+import CollisionIdeals.Planar.Secant.Algebra
+import CollisionIdeals.Planar.Secant.Ideal
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000

@@ -1,5 +1,5 @@
 import CollisionIdeals.Planar.Normalization
-import CollisionIdeals.PolynomialNormalizationDiagram
+import CollisionIdeals.General.Normalization.Diagram
 
 /-!
 # Planar normalization-diagram notation

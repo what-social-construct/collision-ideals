@@ -1170,12 +1170,10 @@ so \(\Obs(F)=0\).
 \end{proof}
 
 \begin{leanfiles}
-\leanpath{CollisionIdeals/CollisionDiagonal.lean},
-\leanpath{CollisionIdeals/OffDiagonalScheme.lean},
-\leanpath{CollisionIdeals/Secant.lean},
-\leanpath{CollisionIdeals/GenericCollisionDiagonal.lean},
-\leanpath{CollisionIdeals/KellerCollisionModel.lean}, and
-\leanpath{CollisionIdeals/JacobianConjecture.lean}.  The Lean form of
+\leanpath{CollisionIdeals/General/Collision/CollisionDiagonal.lean},
+\leanpath{CollisionIdeals/General/ResidualCollision/Scheme.lean},
+\leanpath{CollisionIdeals/General/GenericFiber/CollisionDiagonal.lean}, and
+\leanpath{CollisionIdeals/General/Automorphism/Equivalences.lean}.  The Lean form of
 Theorem~\ref{thm:generic-collision-base-change} takes surjectivity of
 \(\theta\) as a parameter; the proof above derives it from generic
 finiteness.
@@ -4064,11 +4062,11 @@ the ordered-root normal closure.
 \end{remark}
 
 \begin{leanfiles}
-\leanpath{CollisionIdeals/ComplexThree/CubicGaloisGroup.lean},
-\leanpath{CollisionIdeals/ComplexThree/S3Collision.lean},
+\leanpath{CollisionIdeals/ComplexThree/Cubic/GaloisGroup.lean},
+\leanpath{CollisionIdeals/ComplexThree/Cubic/S3Collision.lean},
 \leanpath{CollisionIdeals/ComplexThree/OffDiagonal.lean},
-\leanpath{CollisionIdeals/ComplexThree/CubicS3.lean}, and
-\leanpath{CollisionIdeals/ComplexThree/JacobianConjecture.lean}.  The
+\leanpath{CollisionIdeals/ComplexThree/Cubic/Main.lean}, and
+\leanpath{CollisionIdeals/ComplexThree/Statements/JacobianConjecture.lean}.  The
 Lean cubic witness takes the residual-field isomorphism and
 \(H\neq1\) as explicit inputs; Proposition~\ref{prop:cubic-tensor-decomposition}
 derives them here from nonnormality.  Hidden inertia is formalized

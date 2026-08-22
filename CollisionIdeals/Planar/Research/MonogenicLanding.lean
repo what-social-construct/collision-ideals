@@ -1,4 +1,4 @@
-import CollisionIdeals.Planar.Endgame
+import CollisionIdeals.Planar.Rigidity.Consequences
 import CollisionIdeals.Planar.Research.MonogenicOrder
 import CollisionIdeals.Planar.Research.PrincipalPartsStrategy
 

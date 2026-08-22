@@ -1,8 +1,10 @@
-import CollisionIdeals.Planar.BoundarySeparation
+import CollisionIdeals.Planar.Boundary
 import CollisionIdeals.Planar.ConjugateSecantEvaluation
 import CollisionIdeals.Planar.ExplicitSecant
-import CollisionIdeals.Planar.GaloisCollisionCocone
+import CollisionIdeals.Planar.GaloisCollisionPair
 import CollisionIdeals.Planar.KellerFrame
-import CollisionIdeals.Planar.RigidityTargets
+import CollisionIdeals.Planar.Statements
+import CollisionIdeals.Planar.Equivalences
+import CollisionIdeals.Planar.External
+import CollisionIdeals.Planar.Rigidity
 import CollisionIdeals.Planar.Conclusion
-import CollisionIdeals.Planar.JacobianConjecture

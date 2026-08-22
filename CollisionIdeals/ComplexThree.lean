@@ -1,2 +1,3 @@
-import CollisionIdeals.ComplexThree.CubicS3
-import CollisionIdeals.ComplexThree.JacobianConjecture
+import CollisionIdeals.ComplexThree.Cubic
+import CollisionIdeals.ComplexThree.Statements
+import CollisionIdeals.ComplexThree.Equivalences

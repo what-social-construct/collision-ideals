@@ -1,5 +1,5 @@
 import CollisionIdeals.ComplexThree.Basic
-import CollisionIdeals.OffDiagonalScheme
+import CollisionIdeals.General.ResidualCollision.Scheme
 
 set_option autoImplicit false
 

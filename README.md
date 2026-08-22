@@ -113,8 +113,10 @@ map, `collisionDiagonal_ker` identifies the kernel of $\bar\mu_F$ with
 the obstruction ideal.
 
 The dimension-independent automorphism and Jacobian-conjecture interfaces
-live in `AutomorphismCriterion` and `JacobianConjecture`; the planar file
-is only their $n=2,\ k=\mathbb C$ specialization.
+live under `General.Automorphism`: `Statements` names the propositions,
+`Equivalences` compares them with collision vanishing, and `Criteria`
+contains the underlying mapwise automorphism tests.  The planar files are
+their $n=2,\ k=\mathbb C$ specializations.
 
 All literature interfaces, including the standard Ax–Grothendieck
 instance, are listed together in the canonical planar spine below.
@@ -179,6 +181,9 @@ At a glance, it includes:
 
 - the dimension-generic collision quotient, obstruction ideal, fiber-product
   interpretation, and automorphism criterion;
+- the dimension-independent Galois collision map pair attached to an ordered
+  pair of conjugate sheets \((g,\sigma g)\), together with the planar
+  off-diagonal specialization for a group-theoretically moved pair;
 - the planar secant and normalization constructions;
 - the canonical conjugate affine opens on the Galois normalization, their
   pulled-back boundary ideals and moving-boundary sums, and the
@@ -189,6 +194,16 @@ At a glance, it includes:
   with its explicit support bridge, to obstruction vanishing;
 - the off-diagonal decomposition and obstruction in the separable cubic
   $S_3$ case in dimension three.
+
+The source tree follows mathematical ownership.  `CollisionIdeals.General`
+exports the collision, fiber-product, generic-fiber, Galois, normalization,
+Keller, and automorphism infrastructure shared by both applications.
+`CollisionIdeals.ComplexThree` owns the cubic $S_3$ specialization, while
+`CollisionIdeals.Planar` owns the secant, boundary, and rigidity development.
+Within each dimension-specific layer, `Statements` names conjectural
+propositions, `Equivalences` contains proved iff characterizations,
+`Interfaces` records explicit comparison obligations, and `Consequences`
+contains proved one-way endgames.
 
 Universal `PlanarBoundaryCoherence` and `PlanarRamificationRigidity` are not
 proved.  Their current Lean routes use the explicit
@@ -315,22 +330,23 @@ The canonical modules are:
 
 | Stage | Main module | Role |
 |---|---|---|
-| automorphism criterion | `AutomorphismCriterion`, `JacobianConjecture` | dimension-independent obstruction detection and conjecture interface |
+| automorphism criterion | `General.Automorphism.Criteria`, `.Statements`, `.Equivalences` | dimension-independent obstruction detection, conjectural statements, and their equivalences |
 | planar map | `Planar.Basic` | polynomials, Jacobian determinant, Keller condition |
-| vanishing target | `Planar.Vanishing` | obstruction and collision-ideal equality |
-| finite models | `NormalClosure`, `PolynomialNormalization` | dimension-independent $K\subseteq L\subseteq N$ and $Z\to\overline X\to Y$ |
+| vanishing target | `Planar.Statements.Vanishing`, `Planar.Equivalences.Vanishing` | planar obstruction vanishing and its collision-ideal formulation |
+| finite models | `General.Galois.NormalClosure`, `General.Normalization.Polynomial` | dimension-independent $K\subseteq L\subseteq N$ and $Z\to\overline X\to Y$ |
 | planar notation | `Planar.Normalization` | thin $n=2,\ k=\mathbb C$ specialization |
-| inertia | `ValuationInertia` | dimension-independent divisorial valuations and inertia kernels |
-| conjugate sheets | `DecompositionSheets` | dimension-independent $D_E\backslash G/H$ classes and sheet index |
-| geometric centers | `PolynomialNormalizationDiagram`, `Planar.NormalizationDiagram` | shared centers and the legacy no-hidden-inertia interface |
-| ramification realization | `VisibleRamification` | dimension-independent identification of sheet and geometric ramification indices |
-| finiteness criteria | `BoundaryPrincipalParts`, `Planar.RigidityTargets` | global boundary coherence, divisorial ramification rigidity, and their explicit bridge interfaces |
-| canonical boundary API | `Planar.BoundarySeparation` | pulled-back conjugate boundaries and ideals, valuation containment, moving-sheet coverage, and boundary separation |
-| Keller local geometry | `KellerGeometry` | dimension-generic Keller-to-étale and Keller-to-flat bridges |
-| Keller collision model | `KellerCollisionModel` | dimension-generic package of the supplied normalization and local-geometry data |
-| generic degree one | `GenericDegreeOne` | dimension-generic descent from $L=K$ and flatness to obstruction vanishing |
-| literature interfaces | `Planar.ExternalAssumptions` | branch purity, finite-étale rigidity, Ax–Grothendieck |
-| composition | `Planar.Endgame` | the hypothesis-parametrized divisorial endgame and automorphism theorems |
+| inertia | `General.Galois.ValuationInertia` | dimension-independent divisorial valuations and inertia kernels |
+| conjugate sheets | `General.Galois.DecompositionSheets` | dimension-independent $D_E\backslash G/H$ classes and sheet index |
+| Galois collision map pairs | `General.Galois.PolynomialCollisionPair`, `Planar.GaloisCollisionPair` | dimension-independent conjugate polynomial-source pairs and their planar off-diagonal specialization |
+| geometric centers | `General.Normalization.Diagram`, `Planar.NormalizationDiagram` | shared centers and the legacy no-hidden-inertia interface |
+| ramification realization | `General.Normalization.VisibleRamification` | dimension-independent identification of sheet and geometric ramification indices |
+| rigidity statements | `Planar.Rigidity.Statements`, `.Interfaces` | global boundary coherence, divisorial ramification rigidity, and their explicit bridge interfaces |
+| canonical boundary API | `Planar.Boundary.Separation` | pulled-back conjugate boundaries and ideals, valuation containment, moving-sheet coverage, and boundary separation |
+| Keller local geometry | `General.Keller.Interfaces` | dimension-generic Keller-to-étale and Keller-to-flat interfaces |
+| Keller collision model | `General.Keller.CollisionModel` | dimension-generic package of the supplied normalization and local-geometry data |
+| generic degree one | `General.Automorphism.GenericDegreeOne` | dimension-generic descent from $L=K$ and flatness to obstruction vanishing |
+| literature interfaces | `Planar.External.Interfaces`, `.Assumptions` | branch purity, finite-étale rigidity, Ax–Grothendieck, and their explicit witnesses |
+| composition | `Planar.Rigidity.Consequences` | the hypothesis-parametrized divisorial endgame and automorphism theorems |
 | secant projector | `Planar.Secant` | planar construction of $q_F$ from the secant determinant |
 | explicit planar input | `Planar.ExplicitSecant`, `Planar.KellerFrame` | canonical telescoping divided differences and the polynomial inverse-Jacobian frame |
 | landing candidate | `Planar.Research.SecantFrameDenominator` | nonzero finite-coefficient denominator ideals; uniform trace landing remains open |
@@ -397,7 +413,8 @@ abbreviation of the dimension-independent
 
 The generic-degree-one descent from $L=K$, together with the model's
 Keller-to-flat bridge, to $\mathrm{Obs}(F)=0$ is proved in
-`GenericDegreeOne`; it is not stored as opaque data in the model.
+`General.Automorphism.GenericDegreeOne`; it is not stored as opaque data
+in the model.
 
 It does **not** contain planar no-hidden-inertia rigidity.  That assertion
 is a separate condition, so the local consequence of Keller étaleness and
@@ -518,7 +535,7 @@ Ax–Grothendieck is used only after this chain, to pass from injectivity to
 a polynomial automorphism.
 
 The three standard literature results not presently supplied by mathlib are
-isolated once, in `Planar.ExternalAssumptions`:
+isolated once, in `Planar.External.Assumptions`:
 
 ```text
 branchPurityA2
@@ -630,8 +647,9 @@ divisor argument is not yet formalized in Lean.
 
 ### Public planar modules
 
-`CollisionIdeals.Planar` exports `RigidityTargets` and `BoundarySeparation`
-alongside the legacy no-hidden-inertia API.
+`CollisionIdeals.Planar` exports the local `Statements`, `Equivalences`,
+`Rigidity`, and `Boundary` umbrellas alongside the legacy
+no-hidden-inertia API.
 
 Import `CollisionIdeals.Planar.Research` explicitly for the prospective
 principal-parts, conjugate-secant, and completed tame-ramification modules.
@@ -695,9 +713,8 @@ obstruction and records the failure of
 F(u)=F(v)\Longrightarrow u=v.
 ```
 
-The dimension-three specialization is organized by
-`ComplexThree.FunctionField`, `ComplexThree.S3Collision`,
-`ComplexThree.CubicGaloisGroup`, and `ComplexThree.CubicS3`.
+The dimension-three specialization is organized under `ComplexThree.Cubic`:
+`FunctionField`, `GaloisGroup`, `S3Collision`, and `Main`.
 
 This is a conditional cubic-extension statement.  It is neither a
 universal assertion that every three-dimensional off-diagonal collision locus has

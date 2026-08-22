@@ -1,5 +1,5 @@
 import CollisionIdeals.Planar.Secant
-import CollisionIdeals.UniversalProperty
+import CollisionIdeals.General.FiberProduct.UniversalProperty
 
 /-!
 # Evaluating the planar secant on collision sheets
@@ -47,12 +47,12 @@ theorem planarSecantClass_mul_coordinateDifference_eq_zero
     (diagonalGenerator_mem (R := ℂ) i)
 
 /--
-After evaluating at any collision cocone, the secant determinant kills the
+After evaluating at any collision map pair, the secant determinant kills the
 corresponding coordinate difference.
 -/
 theorem collisionLift_planarSecantClass_mul_coordinateDifference_eq_zero
     {T : Type u} [CommRing T] [Algebra ℂ T]
-    (F : PlanarPolynomialMap) (c : CollisionCocone F T) (i : Fin 2) :
+    (F : PlanarPolynomialMap) (c : CollisionMapPair F T) (i : Fin 2) :
     collisionLift c (planarSecantClass F) *
         (c.left (X i) - c.right (X i)) = 0 := by
   have h := congrArg (collisionLift c)
@@ -65,12 +65,12 @@ theorem collisionLift_planarSecantClass_mul_coordinateDifference_eq_zero
   exact h
 
 /--
-Over a domain, a collision cocone which moves one planar coordinate sends the
+Over a domain, a collision map pair which moves one planar coordinate sends the
 secant determinant to zero.
 -/
 theorem collisionLift_planarSecantClass_eq_zero_of_coordinate_moved
     {T : Type u} [CommRing T] [IsDomain T] [Algebra ℂ T]
-    (F : PlanarPolynomialMap) (c : CollisionCocone F T) (i : Fin 2)
+    (F : PlanarPolynomialMap) (c : CollisionMapPair F T) (i : Fin 2)
     (hi : c.left (X i) ≠ c.right (X i)) :
     collisionLift c (planarSecantClass F) = 0 := by
   have h :=
@@ -79,14 +79,14 @@ theorem collisionLift_planarSecantClass_eq_zero_of_coordinate_moved
   exact (mul_eq_zero.mp h).resolve_right (sub_ne_zero.mpr hi)
 
 /--
-For a planar Keller map, a collision cocone which moves one coordinate kills
+For a planar Keller map, a collision map pair which moves one coordinate kills
 the concrete off-diagonal ideal.  This is the kernel statement needed to
 factor its pair evaluation through `OffDiagonalRing F`.
 -/
 theorem collisionOffDiagonalIdeal_le_collisionPairMap_ker_of_coordinate_moved
     {T : Type u} [CommRing T] [IsDomain T] [Algebra ℂ T]
     (F : PlanarPolynomialMap) (hKeller : IsPlanarKeller F)
-    (c : CollisionCocone F T) (i : Fin 2)
+    (c : CollisionMapPair F T) (i : Fin 2)
     (hi : c.left (X i) ≠ c.right (X i)) :
     collisionOffDiagonalIdeal F ≤
       RingHom.ker (collisionPairMap c).toRingHom := by
@@ -114,7 +114,7 @@ principal parts.
 def planarOffDiagonalLift
     {T : Type u} [CommRing T] [IsDomain T] [Algebra ℂ T]
     (F : PlanarPolynomialMap) (hKeller : IsPlanarKeller F)
-    (c : CollisionCocone F T) (i : Fin 2)
+    (c : CollisionMapPair F T) (i : Fin 2)
     (hi : c.left (X i) ≠ c.right (X i)) :
     OffDiagonalRing F →ₐ[ℂ] T :=
   Ideal.Quotient.liftₐ
@@ -129,7 +129,7 @@ the quotient projection. -/
 theorem planarOffDiagonalLift_comp_quotient
     {T : Type u} [CommRing T] [IsDomain T] [Algebra ℂ T]
     (F : PlanarPolynomialMap) (hKeller : IsPlanarKeller F)
-    (c : CollisionCocone F T) (i : Fin 2)
+    (c : CollisionMapPair F T) (i : Fin 2)
     (hi : c.left (X i) ≠ c.right (X i)) :
     (planarOffDiagonalLift F hKeller c i hi).comp
         (Ideal.Quotient.mkₐ ℂ (collisionOffDiagonalIdeal F)) =
@@ -142,7 +142,7 @@ from the collision ring: it recovers the original collision lift. -/
 theorem planarOffDiagonalLift_comp_collisionToOffDiagonal
     {T : Type u} [CommRing T] [IsDomain T] [Algebra ℂ T]
     (F : PlanarPolynomialMap) (hKeller : IsPlanarKeller F)
-    (c : CollisionCocone F T) (i : Fin 2)
+    (c : CollisionMapPair F T) (i : Fin 2)
     (hi : c.left (X i) ≠ c.right (X i)) :
     (planarOffDiagonalLift F hKeller c i hi).comp
         (collisionToOffDiagonal F) =
@@ -157,7 +157,7 @@ theorem planarOffDiagonalLift_comp_collisionToOffDiagonal
 theorem planarOffDiagonalLift_mk
     {T : Type u} [CommRing T] [IsDomain T] [Algebra ℂ T]
     (F : PlanarPolynomialMap) (hKeller : IsPlanarKeller F)
-    (c : CollisionCocone F T) (i : Fin 2)
+    (c : CollisionMapPair F T) (i : Fin 2)
     (hi : c.left (X i) ≠ c.right (X i))
     (p : PairRing ℂ (Fin 2)) :
     planarOffDiagonalLift F hKeller c i hi

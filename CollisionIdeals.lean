@@ -1,3 +1,4 @@
+import CollisionIdeals.General
 import CollisionIdeals.ComplexThree
-import CollisionIdeals.ComplexThree.HiddenInertia
+import CollisionIdeals.ComplexThree.Cubic.HiddenInertia
 import CollisionIdeals.Planar

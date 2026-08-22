@@ -1,5 +1,5 @@
-import CollisionIdeals.BoundaryPrincipalParts
-import CollisionIdeals.Planar.BoundarySeparation
+import CollisionIdeals.Planar.Boundary.PrincipalParts
+import CollisionIdeals.Planar.Boundary.Separation
 
 /-!
 # Fixed--moving boundary principal parts
